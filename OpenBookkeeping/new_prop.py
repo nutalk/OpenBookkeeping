@@ -1,13 +1,46 @@
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton,\
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox
 
+from OpenBookkeeping.sql_db import add_prop
 
-class NewProp(QWidget):
-    def __init__(self, database: str):
+class NewItem(QWidget):
+    def __init__(self, database: str, window_title: str):
         super().__init__()
         self.database = database
+        self.setWindowTitle(window_title)
 
-        self.setWindowTitle('新增资产')
+        self.warring_label = QLabel('')
+
+        self.buts_layout = QHBoxLayout()
+        self.cancel_btn = QPushButton('取消')
+        self.confirm_btn = QPushButton('确定')
+        self.buts_layout.addWidget(self.cancel_btn)
+        self.buts_layout.addWidget(self.confirm_btn)
+        self.band()
+
+    def band(self):
+        self.cancel_btn.pressed.connect(self.cancel_btp_fuc)
+        self.confirm_btn.pressed.connect(self.confirm_btn_fuc)
+
+    def cancel_btp_fuc(self):
+        self.close()
+
+    def check_valie(self) -> str:
+        return '还没定义好'
+
+    def confirm_btn_fuc(self):
+        check_res = self.check_valie()
+        if check_res == '':
+            print('confirm')
+        else:
+            self.warring_label.setText(check_res)
+            self.warring_label.setStyleSheet("color: red;")
+
+
+class NewProp(NewItem):
+    def __init__(self, database: str):
+        super().__init__(database, '新增资产')
+
         input_layout = QGridLayout()
         name_label = QLabel('名称')
         type_label = QLabel('类别')
@@ -30,23 +63,15 @@ class NewProp(QWidget):
         input_layout.addWidget(self.name_input, 1, 2)
         input_layout.addWidget(self.type_input, 2, 2)
         input_layout.addWidget(self.rate_input, 3, 2)
-        input_layout.addWidget(self.currency_input, 4,2)
-
-        buts_layout = QHBoxLayout()
-        self.cancel_btn = QPushButton('取消')
-        self.confirm_btn = QPushButton('确定')
-        buts_layout.addWidget(self.cancel_btn)
-        buts_layout.addWidget(self.confirm_btn)
-
-        input_layout.addLayout(buts_layout, 5, 2)
+        input_layout.addWidget(self.currency_input, 4, 2)
+        input_layout.addWidget(self.warring_label, 5, 2)
+        input_layout.addLayout(self.buts_layout, 6, 2)
         self.setLayout(input_layout)
 
 
-class NewLiability(QWidget):
+class NewLiability(NewItem):
     def __init__(self, database: str):
-        super().__init__()
-        self.database = database
-        self.setWindowTitle('新增负债')
+        super().__init__(database, '新增负债')
         input_layout = QGridLayout()
         name_label = QLabel('名称')
         type_label = QLabel('负债类型')
@@ -60,7 +85,6 @@ class NewLiability(QWidget):
         self.currency_type_input.addItems(['先息后本', '等额本息', '等额本金', '到期还本付息'])
         self.rate_input = QDoubleSpinBox()
 
-
         input_layout.addWidget(name_label, 1, 1)
         input_layout.addWidget(type_label, 2, 1)
         input_layout.addWidget(currency_label, 3, 1)
@@ -70,12 +94,6 @@ class NewLiability(QWidget):
         input_layout.addWidget(self.type_input, 2, 2)
         input_layout.addWidget(self.currency_type_input, 3,2)
         input_layout.addWidget(self.rate_input, 4, 2)
-
-        buts_layout = QHBoxLayout()
-        self.cancel_btn = QPushButton('取消')
-        self.confirm_btn = QPushButton('确定')
-        buts_layout.addWidget(self.cancel_btn)
-        buts_layout.addWidget(self.confirm_btn)
-
-        input_layout.addLayout(buts_layout, 5, 2)
+        input_layout.addWidget(self.warring_label, 5, 2)
+        input_layout.addLayout(self.buts_layout, 6, 2)
         self.setLayout(input_layout)

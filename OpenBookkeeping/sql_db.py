@@ -28,6 +28,22 @@ class Connect:
         self.conn.close()
 
 
+def add_prop(database: str,
+             names: list,
+             types: list,
+             currency_type: list,
+             create_date: list,
+             rate: list,
+             currency: list):
+    with Connect(database) as db:
+        sql_str = "INSERT INTO prop " \
+                  "(name, type, currency_type, create_date, rate, currency)" \
+                  "VALUES (?, ?, ?, ?, ?, ?)"
+        data = (names, types, currency_type, create_date, rate, currency)
+        db.cur.execute(sql_str, data)
+        db.conn.commit()
+
+
 def init_db(data_base: str):
     create_prop_table = """
     CREATE TABLE "prop" (
@@ -38,7 +54,7 @@ def init_db(data_base: str):
         "create_date"	INTEGER NOT NULL,
         "rate"	float NOT NULL,
         "currency"	int NOT NULL,
-        PRIMARY KEY("create_date" AUTOINCREMENT)
+        PRIMARY KEY("id" AUTOINCREMENT)
     );
     """
 
