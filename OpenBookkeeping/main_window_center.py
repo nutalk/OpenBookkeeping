@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
-    QHBoxLayout, QVBoxLayout, QPushButton, QLabel
+    QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
+from PySide6.QtGui import QStandardItemModel, QStandardItem
 
 
 class TableBase(QWidget):

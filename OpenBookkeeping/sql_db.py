@@ -1,17 +1,12 @@
 import sqlite3
-from dbutils.persistent_db import PersistentDB
 import time
+from loguru import logger
 
 
-class Pool(object):
-    __pool = None
-
-    def __new__(cls, database: str, *args, **kwargs):
-        if cls.__pool is None:
-            cls.__pool = PersistentDB(sqlite3, maxusage=None,
-                                      closeable=False,
-                                      database=database)
-            return cls.__pool
+def init_connect(database: str):
+    conn = sqlite3.connect(database)
+    cursor = conn.cursor()
+    return conn, cursor
 
 
 class Connect:
@@ -19,9 +14,7 @@ class Connect:
         self.database = database
 
     def __enter__(self):
-        db_pool = Pool(database=self.database)
-        self.conn = db_pool.connection()
-        self.cur = self.conn.cursor()
+        self.conn, self.cur = init_connect(self.database)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -45,8 +38,14 @@ def add_prop(database: str,
         db.conn.commit()
 
 
-def query_prop(database: str):
-    ...
+def query_table(database: str, cols: list, table_name: str):
+    cols_str = ' '.join(cols)
+    with Connect(database) as db:
+        sql_str = f"""select {cols_str} from {table_name}"""
+        logger.debug(f'{sql_str=}')
+        db.cur.execute(sql_str)
+        records = db.cur.fetchall()
+    return records
 
 
 def init_db(data_base: str):
@@ -69,6 +68,7 @@ def init_db(data_base: str):
         "type"	INTEGER NOT NULL,
         "currency_type"	INTEGER NOT NULL,
         "create_date"	INTEGER NOT NULL,
+        "start_date" INTEGER NOT NULL,
         "term_month"	INTEGER NOT NULL,
         "rate"	float NOT NULL,
         PRIMARY KEY("id" AUTOINCREMENT)

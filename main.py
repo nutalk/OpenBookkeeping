@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QTableWidget,\
     QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel
 from PySide6.QtGui import QAction
-from faker import Faker
+
 from pathlib import Path
 
 from OpenBookkeeping.main_window_center import MainTables
@@ -14,10 +14,7 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.database = None
 
-        self.faker = Faker(locale='zh_CN')
-        self.data = [[self.faker.name(), self.faker.address(), self.faker.ascii_free_email()] for _ in range(80)]
-
-        self.resize(900, 700)
+        self.resize(1080, 700)
         self.setWindowTitle('财记')
 
         self.new_file_action = QAction('新建账本')
