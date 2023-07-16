@@ -9,10 +9,8 @@ class MainTables(QWidget):
 
         left_layout = QVBoxLayout()
         left_btns_layout = QHBoxLayout()
-        add_prop_btn = QPushButton('新增')
         edit_prop_btn = QPushButton('编辑')
         del_prop_btn = QPushButton('删除')
-        left_btns_layout.addWidget(add_prop_btn)
         left_btns_layout.addWidget(edit_prop_btn)
         left_btns_layout.addWidget(del_prop_btn)
 
@@ -26,7 +24,7 @@ class MainTables(QWidget):
 
         right_layout = QVBoxLayout()
         right_btns_layout = QHBoxLayout()
-        add_detail_btn = QPushButton('新增')
+        add_detail_btn = QPushButton('记一笔')
         edit_detail_btn = QPushButton('编辑')
         del_detail_btn = QPushButton('删除')
         right_btns_layout.addWidget(add_detail_btn)
