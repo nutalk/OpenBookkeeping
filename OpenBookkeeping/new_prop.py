@@ -3,8 +3,10 @@ from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton,\
 
 
 class NewProp(QWidget):
-    def __init__(self):
+    def __init__(self, database: str):
         super().__init__()
+        self.database = database
+
         self.setWindowTitle('新增资产')
         input_layout = QGridLayout()
         name_label = QLabel('名称')
@@ -41,8 +43,9 @@ class NewProp(QWidget):
 
 
 class NewLiability(QWidget):
-    def __init__(self):
+    def __init__(self, database: str):
         super().__init__()
+        self.database = database
         self.setWindowTitle('新增负债')
         input_layout = QGridLayout()
         name_label = QLabel('名称')
