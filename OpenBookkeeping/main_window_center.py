@@ -1,5 +1,40 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
-    QHBoxLayout, QVBoxLayout, QPushButton
+    QHBoxLayout, QVBoxLayout, QPushButton, QLabel
+
+
+class TableBase(QWidget):
+    def __init__(self, label_str):
+        super().__init__()
+        label = QLabel(label_str)
+        self.layout_main = QVBoxLayout()
+        self.layout_main.addWidget(label)
+        self.setLayout(self.layout_main)
+
+    def update_data(self, new_data: list):
+        ...
+
+
+class PropTable(TableBase):
+    def __init__(self):
+        super().__init__('资产汇总')
+
+        self._table = QTableWidget()
+        self._table.setRowCount(5)
+        self._table.setColumnCount(5)
+        self._table.setHorizontalHeaderLabels(['类别', '名称', '余额', '现金流', '创建日期'])
+
+        self.layout_main.addWidget(self._table)
+
+
+class LiabilityTable(TableBase):
+    def __init__(self):
+        super().__init__('负债汇总')
+        self._table = QTableWidget()
+        self._table.setRowCount(5)
+        self._table.setColumnCount(7)
+        self._table.setHorizontalHeaderLabels(['类别', '名称', '余额', '利率', '开始日期', '期限', '现金流'])
+
+        self.layout_main.addWidget(self._table)
 
 
 class MainTables(QWidget):
@@ -9,17 +44,13 @@ class MainTables(QWidget):
 
         left_layout = QVBoxLayout()
         left_btns_layout = QHBoxLayout()
-        edit_prop_btn = QPushButton('编辑')
-        del_prop_btn = QPushButton('删除')
+        edit_prop_btn = QPushButton('编辑账户')
         left_btns_layout.addWidget(edit_prop_btn)
-        left_btns_layout.addWidget(del_prop_btn)
 
-        self.prop_table = QTableWidget()
-        self.prop_table.setRowCount(10)
-        self.prop_table.setColumnCount(4)
-        self.prop_table.setHorizontalHeaderLabels(['类别', '名称', '余额', '现金流'])
-
+        self.prop_table = PropTable()
+        self.liability_table = LiabilityTable()
         left_layout.addWidget(self.prop_table)
+        left_layout.addWidget(self.liability_table)
         left_layout.addLayout(left_btns_layout)
 
         right_layout = QVBoxLayout()

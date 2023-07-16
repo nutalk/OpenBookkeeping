@@ -45,6 +45,10 @@ def add_prop(database: str,
         db.conn.commit()
 
 
+def query_prop(database: str):
+    ...
+
+
 def init_db(data_base: str):
     create_prop_table = """
     CREATE TABLE "prop" (

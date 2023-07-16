@@ -54,6 +54,10 @@ class MyWindow(QMainWindow):
         else:
             self.propAction.setDisabled(False)
             self.liabilityAction.setDisabled(False)
+            if self.new_prop_widget is None:
+                self.new_prop_widget = NewProp(self.database)
+            if self.new_liability_widget is None:
+                self.new_liability_widget = NewLiability(self.database)
 
     def band(self):
         self.propAction.triggered.connect(self.new_prop_fuc)
@@ -71,19 +75,17 @@ class MyWindow(QMainWindow):
     def open_db_fuc(self):
         file_dialog = QFileDialog(self)
         file_use = file_dialog.getOpenFileName(self, "选择文件", filter=".bp (*.bk)")
-        file_path = Path(file_use[0])
+        file_path = file_use[0]
         self.database = file_path
         self.update_status()
 
     def new_prop_fuc(self):
-        if self.new_prop_widget is None:
-            self.new_prop_widget = NewProp(self.database)
         self.new_prop_widget.show()
+        self.update_status()
 
     def new_liability_fuc(self):
-        if self.new_liability_widget is None:
-            self.new_liability_widget = NewLiability(self.database)
         self.new_liability_widget.show()
+        self.update_status()
 
 
 if __name__ == "__main__":
