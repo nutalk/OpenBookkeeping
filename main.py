@@ -3,6 +3,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayou
 from PySide6.QtGui import QAction
 from faker import Faker
 
+from OpenBookkeeping.main_window_center import MainTables
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -23,13 +25,8 @@ class MyWindow(QMainWindow):
 
         self.menuBar().addMenu(self.fileMenu)
 
-        self.table = QTableWidget()
-        self.table.setRowCount(10)
-        self.table.setColumnCount(3)
-        self.table.setHorizontalHeaderLabels(['姓名', '地址', 'Email Address'])
-        # self.table.setVerticalHeaderLabels(['A', 'B', 'C'])
-        self.layout().addWidget(self.table)
-
+        self.tables = MainTables()
+        self.setCentralWidget(self.tables)
         # self.setLayout(self.mainLayout)
 
 
