@@ -1,5 +1,6 @@
 import sqlite3
 from dbutils.persistent_db import PersistentDB
+import time
 
 
 class Pool(object):
@@ -29,17 +30,17 @@ class Connect:
 
 
 def add_prop(database: str,
-             names: list,
-             types: list,
-             currency_type: list,
-             create_date: list,
-             rate: list,
-             currency: list):
+             name: str,
+             types: int,
+             currency: int,
+             comment: str):
+    current_date = time.time()
+    current_date = round(current_date * 1000)
     with Connect(database) as db:
         sql_str = "INSERT INTO prop " \
-                  "(name, type, currency_type, create_date, rate, currency)" \
-                  "VALUES (?, ?, ?, ?, ?, ?)"
-        data = (names, types, currency_type, create_date, rate, currency)
+                  "(name, type, create_date, currency, comment)" \
+                  "VALUES (?, ?, ?, ?, ?)"
+        data = (name, types, current_date, currency, comment)
         db.cur.execute(sql_str, data)
         db.conn.commit()
 
@@ -47,15 +48,27 @@ def add_prop(database: str,
 def init_db(data_base: str):
     create_prop_table = """
     CREATE TABLE "prop" (
-        "id"	int NOT NULL,
+        "id"	INTEGER NOT NULL,
         "name"	text NOT NULL,
-        "type"	int NOT NULL,
-        "currency_type"	int NOT NULL,
+        "type"	INTEGER NOT NULL,
         "create_date"	INTEGER NOT NULL,
-        "rate"	float NOT NULL,
-        "currency"	int NOT NULL,
+        "currency"	INTEGER NOT NULL,
+        "comment" text,
         PRIMARY KEY("id" AUTOINCREMENT)
     );
+    """
+
+    create_liability_table = """
+    CREATE TABLE "liability" (
+        "id"	INTEGER NOT NULL,
+        "name"	TEXT NOT NULL,
+        "type"	INTEGER NOT NULL,
+        "currency_type"	INTEGER NOT NULL,
+        "create_date"	INTEGER NOT NULL,
+        "term_month"	INTEGER NOT NULL,
+        "rate"	float NOT NULL,
+        PRIMARY KEY("id" AUTOINCREMENT)
+    )
     """
 
     create_detail_table = """
@@ -72,6 +85,15 @@ def init_db(data_base: str):
         db.cur.execute(create_prop_table)
         db.conn.commit()
         db.cur.execute(create_detail_table)
+        db.conn.commit()
+        db.cur.execute(create_liability_table)
+        db.conn.commit()
+
+        sql_str = "INSERT INTO prop " \
+                  "(name, type, create_date, currency, comment)" \
+                  "VALUES (?, ?, ?, ?, ?)"
+        data = ('test', 0, 0, 200, 'test_comment')
+        db.cur.execute(sql_str, data)
         db.conn.commit()
 
 
