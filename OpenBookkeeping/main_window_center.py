@@ -2,7 +2,8 @@ from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
 from PySide6.QtGui import QStandardItemModel, QStandardItem
 
-from OpenBookkeeping.sql_db import query_detail, query_table
+from OpenBookkeeping.sql_db import query_by_str
+from OpenBookkeeping.gloab_info import query_liability_table, query_prop_table, prop_type_items, liability_type_items, liability_currency_types
 
 class TableBase(QWidget):
     def __init__(self, label_str):
@@ -22,7 +23,7 @@ class PropTable(TableBase):
         self._table = QTableWidget()
         self._table.setRowCount(5)
         self._table.setColumnCount(5)
-        self._table.setHorizontalHeaderLabels(['类别', '名称', '现金流', '创建日期', '余额'])
+        self._table.setHorizontalHeaderLabels(['名称', '类别', '创建日期', '现金流', '余额'])
 
         self.layout_main.addWidget(self._table)
 
@@ -77,11 +78,13 @@ class MainTables(QWidget):
         self.setLayout(main_layout)
 
     def update_content(self, database:str):
-        props = query_table(database, ['name', 'type', 'start_date', 'currency', 'comment'], 'prop')
+        props = query_by_str(database, query_prop_table)
         prop_table = self.prop_table._table
         prop_table.setRowCount(len(props))
         for row_id, prop in enumerate(props):
             for col_id, v in enumerate(prop):
+                if col_id == 1:
+                    v = prop_type_items[v]
                 prop_item = QTableWidgetItem(v)
                 prop_table.setItem(row_id, col_id, prop_item)
             prop_table.setItem(row_id, col_id+1, QTableWidgetItem(0))
