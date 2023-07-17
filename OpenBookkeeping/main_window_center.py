@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
 from PySide6.QtGui import QStandardItemModel, QStandardItem
+from loguru import logger
 
 from OpenBookkeeping.sql_db import query_by_str
 from OpenBookkeeping.gloab_info import query_liability_table, query_prop_table, prop_type_items, liability_type_items, liability_currency_types
@@ -86,18 +87,19 @@ class MainTables(QWidget):
             for col_id, v in enumerate(prop):
                 if col_id == 1:
                     v = prop_type_items[v]
-                _item = QTableWidgetItem(v)
+                _item = QTableWidgetItem(str(v))
                 prop_table.setItem(row_id, col_id, _item)
 
         liabilities = query_by_str(database, query_liability_table)
         liability_table = self.liability_table._table
         liability_table.setRowCount(len(liabilities))
         for row_id, liability in enumerate(liabilities):
+            logger.debug(f'{liability=}')
             for col_id, v in enumerate(liability):
                 if col_id == 1:
                     v = liability_type_items[v]
                 elif col_id == 2:
                     v = liability_currency_types[v]
-                _item = QTableWidgetItem(v)
+                _item = QTableWidgetItem(str(v))
                 liability_table.setItem(row_id, col_id, _item)
                     
