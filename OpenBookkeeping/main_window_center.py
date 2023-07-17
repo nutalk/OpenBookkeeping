@@ -34,7 +34,8 @@ class LiabilityTable(TableBase):
         self._table = QTableWidget()
         self._table.setRowCount(5)
         self._table.setColumnCount(7)
-        self._table.setHorizontalHeaderLabels(['类别', '名称', '余额', '利率', '开始日期', '期限', '现金流'])
+        # name, type, currency_type, start_date, term_month, rate, sum(amount) 
+        self._table.setHorizontalHeaderLabels(['名称', '类别', '还款方式', '开始日期', '期限', '利率', '余额'])
 
         self.layout_main.addWidget(self._table)
 
@@ -85,6 +86,18 @@ class MainTables(QWidget):
             for col_id, v in enumerate(prop):
                 if col_id == 1:
                     v = prop_type_items[v]
-                prop_item = QTableWidgetItem(v)
-                prop_table.setItem(row_id, col_id, prop_item)
-            prop_table.setItem(row_id, col_id+1, QTableWidgetItem(0))
+                _item = QTableWidgetItem(v)
+                prop_table.setItem(row_id, col_id, _item)
+
+        liabilities = query_by_str(database, query_liability_table)
+        liability_table = self.liability_table._table
+        liability_table.setRowCount(len(liabilities))
+        for row_id, liability in enumerate(liabilities):
+            for col_id, v in enumerate(liability):
+                if col_id == 1:
+                    v = liability_type_items[v]
+                elif col_id == 2:
+                    v = liability_currency_types[v]
+                _item = QTableWidgetItem(v)
+                liability_table.setItem(row_id, col_id, _item)
+                    

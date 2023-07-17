@@ -101,6 +101,7 @@ class NewProp(NewItem):
         
         self.all_input['name'].setText('')
         self.all_input['currency'].setValue(0)
+        self.all_input['comment'].setValue(0)
 
 
 class NewLiability(NewItem):
@@ -111,7 +112,7 @@ class NewLiability(NewItem):
             name = QLabel('名称'),
             type = QLabel('负债类型'),
             rate = QLabel('年利率'),
-            currency_type = QLabel('还款付息类型'),
+            currency_type = QLabel('还款方式'),
             start_date = QLabel('开始日期'),
             term_month = QLabel('期数'),
             comment = QLabel('备注'))
@@ -166,4 +167,7 @@ class NewLiability(NewItem):
         add_liability(self.database, _name, _type, _currency_type, _rate, _start_date,
                       _term_month, _comment)
         
-        
+        self.all_input['name'].setText('')
+        self.all_input['rate'].setValue(0)
+        self.all_input['term_month'].setValue(0)
+        self.all_input['comment'].setText('')

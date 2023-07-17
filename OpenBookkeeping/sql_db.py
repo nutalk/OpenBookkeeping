@@ -75,6 +75,7 @@ def query_detail(database: str, target_id: int, detail_table_name: str):
 
 
 def query_by_str(database: str, sql_str: str):
+    logger.debug(f'{sql_str=}')
     with Connect(database) as db:
         db.cur.execute(sql_str,)
         records = db.cur.fetchall()
