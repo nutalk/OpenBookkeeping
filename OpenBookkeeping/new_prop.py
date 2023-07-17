@@ -8,8 +8,9 @@ from OpenBookkeeping.sql_db import add_prop, query_table, add_liability
 from OpenBookkeeping.gloab_info import prop_type_items, liability_type_items, liability_currency_types
 
 class NewItem(QWidget):
-    def __init__(self, database: str, window_title: str):
+    def __init__(self, database: str, window_title: str, parent: QWidget):
         super().__init__()
+        self.parent = parent
         self.database = database
         self.setWindowTitle(window_title)
 
@@ -34,16 +35,17 @@ class NewItem(QWidget):
 
     def confirm_btn_fuc(self):
         check_res = self.check_valid()
-        if check_res == '':
-            print('confirm')
+        if check_res == '' or check_res is None:
+            self.parent.update_status()
+            self.close()
         else:
             self.warring_label.setText(check_res)
             self.warring_label.setStyleSheet("color: red;")
 
 
 class NewProp(NewItem):
-    def __init__(self, database: str):
-        super().__init__(database, '新增资产')
+    def __init__(self, database: str, parent: QWidget):
+        super().__init__(database, '新增资产', parent)
         input_layout = QGridLayout()
 
         all_labels = dict(
@@ -78,6 +80,7 @@ class NewProp(NewItem):
 
     def check_valid(self) -> str:
         prop_name = self.all_input['name'].text()
+        
         prop_type = self.all_input['type'].currentIndex()
         start_date = self.all_input['start_date'].date().toString("yyyy-MM-dd")
         currency = self.all_input['currency'].value()
@@ -95,11 +98,14 @@ class NewProp(NewItem):
         
         add_prop(self.database, prop_name, prop_type,
                  currency, start_date, comment)
+        
+        self.all_input['name'].setText('')
+        self.all_input['currency'].setValue(0)
 
 
 class NewLiability(NewItem):
-    def __init__(self, database: str):
-        super().__init__(database, '新增负债')
+    def __init__(self, database: str, parent: QWidget):
+        super().__init__(database, '新增负债', parent)
         input_layout = QGridLayout()
         all_labels = dict(
             name = QLabel('名称'),

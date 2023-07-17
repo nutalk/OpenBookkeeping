@@ -52,9 +52,9 @@ class MyWindow(QMainWindow):
             self.propAction.setDisabled(False)
             self.liabilityAction.setDisabled(False)
             if self.new_prop_widget is None:
-                self.new_prop_widget = NewProp(self.database)
+                self.new_prop_widget = NewProp(self.database, self)
             if self.new_liability_widget is None:
-                self.new_liability_widget = NewLiability(self.database)
+                self.new_liability_widget = NewLiability(self.database, self)
             self.tables.update_content(self.database)
 
     def band(self):
