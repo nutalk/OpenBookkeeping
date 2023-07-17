@@ -56,11 +56,19 @@ def add_prop(database: str,
 
 
 def query_table(database: str, cols: list, table_name: str):
-    cols_str = ' '.join(cols)
+    cols_str = ', '.join(cols)
     with Connect(database) as db:
         sql_str = f"""select {cols_str} from {table_name}"""
         logger.debug(f'{sql_str=}')
         db.cur.execute(sql_str)
+        records = db.cur.fetchall()
+    return records
+
+
+def query_detail(database: str, prop_id: int):
+    with Connect(database) as db:
+        sql_str = """select * from details where id = ?"""
+        db.cur.execute(sql_str, (prop_id,),)
         records = db.cur.fetchall()
     return records
 

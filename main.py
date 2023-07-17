@@ -55,6 +55,7 @@ class MyWindow(QMainWindow):
                 self.new_prop_widget = NewProp(self.database)
             if self.new_liability_widget is None:
                 self.new_liability_widget = NewLiability(self.database)
+            self.tables.update_content(self.database)
 
     def band(self):
         self.propAction.triggered.connect(self.new_prop_fuc)
