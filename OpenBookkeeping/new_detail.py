@@ -9,11 +9,12 @@ from OpenBookkeeping.sql_db import add_detail, query_by_col
 
 
 class NewDetail(NewItem):
-    def __init__(self, database: str, parent: QWidget, table_name: str, target_name: str):
+    def __init__(self, database: str, parent: QWidget, table_name: str,
+                 target_name: str, target_table_name: str):
         super().__init__(database, '记一笔', parent)
         self.table_name = table_name
         self.target_name = target_name
-        rec = query_by_col(database, 'prop', 'name', target_name)
+        rec = query_by_col(database, target_table_name, 'name', target_name)
         assert len(rec) == 1, f'记录不存在, {rec=}'
         self.target_id = rec[0][0]
 

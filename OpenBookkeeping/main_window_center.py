@@ -88,7 +88,7 @@ class PropTable(TableBase):
 
     def add_detail(self):
         prop_name = super().on_edit()
-        self.add_detail_form = NewDetail(self.database, self, 'prop_details', prop_name)
+        self.add_detail_form = NewDetail(self.database, self, 'prop_details', prop_name, 'prop')
         self.add_detail_form.show()
 
 
@@ -128,6 +128,11 @@ class LiabilityTable(TableBase):
         self.edit_form = EditLiability(self.database, self)
         self.edit_form.set_values(rec[1],  rec[2], rec[3], rec[4], rec[5], rec[6], rec[7])
         self.edit_form.show()
+
+    def add_detail(self):
+        prop_name = super().on_edit()
+        self.add_detail_form = NewDetail(self.database, self, 'liability_details', prop_name, 'liability')
+        self.add_detail_form.show()
 
 
 class MainTables(QWidget):
