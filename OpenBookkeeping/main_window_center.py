@@ -8,7 +8,7 @@ from OpenBookkeeping.sql_db import query_by_str, query_by_col
 from OpenBookkeeping.gloab_info import query_liability_table, query_prop_table, \
     prop_type_items, liability_type_items, liability_currency_types, \
     prop_type_ids, liability_type_ids, liability_currency_ids
-from OpenBookkeeping.new_prop import EditProp
+from OpenBookkeeping.new_prop import EditProp, EditLiability
 
 
 class TableBase(QWidget):
@@ -90,6 +90,9 @@ class LiabilityTable(TableBase):
 
         self.layout_main.addWidget(self._table)
 
+    def update_status(self):
+        self.update_content(self.database, query_liability_table)
+
     def update_content(self, database: str, query_str: str):
         liabilities = super().update_content(database, query_str)
         for row_id, liability in enumerate(liabilities):
@@ -100,6 +103,19 @@ class LiabilityTable(TableBase):
                     v = liability_currency_types[v]
                 _item = QTableWidgetItem(str(v))
                 self._table.setItem(row_id, col_id, _item)
+
+    def on_edit(self):
+        _name = super().on_edit()
+        rec = query_by_col(self.database, 'liability',  'name', _name)
+        if len(rec) != 1:
+            logger.error(f'{rec=}')
+            raise ValueError('找不到匹配的数据')
+        rec = rec[0]
+        logger.debug(rec)
+
+        self.edit_form = EditLiability(self.database, self)
+        self.edit_form.set_values(rec[1],  rec[2], rec[3], rec[4], rec[5], rec[6], rec[7])
+        self.edit_form.show()
 
 
 class MainTables(QWidget):

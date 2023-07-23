@@ -168,7 +168,7 @@ class NewLiability(NewItem):
 
         self.setLayout(input_layout)
 
-    def check_valid(self) -> str:
+    def get_data(self):
         _name = self.all_input['name'].text()
         _type = self.all_input['type'].currentIndex()
         _rate = self.all_input['rate'].value()
@@ -176,16 +176,15 @@ class NewLiability(NewItem):
         _start_date = self.all_input['start_date'].date().toString("yyyy-MM-dd")
         _term_month = self.all_input['term_month'].value()
         _comment = self.all_input['comment'].toPlainText()
+        return _name, _type, _rate, _currency_type, _start_date, _term_month, _comment
 
-        exist_names = query_table(self.database, ['name'], 'liability')
-        names = [item[0] for item in exist_names]
-        names = set(names)
-        logger.debug(f'{_name=}, {_type=}, {_currency_type=},{_rate}, {_comment=}, \
-{_start_date}, {_term_month=}, {self.database}')
-
+    def check_valid(self) -> str:
+        _name, _type, _rate, _currency_type, _start_date, _term_month, _comment = self.get_data()
         if not _name:
             return '名称不能为空'
-        if _name in names:
+
+        exist_name = query_by_col(self.database, 'liability', 'name', _name)
+        if len(exist_name) >= 1:
             return '资产名已存在'
 
         add_liability(self.database, _name, _type, _currency_type, _rate, _start_date,
@@ -195,3 +194,28 @@ class NewLiability(NewItem):
         self.all_input['rate'].setValue(0)
         self.all_input['term_month'].setValue(0)
         self.all_input['comment'].setText('')
+
+
+class EditLiability(NewLiability):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.all_input['name'].setEnabled(False)
+
+    def set_values(self, _name: str, _type: int,
+                   currency_type: int, start_date: str, term_month: int,
+                   rate: float,
+                   comment: str, *args, **kwargs):
+        self.all_input['name'].setText(_name)
+        self.all_input['type'].setCurrentIndex(_type)
+        self.all_input['rate'].setValue(rate)
+        self.all_input['currency_type'].setCurrentIndex(currency_type)
+        self.all_input['start_date'].setDate(QDate.fromString(start_date, 'yyyy-MM-dd'))
+        self.all_input['term_month'].setValue(term_month)
+        self.all_input['comment'].setPlainText(comment)
+
+    def check_valid(self) -> str:
+        _name, _type, rate, currency_type, start_date, term_month, comment = self.get_data()
+        values = {'type': _type, 'currency_type': currency_type,'start_date': start_date,
+                  'term_month': term_month, 'rate': rate, 'comment': comment}
+        update_by_col(self.database, 'liability', 'name', _name, values)
+
