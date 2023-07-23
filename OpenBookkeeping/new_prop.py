@@ -101,7 +101,7 @@ class NewProp(NewItem):
         
         self.all_input['name'].setText('')
         self.all_input['currency'].setValue(0)
-        self.all_input['comment'].setValue(0)
+        self.all_input['comment'].setText('')
 
 
 class NewLiability(NewItem):
