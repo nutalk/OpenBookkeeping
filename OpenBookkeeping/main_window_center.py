@@ -23,11 +23,17 @@ class TableBase(QWidget):
         self._table = QTableWidget()
         self.edit_action = QAction('编辑')
         self.edit_action.triggered.connect(self.on_edit)
-        self.delete_action = QAction('删除')
-        self.delete_action.triggered.connect(self.on_delete)
+        self.add_action = QAction('记一笔')
+        self.add_action.triggered.connect(self.add_detail)
+        # self.delete_action = QAction('删除')
+        # self.delete_action.triggered.connect(self.on_delete)
         self._table.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self._table.addAction(self.edit_action)
-        self._table.addAction(self.delete_action)
+        self._table.addAction(self.add_action)
+        # self._table.addAction(self.delete_action)
+
+    def add_detail(self):
+        ...
 
     def update_content(self, database: str, query_str: str):
         self.database = database
