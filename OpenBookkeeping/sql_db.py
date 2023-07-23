@@ -66,10 +66,11 @@ def query_table(database: str, cols: list, table_name: str):
     return records
 
 
-def query_detail(database: str, target_id: int, detail_table_name: str):
+def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
     with Connect(database) as db:
-        sql_str = f"select * from {detail_table_name} where target_id = ?"
-        db.cur.execute(sql_str, (target_id,),)
+        sql_str = f"select * from {table_name} where {col_name} = ?"
+        logger.debug(sql_str)
+        db.cur.execute(sql_str, (col_value,),)
         records = db.cur.fetchall()
     return records
 

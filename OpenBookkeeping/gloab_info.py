@@ -1,7 +1,19 @@
 prop_type_items = ['固定资产', '流动资产']
 
+prop_type_ids = {item: idx for idx, item in enumerate(prop_type_items)}
+
 liability_type_items = ['长期负债', '短期负债']
+
+liability_type_ids = {item: idx for idx, item in enumerate(liability_type_items)}
+
 liability_currency_types = ['先息后本', '等额本息', '等额本金', '到期还本付息']
+
+liability_currency_ids = {item: idx for idx, item in enumerate(liability_currency_types)}
+
+
+query_prop_by_name="""
+select * from prop where  name={}
+"""
 
 query_prop_table = """
 select name, type, start_date, currency, sum(amount) from prop LEFT outer join prop_details
