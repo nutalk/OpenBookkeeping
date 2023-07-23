@@ -75,6 +75,20 @@ def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
     return records
 
 
+def update_by_col(database: str, table_name: str, col_name: str, col_value: str, values: dict):
+    with Connect(database) as db:
+        set_strs = [f'{k} = ?' for k in values.keys()]
+        set_str = ' ,'.join(set_strs)
+        vals = list(values.values())
+        vals.append(col_value)
+
+        sql_str = f"UPDATE {table_name} SET {set_str} where {col_name} = ?"
+        logger.debug(sql_str)
+        db.cur.execute(sql_str, tuple(vals),)
+        records = db.cur.fetchall()
+    return records
+
+
 def query_by_str(database: str, sql_str: str):
     logger.debug(f'{sql_str=}')
     with Connect(database) as db:

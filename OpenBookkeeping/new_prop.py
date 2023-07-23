@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
 from PySide6.QtCore import QDate
 from loguru import logger
 
-from OpenBookkeeping.sql_db import add_prop, query_table, add_liability
+from OpenBookkeeping.sql_db import add_prop, query_table, add_liability, query_by_col, update_by_col
 from OpenBookkeeping.gloab_info import prop_type_items, liability_type_items, liability_currency_types
 
 
@@ -79,22 +79,24 @@ class NewProp(NewItem):
         input_layout.addLayout(self.buts_layout, idx + 3, 2)
         self.setLayout(input_layout)
 
-    def check_valid(self) -> str:
+    def get_data(self):
         prop_name = self.all_input['name'].text()
 
         prop_type = self.all_input['type'].currentIndex()
         start_date = self.all_input['start_date'].date().toString("yyyy-MM-dd")
         currency = self.all_input['currency'].value()
         comment = self.all_input['comment'].toPlainText()
-        exist_names = query_table(self.database, ['name'], 'prop')
-        names = [item[0] for item in exist_names]
-        names = set(names)
         logger.debug(f'{prop_name=}, {prop_type=}, {currency=}, {start_date=} \
-{comment=}, {self.database}')
+        {comment=}, {self.database}')
+        return prop_name, prop_type, start_date, currency, comment
 
+    def check_valid(self) -> str:
+        prop_name, prop_type, start_date, currency, comment = self.get_data()
         if not prop_name:
             return '名称不能为空'
-        if prop_name in names:
+
+        exist_name = query_by_col(self.database, 'prop', 'name', prop_name)
+        if len(exist_name) >= 1:
             return '资产名已存在'
 
         add_prop(self.database, prop_name, prop_type,
@@ -106,6 +108,10 @@ class NewProp(NewItem):
 
 
 class EditProp(NewProp):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.all_input['name'].setEnabled(False)
+
     def set_values(self, prop_name: str,
                    prop_type: int, start_date: str,
                    currency: int, comment: str, *args, **kwargs):
@@ -116,7 +122,10 @@ class EditProp(NewProp):
         self.all_input['comment'].setPlainText(comment)
 
     def check_valid(self) -> str:
-        logger.debug(f'{self.all_input=}')
+        prop_name, prop_type, start_date, currency, comment = self.get_data()
+        values = {'type': prop_type, 'start_date': start_date,
+                  'currency': currency, 'comment': comment}
+        update_by_col(self.database, 'prop', 'name', prop_name, values)
 
 
 class NewLiability(NewItem):
