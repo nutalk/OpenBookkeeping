@@ -30,6 +30,9 @@ class MyWindow(QMainWindow):
         self.propMenu.addAction(self.propAction)
         self.propMenu.addAction(self.liabilityAction)
         self.menuBar().addMenu(self.propMenu)
+
+        self.check_action = QMenu('对账')
+        self.menuBar().addMenu(self.check_action)
         self.tables = MainTables()
         self.setCentralWidget(self.tables)
 
@@ -48,9 +51,11 @@ class MyWindow(QMainWindow):
         if self.database is None:
             self.propAction.setDisabled(True)
             self.liabilityAction.setDisabled(True)
+            self.check_action.setDisabled(True)
         else:
             self.propAction.setDisabled(False)
             self.liabilityAction.setDisabled(False)
+            self.check_action.setDisabled(False)
             if self.new_prop_widget is None:
                 self.new_prop_widget = NewProp(self.database, self)
             if self.new_liability_widget is None:
