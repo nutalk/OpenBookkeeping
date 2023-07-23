@@ -9,6 +9,7 @@ from OpenBookkeeping.gloab_info import query_liability_table, query_prop_table, 
     prop_type_items, liability_type_items, liability_currency_types, \
     prop_type_ids, liability_type_ids, liability_currency_ids
 from OpenBookkeeping.new_prop import EditProp, EditLiability
+from OpenBookkeeping.new_detail import NewDetail
 
 
 class TableBase(QWidget):
@@ -32,9 +33,6 @@ class TableBase(QWidget):
         self._table.addAction(self.add_action)
         # self._table.addAction(self.delete_action)
 
-    def add_detail(self):
-        ...
-
     def update_content(self, database: str, query_str: str):
         self.database = database
         props = query_by_str(database, query_str)
@@ -48,6 +46,9 @@ class TableBase(QWidget):
         return name_item.text()
 
     def on_delete(self) -> str:
+        return self.on_edit()
+
+    def add_detail(self):
         return self.on_edit()
 
 
@@ -84,6 +85,11 @@ class PropTable(TableBase):
         self.edit_form = EditProp(self.database, self)
         self.edit_form.set_values(rec[1],  rec[2], rec[3], rec[4], rec[5])
         self.edit_form.show()
+
+    def add_detail(self):
+        prop_name = super().on_edit()
+        self.add_detail_form = NewDetail(self.database, self, 'prop_details', prop_name)
+        self.add_detail_form.show()
 
 
 class LiabilityTable(TableBase):

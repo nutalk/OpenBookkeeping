@@ -56,6 +56,21 @@ def add_prop(database: str,
         db.conn.commit()
 
 
+def add_detail(database: str,
+               target_id: int,
+               occur_date: str,
+               amount: int,
+               notes: str,
+               table_name: str):
+    with Connect(database) as db:
+        sql_str = f"INSERT INTO  {table_name}" \
+                  "(target_id, occur_date, amount, notes)" \
+                  "VALUES (?, ?, ?, ?)"
+        data = (target_id, occur_date, amount, notes)
+        db.cur.execute(sql_str, data)
+        db.conn.commit()
+
+
 def query_table(database: str, cols: list, table_name: str):
     cols_str = ', '.join(cols)
     with Connect(database) as db:
@@ -69,7 +84,7 @@ def query_table(database: str, cols: list, table_name: str):
 def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
     with Connect(database) as db:
         sql_str = f"select * from {table_name} where {col_name} = ?"
-        logger.debug(sql_str)
+        logger.debug(f'{sql_str=}, {col_value=}')
         db.cur.execute(sql_str, (col_value,),)
         records = db.cur.fetchall()
     return records
@@ -94,7 +109,6 @@ def query_by_str(database: str, sql_str: str):
         db.cur.execute(sql_str,)
         records = db.cur.fetchall()
     return records
-
 
 
 def init_db(data_base: str):
