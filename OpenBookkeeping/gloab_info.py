@@ -26,6 +26,11 @@ from liability LEFT outer join liability_details
 on liability.id = liability_details.target_id group by name;
 """
 
+query_detail_str="""
+select 
+"""
+
+
 create_prop_table = """
 CREATE TABLE "prop" (
     "id"	INTEGER NOT NULL,
@@ -74,3 +79,6 @@ CREATE TABLE "liability_details" (
 );
 """
 
+query_detail_str="""
+
+"""

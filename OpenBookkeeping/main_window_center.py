@@ -13,7 +13,7 @@ from OpenBookkeeping.new_detail import NewDetail
 
 
 class TableBase(QWidget):
-    row_select_signal = Signal(str, str)
+    row_select_signal = Signal(str, str, str)
 
     def __init__(self, label_str, table_name: str):
         super().__init__()
@@ -39,8 +39,8 @@ class TableBase(QWidget):
         self._table.cellClicked.connect(self.select_line_emit)
 
     def select_line_emit(self):
-        name_item = self.on_edit()
-        self.row_select_signal.emit(self.table_name, name_item)
+        name_item = self.get_row_name()
+        self.row_select_signal.emit(self.database, self.table_name, name_item)
 
     def update_content(self, database: str, query_str: str):
         self.database = database
@@ -142,6 +142,22 @@ class LiabilityTable(TableBase):
         self.add_detail_form.show()
 
 
+class DetailTable(TableBase):
+    def __init__(self):
+        super().__init__('明细', 'prop_details')
+        self._table.setRowCount(5)
+        self._table.setColumnCount(5)
+        self._table.setHorizontalHeaderLabels(['账户名称', '日期', '金额', '余额', '备注'])
+        self.layout_main.addWidget(self._table)
+
+    def update_content(self, database: str, query_str: str):
+        recs = super().update_content(database, query_str)
+        for row_id, liability in enumerate(recs):
+            for col_id, v in enumerate(liability):
+                _item = QTableWidgetItem(str(v))
+                self._table.setItem(row_id, col_id, _item)
+
+
 class MainTables(QWidget):
     def __init__(self):
         super().__init__()
@@ -162,10 +178,7 @@ class MainTables(QWidget):
         right_btns_layout.addWidget(edit_detail_btn)
         right_btns_layout.addWidget(del_detail_btn)
 
-        self.detail_table = QTableWidget()
-        self.detail_table.setRowCount(10)
-        self.detail_table.setColumnCount(5)
-        self.detail_table.setHorizontalHeaderLabels(['账户名称', '日期', '金额', '余额', '备注'])
+        self.detail_table = DetailTable()
 
         right_layout.addWidget(self.detail_table)
         right_layout.addLayout(right_btns_layout)
@@ -176,11 +189,18 @@ class MainTables(QWidget):
         self.setLayout(main_layout)
 
         self.prop_table.row_select_signal.connect(self.update_detail)
+        self.liability_table.row_select_signal.connect(self.update_detail)
 
     def update_content(self, database:str):
         self.prop_table.update_content(database, query_prop_table)
         self.liability_table.update_content(database, query_liability_table)
 
-    def update_detail(self, *args, **kwargs):
-        logger.debug(args)
+    def update_detail(self, database, table, _name):
+        logger.debug(f'{database=}, {table=}, {_name=}')
+        rec = query_by_col(database, table, 'name', _name)
+        assert len(rec) == 1, f'rec invalid, {rec=}'
+        _id = rec[0][0]
+        query_detail_sql = f"select * from {table}_details where id = {_id}"
+        self.detail_table.update_content(database, query_detail_sql)
+
 
