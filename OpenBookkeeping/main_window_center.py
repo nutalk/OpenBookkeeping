@@ -147,15 +147,24 @@ class DetailTable(TableBase):
         super().__init__('明细', 'prop_details')
         self._table.setRowCount(5)
         self._table.setColumnCount(5)
-        self._table.setHorizontalHeaderLabels(['账户名称', '日期', '金额', '余额', '备注'])
+        self._table.setHorizontalHeaderLabels(['账户名称', '日期', '金额', '备注', '余额'])
         self.layout_main.addWidget(self._table)
 
-    def update_content(self, database: str, query_str: str):
+    def update_content(self, database: str, query_str: str, up_name: str):
         recs = super().update_content(database, query_str)
+        amount = 0
         for row_id, liability in enumerate(recs):
+            _item = QTableWidgetItem(up_name)
+            self._table.setItem(row_id, 0, _item)
             for col_id, v in enumerate(liability):
+                if col_id <= 1:
+                    continue
+                elif col_id == 3:
+                    amount += v
                 _item = QTableWidgetItem(str(v))
-                self._table.setItem(row_id, col_id, _item)
+                self._table.setItem(row_id, col_id - 1, _item)
+            _item = QTableWidgetItem(str(amount))
+            self._table.setItem(row_id, 4, _item)
 
 
 class MainTables(QWidget):
@@ -200,7 +209,7 @@ class MainTables(QWidget):
         rec = query_by_col(database, table, 'name', _name)
         assert len(rec) == 1, f'rec invalid, {rec=}'
         _id = rec[0][0]
-        query_detail_sql = f"select * from {table}_details where id = {_id}"
-        self.detail_table.update_content(database, query_detail_sql)
+        query_detail_sql = f"select * from {table}_details where target_id = {_id}"
+        self.detail_table.update_content(database, query_detail_sql, _name)
 
 
