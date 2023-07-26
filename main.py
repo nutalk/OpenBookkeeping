@@ -70,14 +70,14 @@ class MyWindow(QMainWindow):
 
     def new_db_fuc(self):
         file_dialog = QFileDialog(self)
-        file_use = file_dialog.getSaveFileName(self, "新建文件", filter=".bp (*.bk)")
+        file_use = file_dialog.getSaveFileName(self, "新建文件", filter=".bk (*.bk)")
         init_db(file_use[0])
         self.database = file_use[0]
         self.update_status()
 
     def open_db_fuc(self):
         file_dialog = QFileDialog(self)
-        file_use = file_dialog.getOpenFileName(self, "选择文件", filter=".bp (*.bk)")
+        file_use = file_dialog.getOpenFileName(self, "选择文件", filter=".bk (*.bk)")
         file_path = file_use[0]
         self.database = file_path
         self.update_status()

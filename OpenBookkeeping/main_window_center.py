@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from loguru import logger
 
 from OpenBookkeeping.sql_db import query_by_str, query_by_col
@@ -13,8 +13,11 @@ from OpenBookkeeping.new_detail import NewDetail
 
 
 class TableBase(QWidget):
-    def __init__(self, label_str):
+    row_select_signal = Signal(str, str)
+
+    def __init__(self, label_str, table_name: str):
         super().__init__()
+        self.table_name = table_name
         self.edit_form = None
         self.database = None
         label = QLabel(label_str)
@@ -33,28 +36,44 @@ class TableBase(QWidget):
         self._table.addAction(self.add_action)
         # self._table.addAction(self.delete_action)
 
+        self._table.cellClicked.connect(self.select_line_emit)
+
+    def select_line_emit(self):
+        name_item = self.on_edit()
+        self.row_select_signal.emit(self.table_name, name_item)
+
     def update_content(self, database: str, query_str: str):
         self.database = database
         props = query_by_str(database, query_str)
         self._table.setRowCount(len(props))
         return props
 
-    def on_edit(self) -> str:
+    def get_row_name(self) -> str:
         i = self._table.currentRow()
         name_item = self._table.item(i, 0)
         logger.debug(name_item.text())
         return name_item.text()
 
+    def on_edit(self) -> tuple:
+        row_name = self.get_row_name()
+        rec = query_by_col(self.database, self.table_name, 'name', row_name)
+        if len(rec) != 1:
+            logger.error(f'{rec=}')
+            raise ValueError('找不到匹配的数据')
+        rec = rec[0]
+        logger.debug(rec)
+        return rec
+
     def on_delete(self) -> str:
-        return self.on_edit()
+        return self.get_row_name()
 
     def add_detail(self):
-        return self.on_edit()
+        return self.get_row_name()
 
 
 class PropTable(TableBase):
     def __init__(self):
-        super().__init__('资产汇总')
+        super().__init__('资产汇总', 'prop')
         self._table.setRowCount(5)
         self._table.setColumnCount(5)
         self._table.setHorizontalHeaderLabels(['名称', '类别', '创建日期', '现金流', '余额'])
@@ -74,27 +93,21 @@ class PropTable(TableBase):
                 self._table.setItem(row_id, col_id, _item)
 
     def on_edit(self):
-        prop_name = super().on_edit()
-        rec = query_by_col(self.database, 'prop',  'name', prop_name)
-        if len(rec) != 1:
-            logger.error(f'{rec=}')
-            raise ValueError('找不到匹配的数据')
-        rec = rec[0]
-        logger.debug(rec)
+        rec = super().on_edit()
 
         self.edit_form = EditProp(self.database, self)
         self.edit_form.set_values(rec[1],  rec[2], rec[3], rec[4], rec[5])
         self.edit_form.show()
 
     def add_detail(self):
-        prop_name = super().on_edit()
+        prop_name = self.get_row_name()
         self.add_detail_form = NewDetail(self.database, self, 'prop_details', prop_name, 'prop')
         self.add_detail_form.show()
 
 
 class LiabilityTable(TableBase):
     def __init__(self):
-        super().__init__('负债汇总')
+        super().__init__('负债汇总', 'liability')
         self._table.setRowCount(5)
         self._table.setColumnCount(7)
         # name, type, currency_type, start_date, term_month, rate, sum(amount) 
@@ -117,20 +130,14 @@ class LiabilityTable(TableBase):
                 self._table.setItem(row_id, col_id, _item)
 
     def on_edit(self):
-        _name = super().on_edit()
-        rec = query_by_col(self.database, 'liability',  'name', _name)
-        if len(rec) != 1:
-            logger.error(f'{rec=}')
-            raise ValueError('找不到匹配的数据')
-        rec = rec[0]
-        logger.debug(rec)
+        rec = super().on_edit()
 
         self.edit_form = EditLiability(self.database, self)
         self.edit_form.set_values(rec[1],  rec[2], rec[3], rec[4], rec[5], rec[6], rec[7])
         self.edit_form.show()
 
     def add_detail(self):
-        prop_name = super().on_edit()
+        prop_name = self.get_row_name()
         self.add_detail_form = NewDetail(self.database, self, 'liability_details', prop_name, 'liability')
         self.add_detail_form.show()
 
@@ -168,7 +175,12 @@ class MainTables(QWidget):
 
         self.setLayout(main_layout)
 
+        self.prop_table.row_select_signal.connect(self.update_detail)
+
     def update_content(self, database:str):
         self.prop_table.update_content(database, query_prop_table)
         self.liability_table.update_content(database, query_liability_table)
+
+    def update_detail(self, *args, **kwargs):
+        logger.debug(args)
 
