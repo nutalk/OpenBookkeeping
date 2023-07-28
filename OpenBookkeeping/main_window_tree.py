@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QTreeView, QWidget, QHBoxLayout, QApplication
-from PySide6.QtGui import QStandardItemModel, QStandardItem
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 from collections import defaultdict
 
 
@@ -21,8 +21,12 @@ class TreeView(QWidget):
         root = self.model.invisibleRootItem()
         for type_id, rec_dict in data.items():
             child_type = QStandardItem(str(type_id))
+            color = QColor('lightGray')
+            child_type.setBackground(color)
             child_name = QStandardItem('')
+            child_name.setBackground(color)
             child_amount = QStandardItem(str(rec_dict['amount']))
+            child_amount.setBackground(color)
             root.appendRow([child_type, child_name, child_amount])
             for rec in rec_dict['recs']:
                 child_type.appendRow([
