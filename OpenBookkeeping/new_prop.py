@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
-    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog
+    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog, QMessageBox
 from PySide6.QtCore import QDate, Signal
 from loguru import logger
 from functools import wraps
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
-from OpenBookkeeping.sql_db import query_table, add_prop, query_by_col, update_by_col
+from OpenBookkeeping.sql_db import (query_table, add_prop, query_by_col,
+                                    update_by_col, del_by_col)
 
 
 class PropName(QDialog):
@@ -53,6 +54,39 @@ class PropName(QDialog):
         self.editer.setText('')
         self.close()
 
+
+class DeleteConfirm(QDialog):
+    conf_sig = Signal(str)
+
+    def __init__(self, prop_name: str):
+        super().__init__()
+        self.setWindowTitle('删除确认')
+        layout = QVBoxLayout()
+        self.prop_name = prop_name
+
+        self.warring_label = QLabel(f'确认删除账户：{prop_name}？')
+        layout.addWidget(self.warring_label)
+
+        right_btn_layout = QHBoxLayout()
+        spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        right_btn_layout.addItem(spacer)
+        self.conf_btn = QPushButton('确认')
+        self.cancel_btn = QPushButton('取消')
+        right_btn_layout.addWidget(self.conf_btn)
+        right_btn_layout.addWidget(self.cancel_btn)
+
+        layout.addLayout(right_btn_layout)
+        self.setLayout(layout)
+
+        self.conf_btn.clicked.connect(self.conf_emit)
+        self.cancel_btn.clicked.connect(self.cancel)
+
+    def conf_emit(self):
+        self.conf_sig.emit(self.prop_name)
+        self.close()
+
+    def cancel(self):
+        self.close()
 
 class PropInfo(QWidget):
     def __init__(self, database: str):
@@ -163,6 +197,7 @@ class NewProp(QWidget):
         self.new_btn = QPushButton('新增')
         self.new_btn.clicked.connect(self.new_prop_form)
         self.del_btn = QPushButton('删除')
+        self.del_btn.clicked.connect(self.del_prop)
         button_layout.addWidget(self.new_btn)
         button_layout.addWidget(self.del_btn)
         left_layout.addLayout(button_layout)
@@ -186,6 +221,7 @@ class NewProp(QWidget):
 
     def update_prop_info(self, current, pre):
         prop_name = current.data()
+        self.current_name = prop_name
         info = query_by_col(self.database, 'prop', 'name', prop_name)
         if len(info) == 1:
             self.prop_edit_widget.update_content(info[0])
@@ -208,6 +244,29 @@ class NewProp(QWidget):
     @update_after
     def new_prop_to_sql(self, prop_name: str):
         add_prop(self.database, prop_name)
+
+    @update_after
+    def del_prop(self):
+        if self.current_name is None:
+            logger.error(f'not selected')
+        else:
+            self.alt = DeleteConfirm(self.current_name)
+            self.alt.show()
+            self.alt.conf_sig.connect(self.del_prop_sql)
+
+    @update_after
+    def del_prop_sql(self, prop_name):
+        logger.debug(f'del {prop_name}')
+        info = query_by_col(self.database, 'prop', 'name', prop_name)
+        if len(info) == 1:
+            rec = info[0]
+            prop_id = rec[0]
+            del_by_col(self.database, 'prop_details', 'target_id', prop_id)
+            del_by_col(self.database, 'prop', 'name', prop_name)
+        else:
+            logger.error(f'length of prop invalid {info}')
+
+
 
 
 

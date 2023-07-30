@@ -68,6 +68,14 @@ def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
     return records
 
 
+def del_by_col(database:str, table_name: str, col_name: str, col_value: str):
+    with Connect(database) as db:
+        sql_str = f'DELETE FROM {table_name} WHERE {col_name} = ?'
+        logger.debug(f'{sql_str=}, {col_value=}')
+        db.cur.execute(sql_str, (col_value,),)
+        db.conn.commit()
+
+
 def update_by_col(database: str, table_name: str, col_name: str, col_value: str, values: dict):
     with Connect(database) as db:
         set_strs = [f'{k} = ?' for k in values.keys()]
