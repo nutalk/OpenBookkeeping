@@ -7,7 +7,7 @@ from functools import wraps
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
-from OpenBookkeeping.sql_db import query_table, add_prop, query_by_col
+from OpenBookkeeping.sql_db import query_table, add_prop, query_by_col, update_by_col
 
 
 class PropName(QDialog):
@@ -55,16 +55,16 @@ class PropName(QDialog):
 
 
 class PropInfo(QWidget):
-    def __init__(self):
+    def __init__(self, database: str):
         super().__init__()
+        self.database = database
         layout = QVBoxLayout()
         right_btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
         right_btn_layout.addItem(spacer)
-        self.conf_btn = QPushButton('确认')
-        self.cancel_btn = QPushButton('取消')
+        self.conf_btn = QPushButton('保存')
         right_btn_layout.addWidget(self.conf_btn)
-        right_btn_layout.addWidget(self.cancel_btn)
+        self.conf_btn.clicked.connect(self.commit_info)
 
         layout.addWidget(QLabel('账户详情'))
         input_form_layout = self.get_input_form()
@@ -129,6 +129,19 @@ class PropInfo(QWidget):
         self.all_input['comment'].setText(info[8])
         self.all_input['comment'].setEnabled(True)
 
+    def commit_info(self):
+        val = dict(
+            type=self.all_input['type'].currentIndex(),
+            start_date=self.all_input['start_date'].date().toString("yyyy-MM-dd"),
+            term_month=self.all_input['term_month'].value(),
+            rate=self.all_input['rate'].value(),
+            currency=self.all_input['currency'].value(),
+            ctype=self.all_input['currency_type'].currentIndex(),
+            comment=self.all_input['comment'].toPlainText()
+        )
+        update_by_col(self.database, 'prop', 'name', self.all_input['name'].text(), val)
+
+
 class NewProp(QWidget):
     def __init__(self, database: str):
         super().__init__()
@@ -156,7 +169,7 @@ class NewProp(QWidget):
 
         main_layout.addLayout(left_layout)
 
-        self.prop_edit_widget = PropInfo()
+        self.prop_edit_widget = PropInfo(self.database)
         main_layout.addWidget(self.prop_edit_widget)
 
         self.setLayout(main_layout)
