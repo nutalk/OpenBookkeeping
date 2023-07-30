@@ -3,9 +3,11 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayou
 from PySide6.QtGui import QAction
 from functools import wraps
 from pathlib import Path
+from loguru import logger
 
 from OpenBookkeeping.main_window_center import MainLayouts
 from OpenBookkeeping.sql_db import init_db
+from OpenBookkeeping.new_prop import NewProp
 
 
 class MyWindow(QMainWindow):
@@ -22,8 +24,8 @@ class MyWindow(QMainWindow):
         self.fileMenu.addAction(self.openFile)
         self.menuBar().addMenu(self.fileMenu)
 
-        self.propMenu = QMenu('账户管理')
-        self.menuBar().addMenu(self.propMenu)
+        self.propMenu = QAction('账户管理')
+        self.menuBar().addAction(self.propMenu)
 
         self.check_action = QMenu('对账')
         self.menuBar().addMenu(self.check_action)
@@ -69,6 +71,7 @@ class MyWindow(QMainWindow):
     def band(self):
         self.openFile.triggered.connect(self.open_db_fuc)
         self.new_file_action.triggered.connect(self.new_db_fuc)
+        self.propMenu.triggered.connect(self.edit_prop)
 
     @update_after
     def new_db_fuc(self):
@@ -83,6 +86,12 @@ class MyWindow(QMainWindow):
         file_use = file_dialog.getOpenFileName(self, "选择文件", filter=".bk (*.bk)")
         file_path = file_use[0]
         self.database = file_path
+
+    @update_after
+    def edit_prop(self):
+        logger.debug(f'edit prop')
+        self.prop_window = NewProp(self.database)
+        self.prop_window.show()
 
 
 if __name__ == "__main__":
