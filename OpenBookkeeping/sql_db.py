@@ -23,35 +23,13 @@ class Connect:
         self.conn.close()
 
 
-def add_liability(database: str,
-                  name: str, 
-                  types: int, 
-                  currency_type: int,
-                  rate: float,
-                  start_date: str, 
-                  term_month: int,
-                  comment: str ):
-    with Connect(database) as db:
-        sql_str = "INSERT INTO liability " \
-                  "(name, type, currency_type, rate, start_date, term_month, comment)" \
-                  "VALUES (?, ?, ?, ?, ?, ?, ?)"
-        data = (name, types, currency_type, rate, start_date,term_month, comment)
-        db.cur.execute(sql_str, data)
-        db.conn.commit()
-
-
 def add_prop(database: str,
-             name: str,
-             types: int,
-             currency: int,
-             start_date: str,
-             comment: str):
-
+             name: str):
     with Connect(database) as db:
         sql_str = "INSERT INTO prop " \
-                  "(name, type, start_date, currency, comment)" \
-                  "VALUES (?, ?, ?, ?, ?)"
-        data = (name, types, start_date, currency, comment)
+                  "(name, type, start_date, term_month, rate, currency, ctype, comment)" \
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        data = (name, 0, '2023-06-01', 12, 0, 0, 0, '')
         db.cur.execute(sql_str, data)
         db.conn.commit()
 
