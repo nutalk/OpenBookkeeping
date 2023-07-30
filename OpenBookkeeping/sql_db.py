@@ -1,8 +1,8 @@
 import sqlite3
-import time
 from loguru import logger
-from OpenBookkeeping.gloab_info import create_liability_detail_table, create_prop_detail_table, \
-    create_prop_table, create_liability_table
+from OpenBookkeeping.gloab_info import create_prop_detail_table, \
+    create_prop_table
+
 
 def init_connect(database: str):
     conn = sqlite3.connect(database)
@@ -115,10 +115,7 @@ def init_db(data_base: str):
     with Connect(database=data_base) as db:
         db.cur.execute(create_prop_table)
         db.cur.execute(create_prop_detail_table)
-        db.cur.execute(create_liability_table)
-        db.cur.execute(create_liability_detail_table)
         db.conn.commit()
-
 
 
 if __name__ == "__main__":

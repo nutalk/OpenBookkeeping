@@ -5,7 +5,6 @@ from PySide6.QtCore import QDate
 from loguru import logger
 
 from OpenBookkeeping.sql_db import add_prop, query_table, add_liability, query_by_col, update_by_col
-from OpenBookkeeping.gloab_info import prop_type_items, liability_type_items, liability_currency_types
 
 
 class NewItem(QWidget):
