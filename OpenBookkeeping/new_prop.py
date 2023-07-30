@@ -7,18 +7,22 @@ from functools import wraps
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
-from OpenBookkeeping.sql_db import query_table, add_prop
+from OpenBookkeeping.sql_db import query_table, add_prop, query_by_col
 
 
 class PropName(QDialog):
     conf_sig = Signal(str)
 
-    def __init__(self):
+    def __init__(self, exist_props: list):
         super(PropName, self).__init__()
         self.setWindowTitle('账户名称')
         layout = QVBoxLayout()
         self.editer = QLineEdit()
         layout.addWidget(self.editer)
+
+        self.exist_props = exist_props
+        self.warring_label = QLabel('')
+        layout.addWidget(self.warring_label)
 
         right_btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -37,8 +41,13 @@ class PropName(QDialog):
     def conf_emit(self):
         new_name = self.editer.text()
         logger.debug(f'{new_name=}')
-        self.conf_sig.emit(new_name)
-        self.close()
+        if new_name in self.exist_props:
+            self.warring_label.setText(f'{new_name}已存在')
+        elif new_name == '':
+            self.warring_label.setText(f'名称不能为空，不能重复')
+        else:
+            self.conf_sig.emit(new_name)
+            self.close()
 
     def cancel(self):
         self.editer.setText('')
@@ -48,6 +57,8 @@ class PropName(QDialog):
 class NewProp(QWidget):
     def __init__(self, database: str):
         super().__init__()
+        self.exist_props = []
+        self.setWindowTitle('管理账户')
         self.database = database
         self.current_name = None
         main_layout = QHBoxLayout()
@@ -57,6 +68,7 @@ class NewProp(QWidget):
         self.list = QListView(self)
         self.list_model = QStandardItemModel()
         self.list.setModel(self.list_model)
+        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
         left_layout.addWidget(self.list)
 
         button_layout = QHBoxLayout()
@@ -130,11 +142,18 @@ class NewProp(QWidget):
 
     def update_content(self):
         self.list_model.clear()
-        exist_props = query_table(self.database, ['name'], 'prop')
-        props = [item[0] for item in exist_props]
-        for prop in props:
+        props = query_table(self.database, ['name'], 'prop')
+        self.exist_props = [item[0] for item in props]
+        for prop in self.exist_props:
             item = QStandardItem(prop)
             self.list_model.appendRow(item)
+
+    def update_prop_info(self, current, pre):
+        prop_name = current.data()
+        info = query_by_col(self.database, 'prop', 'name', prop_name)
+        assert len(info) == 1, f'length of prop invalid {info}'
+        logger.debug(current.data())
+        ...
 
     def update_after(func):
         @wraps(func)
@@ -145,14 +164,14 @@ class NewProp(QWidget):
         return wrapper
 
     def new_prop_form(self):
-        self.dlog = PropName()
+        self.dlog = PropName(self.exist_props)
         self.dlog.conf_sig.connect(self.new_prop_to_sql)
         self.dlog.show()
 
     @update_after
     def new_prop_to_sql(self, prop_name: str):
-        if prop_name != '':
-            add_prop(self.database, prop_name)
+        add_prop(self.database, prop_name)
+
 
 
 
