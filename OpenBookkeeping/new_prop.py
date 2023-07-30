@@ -54,34 +54,10 @@ class PropName(QDialog):
         self.close()
 
 
-class NewProp(QWidget):
-    def __init__(self, database: str):
+class PropInfo(QWidget):
+    def __init__(self):
         super().__init__()
-        self.exist_props = []
-        self.setWindowTitle('管理账户')
-        self.database = database
-        self.current_name = None
-        main_layout = QHBoxLayout()
-        left_layout = QVBoxLayout()
-        left_layout.addWidget(QLabel('账户列表'))
-
-        self.list = QListView(self)
-        self.list_model = QStandardItemModel()
-        self.list.setModel(self.list_model)
-        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
-        left_layout.addWidget(self.list)
-
-        button_layout = QHBoxLayout()
-        self.new_btn = QPushButton('新增')
-        self.new_btn.clicked.connect(self.new_prop_form)
-        self.del_btn = QPushButton('删除')
-        button_layout.addWidget(self.new_btn)
-        button_layout.addWidget(self.del_btn)
-        left_layout.addLayout(button_layout)
-
-        main_layout.addLayout(left_layout)
-
-        right_layout = QVBoxLayout()
+        layout = QVBoxLayout()
         right_btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
         right_btn_layout.addItem(spacer)
@@ -90,15 +66,11 @@ class NewProp(QWidget):
         right_btn_layout.addWidget(self.conf_btn)
         right_btn_layout.addWidget(self.cancel_btn)
 
-        right_layout.addWidget(QLabel('账户详情'))
+        layout.addWidget(QLabel('账户详情'))
         input_form_layout = self.get_input_form()
-        right_layout.addLayout(input_form_layout)
-        right_layout.addLayout(right_btn_layout)
-        main_layout.addLayout(right_layout)
-
-        self.setLayout(main_layout)
-        self.update_content()
-        self.resize(500, 400)
+        layout.addLayout(input_form_layout)
+        layout.addLayout(right_btn_layout)
+        self.setLayout(layout)
 
     def get_input_form(self):
         input_form_layout = QGridLayout()
@@ -140,6 +112,57 @@ class NewProp(QWidget):
             input_form_layout.addWidget(_input, idx + 1, 2)
         return input_form_layout
 
+    def update_content(self, info: tuple):
+        self.all_input['name'].setText(info[1])
+        self.all_input['type'].setCurrentIndex(info[2])
+        self.all_input['type'].setEnabled(True)
+        self.all_input['start_date'].setDate(QDate.fromString(info[3], 'yyyy-MM-dd'))
+        self.all_input['start_date'].setEnabled(True)
+        self.all_input['term_month'].setValue(info[4])
+        self.all_input['term_month'].setEnabled(True)
+        self.all_input['rate'].setValue(info[5])
+        self.all_input['rate'].setEnabled(True)
+        self.all_input['currency'].setValue(info[6])
+        self.all_input['currency'].setEnabled(True)
+        self.all_input['currency_type'].setCurrentIndex(info[7])
+        self.all_input['currency_type'].setEnabled(True)
+        self.all_input['comment'].setText(info[8])
+        self.all_input['comment'].setEnabled(True)
+
+class NewProp(QWidget):
+    def __init__(self, database: str):
+        super().__init__()
+        self.exist_props = []
+        self.setWindowTitle('管理账户')
+        self.database = database
+        self.current_name = None
+        main_layout = QHBoxLayout()
+        left_layout = QVBoxLayout()
+        left_layout.addWidget(QLabel('账户列表'))
+
+        self.list = QListView(self)
+        self.list_model = QStandardItemModel()
+        self.list.setModel(self.list_model)
+        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
+        left_layout.addWidget(self.list)
+
+        button_layout = QHBoxLayout()
+        self.new_btn = QPushButton('新增')
+        self.new_btn.clicked.connect(self.new_prop_form)
+        self.del_btn = QPushButton('删除')
+        button_layout.addWidget(self.new_btn)
+        button_layout.addWidget(self.del_btn)
+        left_layout.addLayout(button_layout)
+
+        main_layout.addLayout(left_layout)
+
+        self.prop_edit_widget = PropInfo()
+        main_layout.addWidget(self.prop_edit_widget)
+
+        self.setLayout(main_layout)
+        self.update_content()
+        self.resize(500, 400)
+
     def update_content(self):
         self.list_model.clear()
         props = query_table(self.database, ['name'], 'prop')
@@ -151,9 +174,10 @@ class NewProp(QWidget):
     def update_prop_info(self, current, pre):
         prop_name = current.data()
         info = query_by_col(self.database, 'prop', 'name', prop_name)
-        assert len(info) == 1, f'length of prop invalid {info}'
-        logger.debug(current.data())
-        ...
+        if len(info) == 1:
+            self.prop_edit_widget.update_content(info[0])
+        else:
+            logger.error(f'length of prop invalid {info}')
 
     def update_after(func):
         @wraps(func)
