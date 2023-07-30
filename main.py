@@ -31,8 +31,8 @@ class MyWindow(QMainWindow):
         self.pred_action = QMenu('预测')
         self.menuBar().addMenu(self.pred_action)
 
-        self.tables = MainLayouts()
-        self.setCentralWidget(self.tables)
+        self.center_widgets = MainLayouts()
+        self.setCentralWidget(self.center_widgets)
 
         self.new_prop_widget = None
         self.new_liability_widget = None
@@ -50,6 +50,7 @@ class MyWindow(QMainWindow):
             self.propMenu.setEnabled(True)
             self.check_action.setEnabled(True)
             self.pred_action.setEnabled(True)
+            self.center_widgets.update_content()
         else:
             self.propMenu.setEnabled(False)
             self.check_action.setEnabled(False)
