@@ -30,22 +30,32 @@ class DetailTableModel(QAbstractTableModel):
         return len(self._data[0])
 
 
-class DetailPage(QWidget):
+class DetailTable(QWidget):
     def __init__(self):
         super().__init__()
-        self.database = None
-        layout = QHBoxLayout(self)
-        self.setLayout(layout)
-        self.prop_list = PropList(self.database)
-        layout.addWidget(self.prop_list)
-
-        right_layout = QVBoxLayout(self)
+        right_layout = QVBoxLayout()
+        right_layout.addWidget(QLabel('账户变化明细'))
         self.detail_table = QTableView(self)
         data = [(1, 'haha'), (2, 'baba')]
         self.detail_model = DetailTableModel(data)
         self.detail_table.setModel(self.detail_model)
         right_layout.addWidget(self.detail_table)
-        layout.addLayout(right_layout)
+        self.setLayout(right_layout)
+
+
+class DetailPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.database = None
+        layout = QHBoxLayout()
+        self.prop_list = PropList(self.database)
+        self.prop_list.setMaximumWidth(200)
+        layout.addWidget(self.prop_list)
+
+        self.detail = DetailTable()
+        layout.addWidget(self.detail)
+
+        self.setLayout(layout)
 
     def update_content(self, database: str):
         self.database = database
