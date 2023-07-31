@@ -60,6 +60,14 @@ def query_table(database: str, cols: list, table_name: str):
 
 
 def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
+    """
+    按一列作为条件，查询数据库中的数据
+    :param database: 数据库路径
+    :param table_name: 表名称
+    :param col_name: 条件列名称
+    :param col_value: 条件列的值
+    :return: 满足条件的数据条目
+    """
     with Connect(database) as db:
         sql_str = f"select * from {table_name} where {col_name} = ?"
         logger.debug(f'{sql_str=}, {col_value=}')
