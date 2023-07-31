@@ -48,8 +48,11 @@ class DetailTable(QWidget):
         right_layout.addWidget(self.detail_table)
         self.setLayout(right_layout)
 
-    def update_content(self, data):
+    def update_content(self, data: list):
+        logger.debug(f'{data=}')
         self.detail_model.update_content(data)
+        # 通知viewer
+        self.detail_model.layoutChanged.emit()
 
 
 class DetailPage(QWidget):
