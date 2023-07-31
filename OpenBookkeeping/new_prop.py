@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
-    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog, QMessageBox
+    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog, QMessageBox, \
+    QGroupBox
 from PySide6.QtCore import QDate, Signal
 from loguru import logger
 from functools import wraps
@@ -87,6 +88,7 @@ class DeleteConfirm(QDialog):
 
     def cancel(self):
         self.close()
+
 
 class PropInfo(QWidget):
     def __init__(self, database: str):
@@ -180,11 +182,16 @@ class NewProp(QWidget):
     def __init__(self, database: str):
         super().__init__()
         self.exist_props = []
+        self.left_groupbox = QGroupBox(self)
+        self.right_groupbox = QGroupBox(self)
         self.setWindowTitle('管理账户')
         self.database = database
         self.current_name = None
         main_layout = QHBoxLayout()
+
         left_layout = QVBoxLayout()
+        self.left_groupbox.setLayout(left_layout)
+        self.left_groupbox.setMaximumWidth(200)
         left_layout.addWidget(QLabel('账户列表'))
 
         self.list = QListView(self)
@@ -202,10 +209,12 @@ class NewProp(QWidget):
         button_layout.addWidget(self.del_btn)
         left_layout.addLayout(button_layout)
 
-        main_layout.addLayout(left_layout)
-
+        main_layout.addWidget(self.left_groupbox)
+        right_layout = QHBoxLayout()
         self.prop_edit_widget = PropInfo(self.database)
-        main_layout.addWidget(self.prop_edit_widget)
+        right_layout.addWidget(self.prop_edit_widget)
+        self.right_groupbox.setLayout(right_layout)
+        main_layout.addWidget(self.right_groupbox)
 
         self.setLayout(main_layout)
         self.update_content()

@@ -23,6 +23,7 @@ class MainTree(QWidget):
         self.setLayout(layout)
 
     def update_content(self, data: dict):
+        self.model.clear()
         root = self.model.invisibleRootItem()
         for type_id, rec_dict in data.items():
             child_type = QStandardItem(str(type_id))
@@ -49,7 +50,7 @@ class PieChart(QWidget):
     ...
 
 
-class MainLayouts(QWidget):
+class PageOneWidget(QWidget):
     def __init__(self, database: str = None):
         super().__init__()
         self.database = database

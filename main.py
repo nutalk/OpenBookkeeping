@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QTableWidget,\
-    QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel
+    QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel, QTabWidget
 from PySide6.QtGui import QAction
 from functools import wraps
 from pathlib import Path
 from loguru import logger
 
-from OpenBookkeeping.main_window_center import MainLayouts
+from OpenBookkeeping.main_window_tree import PageOneWidget
 from OpenBookkeeping.sql_db import init_db
 from OpenBookkeeping.new_prop import NewProp
 
@@ -33,8 +33,12 @@ class MyWindow(QMainWindow):
         self.pred_action = QMenu('预测')
         self.menuBar().addMenu(self.pred_action)
 
-        self.center_widgets = MainLayouts()
-        self.setCentralWidget(self.center_widgets)
+        self.tab_widget = QTabWidget(self)
+        self.setCentralWidget(self.tab_widget)
+
+        self.center_widgets = PageOneWidget()
+        self.tab_widget.addTab(self.center_widgets, '概览')
+        self.tab_widget.addTab(QTableWidget(), '明细')
 
         self.new_prop_widget = None
         self.new_liability_widget = None
