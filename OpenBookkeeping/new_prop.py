@@ -201,7 +201,10 @@ class PropList(QWidget):
 
     def update_content(self):
         self.list_model.clear()
-        props = query_table(self.database, ['name'], 'prop')
+        if self.database is None:
+            props = []
+        else:
+            props = query_table(self.database, ['name'], 'prop')
         self.exist_props = [item[0] for item in props]
         for prop in self.exist_props:
             item = QStandardItem(prop)
