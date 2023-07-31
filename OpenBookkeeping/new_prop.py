@@ -178,6 +178,36 @@ class PropInfo(QWidget):
         update_by_col(self.database, 'prop', 'name', self.all_input['name'].text(), val)
 
 
+class PropList(QWidget):
+    select_sig = Signal(str)
+
+    def __init__(self, database:str):
+        super().__init__()
+        self.exist_props = []
+        self.database = database
+        left_layout = QVBoxLayout()
+        left_layout.addWidget(QLabel('账户列表'))
+
+        self.list = QListView(self)
+        self.list_model = QStandardItemModel()
+        self.list.setModel(self.list_model)
+        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
+        left_layout.addWidget(self.list)
+        self.setLayout(left_layout)
+
+    def update_prop_info(self, current, pre):
+        prop_name = current.data()
+        self.select_sig.emit(prop_name)
+
+    def update_content(self):
+        self.list_model.clear()
+        props = query_table(self.database, ['name'], 'prop')
+        self.exist_props = [item[0] for item in props]
+        for prop in self.exist_props:
+            item = QStandardItem(prop)
+            self.list_model.appendRow(item)
+
+
 class NewProp(QWidget):
     def __init__(self, database: str):
         super().__init__()
@@ -192,13 +222,10 @@ class NewProp(QWidget):
         left_layout = QVBoxLayout()
         self.left_groupbox.setLayout(left_layout)
         self.left_groupbox.setMaximumWidth(200)
-        left_layout.addWidget(QLabel('账户列表'))
 
-        self.list = QListView(self)
-        self.list_model = QStandardItemModel()
-        self.list.setModel(self.list_model)
-        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
-        left_layout.addWidget(self.list)
+        self.prop_list = PropList(self.database)
+        self.prop_list.select_sig.connect(self.update_prop_info)
+        left_layout.addWidget(self.prop_list)
 
         button_layout = QHBoxLayout()
         self.new_btn = QPushButton('新增')
@@ -221,15 +248,9 @@ class NewProp(QWidget):
         self.resize(500, 400)
 
     def update_content(self):
-        self.list_model.clear()
-        props = query_table(self.database, ['name'], 'prop')
-        self.exist_props = [item[0] for item in props]
-        for prop in self.exist_props:
-            item = QStandardItem(prop)
-            self.list_model.appendRow(item)
+        self.prop_list.update_content()
 
-    def update_prop_info(self, current, pre):
-        prop_name = current.data()
+    def update_prop_info(self, prop_name):
         self.current_name = prop_name
         info = query_by_col(self.database, 'prop', 'name', prop_name)
         if len(info) == 1:
