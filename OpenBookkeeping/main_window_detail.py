@@ -15,7 +15,8 @@ from OpenBookkeeping.fuc import DetailTableModel
 class DetailForm(QWidget):
     def __init__(self, target_names: list, current_id: int = 0):
         super().__init__()
-        layout = QFormLayout()
+        layout = QVBoxLayout()
+        form_layout = QFormLayout()
         self.target_name = QComboBox()
         self.target_name.addItems(target_names)
         self.target_name.setCurrentIndex(current_id)
@@ -29,10 +30,12 @@ class DetailForm(QWidget):
 
         self.note = QTextEdit()
 
-        layout.addRow('账户名称', self.target_name)
-        layout.addRow('发生日期', self.occur_date)
-        layout.addRow('金额', self.amount)
-        layout.addRow('备注', self.note)
+        form_layout.addRow('账户名称', self.target_name)
+        form_layout.addRow('发生日期', self.occur_date)
+        form_layout.addRow('金额', self.amount)
+        form_layout.addRow('备注', self.note)
+
+        layout.addLayout(form_layout)
 
         btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -48,8 +51,10 @@ class DetailForm(QWidget):
 
 
 class DetailTable(QWidget):
-    def __init__(self):
+    def __init__(self, prop_names: list):
         super().__init__()
+        self.prop_names = prop_names
+        self.current_prop_idx = 0
         right_layout = QVBoxLayout()
         right_layout.addWidget(QLabel('账户变化明细'))
         self.detail_table = QTableView(self)
@@ -75,8 +80,9 @@ class DetailTable(QWidget):
 
         self.setLayout(right_layout)
 
-    def update_content(self, data: list, header: list):
-        logger.debug(f'{data=}, {header=}')
+    def update_content(self, data: list, header: list, prop_idx: int):
+        logger.debug(f'{data=}, {header=}, {prop_idx}')
+        self.current_prop_idx = prop_idx
         self.detail_model.update_content(data, header)
         # 通知viewer
         self.detail_model.layoutChanged.emit()
@@ -93,9 +99,13 @@ class DetailTable(QWidget):
 
     def edit_line(self):
         index = self._edit_del_line()
+        if index.row() >= 0:
+            self.edit_form = DetailForm(self.prop_names, self.current_prop_idx)
+            self.edit_form.show()
 
     def del_line(self):
         index = self._edit_del_line()
+
 
 class DetailPage(QWidget):
     def __init__(self):
@@ -108,7 +118,7 @@ class DetailPage(QWidget):
         self.prop_list.setMaximumWidth(200)
         layout.addWidget(self.prop_list)
 
-        self.detail = DetailTable()
+        self.detail = DetailTable([])
         layout.addWidget(self.detail)
 
         self.setLayout(layout)
@@ -117,8 +127,9 @@ class DetailPage(QWidget):
         self.database = database
         self.prop_list.database = database
         self.prop_list.update_content()
+        self.detail.prop_names = self.prop_list.exist_props
 
-    def update_prop_detail(self, prop_name):
+    def update_prop_detail(self, prop_name: str, prop_idx: int):
         self.current_name = prop_name
         info = query_by_col(self.database, 'prop', 'name', prop_name)
         if len(info) == 1:
@@ -131,7 +142,7 @@ class DetailPage(QWidget):
                 sum += row[3]
                 new_row = [row[0], prop_name] + list(row[2:]) + [sum]
                 output.append(new_row)
-            self.detail.update_content(output, header=headers)
+            self.detail.update_content(output, header=headers, prop_idx=prop_idx)
         else:
             logger.error(f'length of prop invalid {info}')
 

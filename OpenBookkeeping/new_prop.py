@@ -179,7 +179,7 @@ class PropInfo(QWidget):
 
 
 class PropList(QWidget):
-    select_sig = Signal(str)
+    select_sig = Signal(str, int)
 
     def __init__(self, database:str):
         super().__init__()
@@ -197,7 +197,7 @@ class PropList(QWidget):
 
     def update_prop_info(self, current, pre):
         prop_name = current.data()
-        self.select_sig.emit(prop_name)
+        self.select_sig.emit(prop_name, current.row())
 
     def update_content(self):
         self.list_model.clear()
