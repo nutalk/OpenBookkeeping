@@ -21,6 +21,9 @@ class DetailTableModel(QAbstractTableModel):
         self._data = []
         self._header = []
 
+    def get_row(self, row_idx: int) -> tuple:
+        return self._data[row_idx]
+
     def data(self, index, role):
         if role == Qt.DisplayRole:
             return self._data[index.row()][index.column()]

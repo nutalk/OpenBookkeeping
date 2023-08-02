@@ -85,6 +85,15 @@ def del_by_col(database:str, table_name: str, col_name: str, col_value: str):
 
 
 def update_by_col(database: str, table_name: str, col_name: str, col_value: str, values: dict):
+    """
+    以一列为条件，更新数据库中的数据
+    :param database: 数据库路径
+    :param table_name: 表名称
+    :param col_name: 条件列名称
+    :param col_value: 条件列的值
+    :param values: 数据库中列名称与值
+    :return:
+    """
     with Connect(database) as db:
         set_strs = [f'{k} = ?' for k in values.keys()]
         set_str = ' , '.join(set_strs)
