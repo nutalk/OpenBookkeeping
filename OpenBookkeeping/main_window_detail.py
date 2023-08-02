@@ -23,6 +23,18 @@ class DetailTable(QWidget):
         self.detail_model = DetailTableModel()
         self.detail_table.setModel(self.detail_model)
         right_layout.addWidget(self.detail_table)
+        btn_layout = QHBoxLayout()
+        spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.new_btn = QPushButton('记一笔')
+        self.edit_btn = QPushButton('编辑')
+        self.del_but = QPushButton('删除')
+
+        btn_layout.addItem(spacer)
+        btn_layout.addWidget(self.new_btn)
+        btn_layout.addWidget(self.edit_btn)
+        btn_layout.addWidget(self.del_but)
+        right_layout.addLayout(btn_layout)
+
         self.setLayout(right_layout)
 
     def update_content(self, data: list, header: list):
