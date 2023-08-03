@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QTableWidget,\
     QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel, QTabWidget
 from PySide6.QtGui import QAction
+from PySide6.QtCore import Qt
 from functools import wraps
 from pathlib import Path
 from loguru import logger
@@ -48,10 +49,12 @@ class MyWindow(QMainWindow):
 
     @property
     def ready(self):
-        if self.database is not None and Path(self.database).exists():
-            return True
-        else:
-            return False
+        if self.database is not None:
+            database = Path(self.database)
+            if database.is_file() and database.exists():
+                return True
+
+        return False
 
     def update_content(self):
         if self.ready:

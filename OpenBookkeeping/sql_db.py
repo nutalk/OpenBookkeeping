@@ -25,13 +25,31 @@ class Connect:
 
 def add_prop(database: str,
              name: str):
+    """
+    新增一个账户,如果
+    :param database: 数据库路经
+    :param name: 账户名称
+    :return: bool, exist name
+    """
+    if name == '':
+        logger.warning(f'name empty {name=}')
+        return False
+
     with Connect(database) as db:
+        sql_str = f"select * from prop where name = ?"
+        db.cur.execute(sql_str, (name,), )
+        records = db.cur.fetchall()
+        if len(records) > 0:
+            logger.warning(f'{records}')
+            return True
+
         sql_str = "INSERT INTO prop " \
                   "(name, type, start_date, term_month, rate, currency, ctype, comment)" \
                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         data = (name, 0, '2023-06-01', 0, 0, 0, 0, '')
         db.cur.execute(sql_str, data)
         db.conn.commit()
+    return False
 
 
 def add_detail(database: str,

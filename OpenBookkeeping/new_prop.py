@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
-    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog, QMessageBox, \
+    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QInputDialog, QMessageBox, \
     QGroupBox
 from PySide6.QtCore import QDate, Signal
 from loguru import logger
@@ -10,84 +10,6 @@ from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
 from OpenBookkeeping.sql_db import (query_table, add_prop, query_by_col,
                                     update_by_col, del_by_col)
-
-
-class PropName(QDialog):
-    conf_sig = Signal(str)
-
-    def __init__(self, exist_props: list):
-        super(PropName, self).__init__()
-        self.setWindowTitle('账户名称')
-        layout = QVBoxLayout()
-        self.editer = QLineEdit()
-        layout.addWidget(self.editer)
-
-        self.exist_props = exist_props
-        self.warring_label = QLabel('')
-        layout.addWidget(self.warring_label)
-
-        right_btn_layout = QHBoxLayout()
-        spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        right_btn_layout.addItem(spacer)
-        self.conf_btn = QPushButton('确认')
-        self.cancel_btn = QPushButton('取消')
-        right_btn_layout.addWidget(self.conf_btn)
-        right_btn_layout.addWidget(self.cancel_btn)
-
-        layout.addLayout(right_btn_layout)
-        self.setLayout(layout)
-
-        self.conf_btn.clicked.connect(self.conf_emit)
-        self.cancel_btn.clicked.connect(self.cancel)
-
-    def conf_emit(self):
-        new_name = self.editer.text()
-        logger.debug(f'{new_name=}')
-        if new_name in self.exist_props:
-            self.warring_label.setText(f'{new_name}已存在')
-        elif new_name == '':
-            self.warring_label.setText(f'名称不能为空，不能重复')
-        else:
-            self.conf_sig.emit(new_name)
-            self.close()
-
-    def cancel(self):
-        self.editer.setText('')
-        self.close()
-
-
-class DeleteConfirm(QDialog):
-    conf_sig = Signal(str)
-
-    def __init__(self, prop_name: str):
-        super().__init__()
-        self.setWindowTitle('删除确认')
-        layout = QVBoxLayout()
-        self.prop_name = prop_name
-
-        self.warring_label = QLabel(f'确认删除账户：{prop_name}？')
-        layout.addWidget(self.warring_label)
-
-        right_btn_layout = QHBoxLayout()
-        spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        right_btn_layout.addItem(spacer)
-        self.conf_btn = QPushButton('确认')
-        self.cancel_btn = QPushButton('取消')
-        right_btn_layout.addWidget(self.conf_btn)
-        right_btn_layout.addWidget(self.cancel_btn)
-
-        layout.addLayout(right_btn_layout)
-        self.setLayout(layout)
-
-        self.conf_btn.clicked.connect(self.conf_emit)
-        self.cancel_btn.clicked.connect(self.cancel)
-
-    def conf_emit(self):
-        self.conf_sig.emit(self.prop_name)
-        self.close()
-
-    def cancel(self):
-        self.close()
 
 
 class PropInfo(QWidget):
@@ -166,22 +88,25 @@ class PropInfo(QWidget):
         self.all_input['comment'].setEnabled(True)
 
     def commit_info(self):
-        val = dict(
-            type=self.all_input['type'].currentIndex(),
-            start_date=self.all_input['start_date'].date().toString("yyyy-MM-dd"),
-            term_month=self.all_input['term_month'].value(),
-            rate=self.all_input['rate'].value(),
-            currency=self.all_input['currency'].value(),
-            ctype=self.all_input['currency_type'].currentIndex(),
-            comment=self.all_input['comment'].toPlainText()
-        )
-        update_by_col(self.database, 'prop', 'name', self.all_input['name'].text(), val)
+        if self.all_input['name'].text() == '':
+            logger.error(f"invalid prop name: {self.all_input['name'].text()}")
+        else:
+            val = dict(
+                type=self.all_input['type'].currentIndex(),
+                start_date=self.all_input['start_date'].date().toString("yyyy-MM-dd"),
+                term_month=self.all_input['term_month'].value(),
+                rate=self.all_input['rate'].value(),
+                currency=self.all_input['currency'].value(),
+                ctype=self.all_input['currency_type'].currentIndex(),
+                comment=self.all_input['comment'].toPlainText()
+            )
+            update_by_col(self.database, 'prop', 'name', self.all_input['name'].text(), val)
 
 
 class PropList(QWidget):
     select_sig = Signal(str, int)
 
-    def __init__(self, database:str):
+    def __init__(self, database: str):
         super().__init__()
         self.exist_props = []
         self.database = database
@@ -267,45 +192,34 @@ class NewProp(QWidget):
             res = func(self, *args, **kwargs)
             self.update_content()
             return res
+
         return wrapper
 
-    def new_prop_form(self):
-        self.dlog = PropName(self.exist_props)
-        self.dlog.conf_sig.connect(self.new_prop_to_sql)
-        self.dlog.show()
-
     @update_after
-    def new_prop_to_sql(self, prop_name: str):
-        add_prop(self.database, prop_name)
+    def new_prop_form(self):
+        prop_name, ok = QInputDialog.getText(self, '新建账户', '账户名称', QLineEdit.EchoMode.Normal, '')
+        if ok:
+            name_exist = add_prop(self.database, prop_name)
+            if name_exist:
+                QMessageBox.warning(self, '账户已存在', f'{prop_name}账户已存在，无法保存',
+                                    QMessageBox.StandardButton.Ok,
+                                    QMessageBox.StandardButton.Ok)
 
     @update_after
     def del_prop(self):
         if self.current_name is None:
             logger.error(f'not selected')
         else:
-            self.alt = DeleteConfirm(self.current_name)
-            self.alt.show()
-            self.alt.conf_sig.connect(self.del_prop_sql)
-
-    @update_after
-    def del_prop_sql(self, prop_name):
-        logger.debug(f'del {prop_name}')
-        info = query_by_col(self.database, 'prop', 'name', prop_name)
-        if len(info) == 1:
-            rec = info[0]
-            prop_id = rec[0]
-            del_by_col(self.database, 'prop_details', 'target_id', prop_id)
-            del_by_col(self.database, 'prop', 'name', prop_name)
-        else:
-            logger.error(f'length of prop invalid {info}')
-
-
-
-
-
-
-
-
-
-
-
+            del_confirm = QMessageBox.warning(self, '删除', f'确定删除{self.current_name}吗?',
+                                              QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok,
+                                              QMessageBox.StandardButton.Cancel)
+            if del_confirm == QMessageBox.StandardButton.Ok:
+                logger.debug(f'del {self.current_name}')
+                info = query_by_col(self.database, 'prop', 'name', self.current_name)
+                if len(info) == 1:
+                    rec = info[0]
+                    prop_id = rec[0]
+                    del_by_col(self.database, 'prop_details', 'target_id', prop_id)
+                    del_by_col(self.database, 'prop', 'name', self.current_name)
+                else:
+                    logger.error(f'length of prop invalid {info}')
