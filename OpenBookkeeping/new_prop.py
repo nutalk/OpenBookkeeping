@@ -1,3 +1,7 @@
+"""
+账户管理
+"""
+
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
     QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QInputDialog, QMessageBox, \

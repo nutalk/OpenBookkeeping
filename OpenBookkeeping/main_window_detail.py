@@ -1,3 +1,7 @@
+"""
+账户明细页面
+"""
+
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QFormLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
     QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QDialog, QMessageBox, \
@@ -251,6 +255,7 @@ class DetailPage(QWidget):
         if len(info) == 1:
             prop_id = info[0][0]
             details = query_by_col(self.database, 'prop_details', 'target_id', prop_id)
+            details = sorted(details, key=lambda x: x[2])
             headers = ['id', '账户名称', '交易日期', '交易金额', '备注', '余额']
             output = []
             sum = 0
