@@ -152,6 +152,7 @@ class DetailTable(QWidget):
         self.detail_table.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.detail_model = DetailTableModel()
         self.detail_table.setModel(self.detail_model)
+        # TODO 明细列表隐藏id列
         right_layout.addWidget(self.detail_table)
         btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
