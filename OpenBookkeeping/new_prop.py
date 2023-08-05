@@ -178,7 +178,7 @@ class NewProp(QWidget):
     def update_content(self):
         self.prop_list.update_content()
 
-    def update_prop_info(self, prop_name):
+    def update_prop_info(self, prop_name, prop_idx):
         self.current_name = prop_name
         info = query_by_col(self.database, 'prop', 'name', prop_name)
         if len(info) == 1:

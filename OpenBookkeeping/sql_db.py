@@ -56,10 +56,9 @@ def add_detail(database: str,
                target_id: int,
                occur_date: str,
                amount: int,
-               notes: str,
-               table_name: str):
+               notes: str):
     with Connect(database) as db:
-        sql_str = f"INSERT INTO  {table_name}" \
+        sql_str = f"INSERT INTO  prop_details" \
                   "(target_id, occur_date, amount, notes)" \
                   "VALUES (?, ?, ?, ?)"
         data = (target_id, occur_date, amount, notes)

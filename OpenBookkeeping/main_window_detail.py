@@ -8,13 +8,22 @@ from functools import wraps
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from OpenBookkeeping.new_prop import PropList
-from OpenBookkeeping.sql_db import query_by_col, update_by_col
+from OpenBookkeeping.sql_db import query_by_col, update_by_col, add_detail
 from OpenBookkeeping.fuc import DetailTableModel
 
 
 class DetailForm(QWidget):
     def __init__(self, database: str, detail_id: int, target_names: list, current_id: int = 0,
                  amount: int = 0, note: str = ''):
+        """
+        明细修改或者新增的表单的父类
+        :param database: 数据库路径
+        :param detail_id: 明细的数据库id
+        :param target_names: 账户名称的列表
+        :param current_id: 当前账户在账户名称列表中的id
+        :param amount: 金额
+        :param note: 备注
+        """
         super().__init__()
         self.database = database
         self.detail_id = detail_id
@@ -56,6 +65,10 @@ class DetailForm(QWidget):
         self.setLayout(layout)
 
     def cfm_fuc(self):
+        """
+        确定按钮对应的功能，需要继承后子类内进行实现
+        :return:
+        """
         logger.debug(f'confrm')
         ...
 
@@ -68,6 +81,15 @@ class DetailEditForm(DetailForm):
 
     def __init__(self, database: str, detail_id: int, target_names: list, current_id: int = 0,
                  amount: int = 0, note: str = ''):
+        """
+        明细表单修改
+        :param database: 数据库路径
+        :param detail_id: 明细的数据库id
+        :param target_names: 账户名称的列表
+        :param current_id: 当前账户在账户名称列表中的id
+        :param amount: 金额
+        :param note: 备注
+        """
         super().__init__(database, detail_id, target_names, current_id, amount, note)
         self.target_name.setEnabled(False)
 
@@ -80,13 +102,43 @@ class DetailEditForm(DetailForm):
         self.close()
 
 
+class DetailNewForm(DetailForm):
+    close_sig = Signal()
+
+    def __init__(self, database: str, detail_id: int, target_names: list, current_id: int = 0,
+                 amount: int = 0, note: str = ''):
+        """
+        明细表单--新增明细
+        :param database: 数据库路径
+        :param detail_id: 明细的数据库id
+        :param target_names: 账户名称的列表
+        :param current_id: 当前账户在账户名称列表中的id
+        :param amount: 金额
+        :param note: 备注
+        """
+        super().__init__(database, detail_id, target_names, current_id, amount, note)
+        self.target_name.setEnabled(False)
+
+    def cfm_fuc(self):
+        values = {'occur_date': self.occur_date.date().toString("yyyy-MM-dd"),
+                  'amount': self.amount.value(),
+                  'notes': self.note.toPlainText()}
+        target_name = self.target_name.currentText()
+        exist_target_id = query_by_col(self.database, 'prop', 'name', target_name)
+        assert len(exist_target_id) == 1, f'{exist_target_id=}, not valid'
+        target_id = exist_target_id[0][0]
+        add_detail(self.database, target_id, **values)
+        self.close_sig.emit()
+        self.close()
+
+
 class DetailTable(QWidget):
     edit_sig = Signal()
 
     def __init__(self, prop_names: list):
         super().__init__()
         self.prop_names = prop_names
-        self.current_prop_idx = 0
+        self.current_prop_idx = None
         self.database = None
         right_layout = QVBoxLayout()
         right_layout.addWidget(QLabel('账户变化明细'))
@@ -132,6 +184,10 @@ class DetailTable(QWidget):
         return row_index
 
     def edit_line(self):
+        """
+        编辑明细
+        :return:
+        """
         index = self._edit_del_line()
         if index.row() >= 0:
             line = self.detail_model.get_row(index.row())
@@ -145,7 +201,12 @@ class DetailTable(QWidget):
         self.edit_sig.emit()
 
     def del_line(self):
+        """
+        删除明细
+        :return:
+        """
         index = self._edit_del_line()
+        # TODO
 
 
 class DetailPage(QWidget):
@@ -161,6 +222,7 @@ class DetailPage(QWidget):
         layout.addWidget(self.prop_list)
 
         self.detail = DetailTable([])
+        self.detail.new_btn.pressed.connect(self.new_detail)
         self.detail.edit_sig.connect(self.update_after_edit_detail)
         layout.addWidget(self.detail)
 
@@ -177,6 +239,12 @@ class DetailPage(QWidget):
         self.detail.prop_names = self.prop_list.exist_props
 
     def update_prop_detail(self, prop_name: str, prop_idx: int):
+        """
+        当选中账户后，更新当前选中的账户名称和所处的行号
+        :param prop_name: 账户名称
+        :param prop_idx: 在list中的行号
+        :return:
+        """
         self.current_name = prop_name
         self.prop_idx = prop_idx
         info = query_by_col(self.database, 'prop', 'name', prop_name)
@@ -193,4 +261,17 @@ class DetailPage(QWidget):
             self.detail.update_content(output, header=headers, prop_idx=prop_idx, database=self.database)
         else:
             logger.error(f'length of prop invalid {info}')
+
+    def new_detail(self):
+        """
+        新增明细条目
+        :return:
+        """
+        current_prop_idx = self.prop_list.list.currentIndex().row()
+        logger.debug(f'new prop, {current_prop_idx=}')
+        self.new_detail_form = DetailNewForm(self.database, 0, self.prop_list.exist_props,
+                                             current_prop_idx)
+        self.new_detail_form.close_sig.connect(self.update_after_edit_detail)
+        self.new_detail_form.show()
+
 
