@@ -101,6 +101,7 @@ class MyWindow(QMainWindow):
 
     @update_after
     def edit_prop(self):
+        # TODO 在编辑之后应该更新界面
         logger.debug(f'edit prop')
         self.prop_window = NewProp(self.database)
         self.prop_window.show()
