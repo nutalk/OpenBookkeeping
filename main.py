@@ -62,7 +62,7 @@ class MyWindow(QMainWindow):
             self.check_action.setEnabled(True)
             self.pred_action.setEnabled(True)
             self.tab_widget.setEnabled(True)
-            self.center_widgets.update_content()
+            self.center_widgets.update_content(self.database)
             self.detail_widget.update_content(self.database)
         else:
             self.propMenu.setEnabled(False)
