@@ -12,7 +12,7 @@ from functools import wraps
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from OpenBookkeeping.new_prop import PropList
-from OpenBookkeeping.sql_db import query_by_col, update_by_col, add_detail
+from OpenBookkeeping.sql_db import query_by_col, update_by_col, add_detail, del_by_col
 from OpenBookkeeping.fuc import DetailTableModel
 
 
@@ -211,7 +211,16 @@ class DetailTable(QWidget):
         :return:
         """
         index = self._edit_del_line()
-        # TODO
+        if index.row() >= 0:
+            line = self.detail_model.get_row(index.row())
+
+            del_confirm = QMessageBox.warning(self, '删除', f'确定删除id={line[0]}这条记录吗?',
+                                              QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok,
+                                              QMessageBox.StandardButton.Cancel)
+            if del_confirm == QMessageBox.StandardButton.Ok:
+                logger.debug(f'del detail id: {line[0]}')
+                del_by_col(self.database, 'prop_details', 'id', line[0])
+                self.edit_sig.emit()
 
 
 class DetailPage(QWidget):
