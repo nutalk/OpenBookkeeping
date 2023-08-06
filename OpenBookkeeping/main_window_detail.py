@@ -275,9 +275,13 @@ class DetailPage(QWidget):
         """
         current_prop_idx = self.prop_list.list.currentIndex().row()
         logger.debug(f'new prop, {current_prop_idx=}')
-        self.new_detail_form = DetailNewForm(self.database, 0, self.prop_list.exist_props,
-                                             current_prop_idx)
-        self.new_detail_form.close_sig.connect(self.update_after_edit_detail)
-        self.new_detail_form.show()
+        if current_prop_idx != -1:
+            self.new_detail_form = DetailNewForm(self.database, 0, self.prop_list.exist_props,
+                                                 current_prop_idx)
+            self.new_detail_form.close_sig.connect(self.update_after_edit_detail)
+            self.new_detail_form.show()
+        else:
+            mesg = QMessageBox(self)
+            mesg.warning(self, '请先选中', '请先选中一个账户')
 
 
