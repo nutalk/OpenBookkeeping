@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCharts import QChart, QChartView, QPieSeries
 from PySide6.QtWidgets import QTreeView, QWidget, QHBoxLayout, QApplication
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor, QPainter
+from PySide6.QtCore import Qt
 from loguru import logger
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -97,16 +97,27 @@ class LineChart(QWidget):
 class PieChart(QWidget):
     def __init__(self):
         super().__init__()
-        self.graph_widget = pg.PlotWidget()
-        self.graph_widget.setBackground('w')
-        layout = QVBoxLayout()
-        layout.addWidget(self.graph_widget)
+        series = QPieSeries()
+        series.append('A', 8)
+        series.append('B', 12)
+        series.hovered.connect(self.on_hover)
+        self.chart = QChart()
+        self.chart.addSeries(series)
+        self.chart.createDefaultAxes()
+
+        # chart.setAnimationOptions(QChart.ser)
+        self.chart.legend().setVisible(True)
+        # chart.legend().setAlignment(Qt.Align)
+        self.chart_view = QChartView(self.chart)
+        self.chart_view.setMinimumHeight(200)
+        # self.chart_view.setRenderHint(QPainter().A)
+        layout = QHBoxLayout()
+        layout.addWidget(self.chart_view)
         self.setLayout(layout)
-        hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
-        # plot data: x, y values
-        pen = pg.mkPen(color=(25, 25, 25), width=3)
-        self.graph_widget.plot(hour, temperature, pen=pen)
+
+    def on_hover(self, slice: QPieSeries):
+        logger.debug(slice)
+        slice.setExploded(not slice.isExploded)
 
 
 class PageOneWidget(QWidget):
