@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from OpenBookkeeping.sql_db import query_table, query_by_str
 from OpenBookkeeping.gloab_info import prop_type_items
+import pyqtgraph as pg
 
 
 class MainTree(QWidget):
@@ -78,13 +79,34 @@ class MainTree(QWidget):
         return data_rec
 
 
-
 class LineChart(QWidget):
-    ...
+    def __init__(self):
+        super().__init__()
+        self.graph_widget = pg.PlotWidget()
+        self.graph_widget.setBackground('w')
+        layout = QVBoxLayout()
+        layout.addWidget(self.graph_widget)
+        self.setLayout(layout)
+        hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
+        # plot data: x, y values
+        pen = pg.mkPen(color=(25, 25, 25), width=3)
+        self.graph_widget.plot(hour, temperature, pen=pen)
 
 
 class PieChart(QWidget):
-    ...
+    def __init__(self):
+        super().__init__()
+        self.graph_widget = pg.PlotWidget()
+        self.graph_widget.setBackground('w')
+        layout = QVBoxLayout()
+        layout.addWidget(self.graph_widget)
+        self.setLayout(layout)
+        hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
+        # plot data: x, y values
+        pen = pg.mkPen(color=(25, 25, 25), width=3)
+        self.graph_widget.plot(hour, temperature, pen=pen)
 
 
 class PageOneWidget(QWidget):
@@ -100,6 +122,8 @@ class PageOneWidget(QWidget):
 
         self.info_chart = PieChart()
         self.his_chart = LineChart()
+        self.info_chart.setMaximumWidth(500)
+        self.his_chart.setMaximumWidth(500)
         right_layout.addWidget(self.info_chart)
         right_layout.addWidget(self.his_chart)
 
