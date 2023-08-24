@@ -37,6 +37,7 @@ class MyWindow(QMainWindow):
 
         self.tab_widget = QTabWidget(self)
         self.setCentralWidget(self.tab_widget)
+        self.tab_widget.tabBarClicked.connect(self.update_content)
 
         self.center_widgets = PageOneWidget()
         self.tab_widget.addTab(self.center_widgets, '概览')
