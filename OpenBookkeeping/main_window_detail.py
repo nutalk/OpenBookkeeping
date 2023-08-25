@@ -42,7 +42,8 @@ class DetailForm(QWidget):
         self.occur_date.setDate(QDate.currentDate())
 
         self.amount = QSpinBox()
-        self.amount.setMaximum(999999)
+        self.amount.setMaximum(9999999)
+        self.amount.setMinimum(-9999999)
         self.amount.setValue(amount)
         self.note = QTextEdit()
         self.note.setText(note)
