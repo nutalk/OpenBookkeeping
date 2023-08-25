@@ -16,7 +16,7 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.database = None
-        self.resize(1080, 700)
+        self.resize(1280, 700)
         self.setWindowTitle('财记')
 
         self.new_file_action = QAction('新建账本')

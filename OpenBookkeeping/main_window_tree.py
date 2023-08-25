@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
-from PySide6.QtCharts import QChart, QChartView, QPieSeries
+from PySide6.QtCharts import QChart, QChartView, QPieSeries, QPieSlice, QLegend
 from PySide6.QtWidgets import QTreeView, QWidget, QHBoxLayout, QApplication
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor, QPainter
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor, QPen
 from PySide6.QtCore import Qt
 from loguru import logger
 from datetime import datetime
@@ -95,29 +95,50 @@ class LineChart(QWidget):
 
 
 class PieChart(QWidget):
+    def __init__(self, chart_name: str):
+        super().__init__()
+        self.series = QPieSeries()
+        self.series.hovered.connect(self.on_hover)
+        self.chart = QChart()
+        self.chart.addSeries(self.series)
+        self.chart.createDefaultAxes()
+        self.chart.setTheme(QChart.ChartTheme.ChartThemeBlueNcs)
+        self.chart.setTitle(chart_name)
+        self.chart_view = QChartView(self.chart)
+        self.chart_view.setMinimumHeight(300)
+        self.chart_view.setMaximumWidth(300)
+
+    def set_data(self, input_data: list):
+        self.series.clear()
+        for (rec_name, rec_value) in input_data:
+            self.series.append(rec_name, rec_value)
+        self.series.setLabelsVisible(True)
+        self.series.setLabelsPosition(QPieSlice.LabelInsideHorizontal)
+        lables = [i.label() for i in self.series.slices()]
+        for label, slice in zip(lables, self.series.slices()):
+            slice.setLabel(f"{label}:{round(slice.percentage() * 100)}%")
+
+        self.chart.legend().setVisible(True)
+        self.chart.legend().setAlignment(Qt.AlignRight)
+        for i, label in enumerate(lables):
+            self.chart.legend().markers(self.series)[i].setLabel(label)
+
+    def on_hover(self, slice):
+        for exi_slice in self.series.slices():
+            exi_slice.setExploded(False)
+        slice.setExploded(True)
+
+
+class PagePie(QWidget):
     def __init__(self):
         super().__init__()
-        series = QPieSeries()
-        series.append('A', 8)
-        series.append('B', 12)
-        series.hovered.connect(self.on_hover)
-        self.chart = QChart()
-        self.chart.addSeries(series)
-        self.chart.createDefaultAxes()
-
-        # chart.setAnimationOptions(QChart.ser)
-        self.chart.legend().setVisible(True)
-        # chart.legend().setAlignment(Qt.Align)
-        self.chart_view = QChartView(self.chart)
-        self.chart_view.setMinimumHeight(200)
-        # self.chart_view.setRenderHint(QPainter().A)
         layout = QHBoxLayout()
-        layout.addWidget(self.chart_view)
+        self.prop_pie = PieChart('资产')
+        self.liability_pie = PieChart('负债')
+        layout.addWidget(self.prop_pie.chart_view)
+        layout.addWidget(self.liability_pie.chart_view)
+        # layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-
-    def on_hover(self, slice: QPieSeries):
-        logger.debug(slice)
-        slice.setExploded(not slice.isExploded)
 
 
 class PageOneWidget(QWidget):
@@ -131,11 +152,11 @@ class PageOneWidget(QWidget):
         self.left_tree = MainTree()
         left_layout.addWidget(self.left_tree)
 
-        self.info_chart = PieChart()
+        self.pie_chart = PagePie()
         self.his_chart = LineChart()
-        self.info_chart.setMaximumWidth(500)
-        self.his_chart.setMaximumWidth(500)
-        right_layout.addWidget(self.info_chart)
+        self.pie_chart.setMaximumWidth(600)
+        self.his_chart.setMaximumWidth(600)
+        right_layout.addWidget(self.pie_chart)
         right_layout.addWidget(self.his_chart)
 
         main_layout.addLayout(left_layout)
@@ -155,5 +176,8 @@ class PageOneWidget(QWidget):
             logger.debug(f'{rec}')
         data_trans = self.left_tree.trans_data(all_props)
         self.left_tree.update_content(data_trans)
+
+        self.pie_chart.prop_pie.set_data([('A', 10), ('B', 5), ('C', 1)])
+        self.pie_chart.liability_pie.set_data([('D', 10), ('E', 5), ('F', 1)])
 
 
