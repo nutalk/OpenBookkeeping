@@ -29,6 +29,7 @@ class MainTree(QWidget):
     def update_content(self, data: dict):
         self.model.clear()
         root = self.model.invisibleRootItem()  # 根节点
+        self.model.setHorizontalHeaderLabels(['类别', '名称', '余额', '利率', '到期日', '现金流'])
         for type_id, rec_dict in data.items():
             child_type = QStandardItem(rec_dict['type_name'])  # 账户类别节点
             color = QColor('lightGray')
@@ -62,7 +63,8 @@ class MainTree(QWidget):
             type_id, name, start_date, term_month, rate, currency, ctype, amount = rec
             if amount is None:
                 amount = 0
-
+            if amount == 0:
+                continue
             start_date_time = datetime.strptime(start_date, '%Y-%m-%d')
             end_date_time = start_date_time + relativedelta(months=term_month)
             end_date = end_date_time.date().strftime('%Y-%m-%d')
@@ -115,8 +117,8 @@ class PieChart(QWidget):
         self.series.setLabelsVisible(True)
         self.series.setLabelsPosition(QPieSlice.LabelInsideHorizontal)
         lables = [i.label() for i in self.series.slices()]
-        for label, slice in zip(lables, self.series.slices()):
-            slice.setLabel(f"{label}:{round(slice.percentage() * 100)}%")
+        for slice in self.series.slices():
+            slice.setLabel(f"{round(slice.percentage() * 100)}%")
 
         self.chart.legend().setVisible(True)
         self.chart.legend().setAlignment(Qt.AlignRight)
@@ -176,8 +178,18 @@ class PageOneWidget(QWidget):
             logger.debug(f'{rec}')
         data_trans = self.left_tree.trans_data(all_props)
         self.left_tree.update_content(data_trans)
+        prop_data = []
+        liability_data = []
+        for rec in all_props:
+            type_id, name, start_date, term_month, rate, currency, ctype, amount = rec
+            if amount is None or amount == 0:
+                continue
+            if type_id in {0, 1}:
+                prop_data.append((name, amount))
+            else:
+                liability_data.append((name, amount))
 
-        self.pie_chart.prop_pie.set_data([('A', 10), ('B', 5), ('C', 1)])
-        self.pie_chart.liability_pie.set_data([('D', 10), ('E', 5), ('F', 1)])
+        self.pie_chart.prop_pie.set_data(prop_data)
+        self.pie_chart.liability_pie.set_data(liability_data)
 
 
