@@ -1,20 +1,22 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QTableWidget,\
-    QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel
+    QTableWidgetItem, QMenuBar, QMenu, QFileDialog, QStatusBar, QLabel, QTabWidget
 from PySide6.QtGui import QAction
-
+from PySide6.QtCore import Qt
+from functools import wraps
 from pathlib import Path
+from loguru import logger
 
-from OpenBookkeeping.main_window_center import MainTables
-from OpenBookkeeping.new_prop import NewLiability, NewProp
+from OpenBookkeeping.main_window_tree import PageOneWidget
+from OpenBookkeeping.main_window_detail import DetailPage
 from OpenBookkeeping.sql_db import init_db
+from OpenBookkeeping.new_prop import NewProp
 
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.database = None
-
-        self.resize(1080, 700)
+        self.resize(1280, 700)
         self.setWindowTitle('财记')
 
         self.new_file_action = QAction('新建账本')
@@ -24,71 +26,86 @@ class MyWindow(QMainWindow):
         self.fileMenu.addAction(self.openFile)
         self.menuBar().addMenu(self.fileMenu)
 
-        self.propAction = QAction('新增资产')
-        self.liabilityAction = QAction('新增负债')
-        self.propMenu = QMenu('新增账户')
-        self.propMenu.addAction(self.propAction)
-        self.propMenu.addAction(self.liabilityAction)
-        self.menuBar().addMenu(self.propMenu)
+        self.propMenu = QAction('账户管理')
+        self.menuBar().addAction(self.propMenu)
 
         self.check_action = QMenu('对账')
         self.menuBar().addMenu(self.check_action)
-        self.tables = MainTables()
-        self.setCentralWidget(self.tables)
+
+        self.pred_action = QMenu('预测')
+        self.menuBar().addMenu(self.pred_action)
+
+        self.tab_widget = QTabWidget(self)
+        self.setCentralWidget(self.tab_widget)
+        self.tab_widget.tabBarClicked.connect(self.update_content)
+
+        self.center_widgets = PageOneWidget()
+        self.tab_widget.addTab(self.center_widgets, '概览')
+        self.detail_widget = DetailPage()
+        self.tab_widget.addTab(self.detail_widget, '明细')
 
         self.new_prop_widget = None
         self.new_liability_widget = None
-
         self.band()
-        self.update_status()
 
-    def update_status(self):
-        self.status_bar = QStatusBar()
-        self.status_info = QLabel(f'账本文件: {self.database}')
-        self.status_bar.addWidget(self.status_info)
-        self.setStatusBar(self.status_bar)
+    @property
+    def ready(self):
+        if self.database is not None:
+            database = Path(self.database)
+            if database.is_file() and database.exists():
+                return True
 
-        if self.database is None:
-            self.propAction.setDisabled(True)
-            self.liabilityAction.setDisabled(True)
-            self.check_action.setDisabled(True)
+        return False
+
+    def update_content(self):
+        if self.ready:
+            self.propMenu.setEnabled(True)
+            self.check_action.setEnabled(True)
+            self.pred_action.setEnabled(True)
+            self.tab_widget.setEnabled(True)
+            self.center_widgets.update_content(self.database)
+            self.detail_widget.update_content(self.database)
         else:
-            self.propAction.setDisabled(False)
-            self.liabilityAction.setDisabled(False)
-            self.check_action.setDisabled(False)
-            if self.new_prop_widget is None:
-                self.new_prop_widget = NewProp(self.database, self)
-            if self.new_liability_widget is None:
-                self.new_liability_widget = NewLiability(self.database, self)
-            self.tables.update_content(self.database)
+            self.propMenu.setEnabled(False)
+            self.check_action.setEnabled(False)
+            self.pred_action.setEnabled(False)
+            self.tab_widget.setEnabled(False)
 
+    def update_after(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            res = func(self, *args, **kwargs)
+            self.update_content()
+            return res
+
+        return wrapper
+
+    @update_after
     def band(self):
-        self.propAction.triggered.connect(self.new_prop_fuc)
-        self.liabilityAction.triggered.connect(self.new_liability_fuc)
         self.openFile.triggered.connect(self.open_db_fuc)
         self.new_file_action.triggered.connect(self.new_db_fuc)
+        self.propMenu.triggered.connect(self.edit_prop)
 
+    @update_after
     def new_db_fuc(self):
         file_dialog = QFileDialog(self)
         file_use = file_dialog.getSaveFileName(self, "新建文件", filter=".bk (*.bk)")
         init_db(file_use[0])
         self.database = file_use[0]
-        self.update_status()
 
+    @update_after
     def open_db_fuc(self):
         file_dialog = QFileDialog(self)
         file_use = file_dialog.getOpenFileName(self, "选择文件", filter=".bk (*.bk)")
         file_path = file_use[0]
         self.database = file_path
-        self.update_status()
 
-    def new_prop_fuc(self):
-        self.new_prop_widget.show()
-        self.update_status()
-
-    def new_liability_fuc(self):
-        self.new_liability_widget.show()
-        self.update_status()
+    @update_after
+    def edit_prop(self):
+        # TODO 在编辑之后应该更新界面
+        logger.debug(f'edit prop')
+        self.prop_window = NewProp(self.database)
+        self.prop_window.show()
 
 
 if __name__ == "__main__":

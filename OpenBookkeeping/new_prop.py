@@ -1,221 +1,229 @@
+"""
+账户管理
+"""
+
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
     QHBoxLayout, QVBoxLayout, QGridLayout, QDoubleSpinBox, QSpinBox, QComboBox, \
-    QTextEdit, QDateEdit
-from PySide6.QtCore import QDate
+    QTextEdit, QDateEdit, QListView, QSpacerItem, QSizePolicy, QInputDialog, QMessageBox, \
+    QGroupBox
+from PySide6.QtCore import QDate, Signal
 from loguru import logger
+from functools import wraps
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
-from OpenBookkeeping.sql_db import add_prop, query_table, add_liability, query_by_col, update_by_col
-from OpenBookkeeping.gloab_info import prop_type_items, liability_type_items, liability_currency_types
+from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
+from OpenBookkeeping.sql_db import (query_table, add_prop, query_by_col,
+                                    update_by_col, del_by_col)
 
 
-class NewItem(QWidget):
-    def __init__(self, database: str, window_title: str, parent: QWidget):
+class PropInfo(QWidget):
+    def __init__(self, database: str):
         super().__init__()
-        self.parent = parent
         self.database = database
-        self.setWindowTitle(window_title)
+        layout = QVBoxLayout()
+        right_btn_layout = QHBoxLayout()
+        spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        right_btn_layout.addItem(spacer)
+        self.conf_btn = QPushButton('保存')
+        right_btn_layout.addWidget(self.conf_btn)
+        self.conf_btn.clicked.connect(self.commit_info)
 
-        self.warring_label = QLabel('')
+        layout.addWidget(QLabel('账户详情'))
+        input_form_layout = self.get_input_form()
+        layout.addLayout(input_form_layout)
+        layout.addLayout(right_btn_layout)
+        self.setLayout(layout)
 
-        self.buts_layout = QHBoxLayout()
-        self.cancel_btn = QPushButton('取消')
-        self.confirm_btn = QPushButton('确定')
-        self.buts_layout.addWidget(self.cancel_btn)
-        self.buts_layout.addWidget(self.confirm_btn)
-        self.band()
-
-    def band(self):
-        self.cancel_btn.pressed.connect(self.cancel_btp_fuc)
-        self.confirm_btn.pressed.connect(self.confirm_btn_fuc)
-
-    def cancel_btp_fuc(self):
-        self.close()
-
-    def check_valid(self) -> str:
-        return '还没定义好'
-
-    def confirm_btn_fuc(self):
-        check_res = self.check_valid()
-        if check_res == '' or check_res is None:
-            self.parent.update_status()
-            self.close()
-        else:
-            self.warring_label.setText(check_res)
-            self.warring_label.setStyleSheet("color: red;")
-
-
-class NewProp(NewItem):
-    def __init__(self, database: str, parent: QWidget):
-        super().__init__(database, '新增资产', parent)
-        input_layout = QGridLayout()
-
+    def get_input_form(self):
+        input_form_layout = QGridLayout()
         all_labels = dict(
             name=QLabel('名称'),
-            type=QLabel('类别'),
-            start_date=QLabel('开始日期'),
-            currency=QLabel('月现金流'),
-            comment=QLabel('备注'),
-        )
-
-        self.all_input = dict(
-            name=QLineEdit(),
-            type=QComboBox(),
-            start_date=QDateEdit(),
-            currency=QSpinBox(),
-            comment=QTextEdit()
-        )
-        self.all_input['type'].addItems(prop_type_items)
-        self.all_input['currency'].setMaximum(999999999)
-        self.all_input['start_date'].setDisplayFormat("yyyy-MM-dd")
-        self.all_input['start_date'].setCalendarPopup(True)
-        self.all_input['start_date'].setDate(QDate.currentDate())
-
-        for idx, _label in enumerate(all_labels.values()):
-            input_layout.addWidget(_label, idx + 1, 1)
-        for idx, _input in enumerate(self.all_input.values()):
-            input_layout.addWidget(_input, idx + 1, 2)
-
-        input_layout.addWidget(self.warring_label, idx + 2, 2)
-        input_layout.addLayout(self.buts_layout, idx + 3, 2)
-        self.setLayout(input_layout)
-
-    def get_data(self):
-        prop_name = self.all_input['name'].text()
-
-        prop_type = self.all_input['type'].currentIndex()
-        start_date = self.all_input['start_date'].date().toString("yyyy-MM-dd")
-        currency = self.all_input['currency'].value()
-        comment = self.all_input['comment'].toPlainText()
-        logger.debug(f'{prop_name=}, {prop_type=}, {currency=}, {start_date=} \
-        {comment=}, {self.database}')
-        return prop_name, prop_type, start_date, currency, comment
-
-    def check_valid(self) -> str:
-        prop_name, prop_type, start_date, currency, comment = self.get_data()
-        if not prop_name:
-            return '名称不能为空'
-
-        exist_name = query_by_col(self.database, 'prop', 'name', prop_name)
-        if len(exist_name) >= 1:
-            return '资产名已存在'
-
-        add_prop(self.database, prop_name, prop_type,
-                 currency, start_date, comment)
-
-        self.all_input['name'].setText('')
-        self.all_input['currency'].setValue(0)
-        self.all_input['comment'].setText('')
-
-
-class EditProp(NewProp):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.all_input['name'].setEnabled(False)
-
-    def set_values(self, prop_name: str,
-                   prop_type: int, start_date: str,
-                   currency: int, comment: str, *args, **kwargs):
-        self.all_input['name'].setText(prop_name)
-        self.all_input['type'].setCurrentIndex(prop_type)
-        self.all_input['start_date'].setDate(QDate.fromString(start_date, 'yyyy-MM-dd'))
-        self.all_input['currency'].setValue(currency)
-        self.all_input['comment'].setPlainText(comment)
-
-    def check_valid(self) -> str:
-        prop_name, prop_type, start_date, currency, comment = self.get_data()
-        values = {'type': prop_type, 'start_date': start_date,
-                  'currency': currency, 'comment': comment}
-        update_by_col(self.database, 'prop', 'name', prop_name, values)
-
-
-class NewLiability(NewItem):
-    def __init__(self, database: str, parent: QWidget):
-        super().__init__(database, '新增负债', parent)
-        input_layout = QGridLayout()
-        all_labels = dict(
-            name=QLabel('名称'),
-            type=QLabel('负债类型'),
-            rate=QLabel('年利率'),
-            currency_type=QLabel('还款方式'),
+            type=QLabel('类型'),
             start_date=QLabel('开始日期'),
             term_month=QLabel('期数'),
+            rate=QLabel('年利率'),
+            currenty=QLabel('月现金流'),
+            currency_type=QLabel('还款方式'),
             comment=QLabel('备注'))
 
         self.all_input = dict(
             name=QLineEdit(),
             type=QComboBox(),
-            rate=QDoubleSpinBox(),
-            currency_type=QComboBox(),
             start_date=QDateEdit(),
             term_month=QSpinBox(),
+            rate=QDoubleSpinBox(),
+            currency=QSpinBox(),
+            currency_type=QComboBox(),
             comment=QTextEdit()
         )
-        self.all_input['type'].addItems(liability_type_items)
+        self.all_input['type'].addItems(prop_type_items)
         self.all_input['currency_type'].addItems(liability_currency_types)
+        self.all_input['currency'].setMaximum(9999999)
         self.all_input['term_month'].setMaximum(9999)
         self.all_input['start_date'].setDisplayFormat("yyyy-MM-dd")
         self.all_input['start_date'].setCalendarPopup(True)
         self.all_input['start_date'].setDate(QDate.currentDate())
 
+        for item in self.all_input.values():
+            item.setDisabled(True)
+
         for idx, label in enumerate(all_labels.values()):
-            input_layout.addWidget(label, idx + 1, 1)
+            input_form_layout.addWidget(label, idx + 1, 1)
 
         for idx, _input in enumerate(self.all_input.values()):
-            input_layout.addWidget(_input, idx + 1, 2)
+            input_form_layout.addWidget(_input, idx + 1, 2)
+        return input_form_layout
 
-        input_layout.addWidget(self.warring_label, idx + 2, 2)
-        input_layout.addLayout(self.buts_layout, idx + 3, 2)
+    def update_content(self, info: tuple):
+        self.all_input['name'].setText(info[1])
+        self.all_input['type'].setCurrentIndex(info[2])
+        self.all_input['type'].setEnabled(True)
+        self.all_input['start_date'].setDate(QDate.fromString(info[3], 'yyyy-MM-dd'))
+        self.all_input['start_date'].setEnabled(True)
+        self.all_input['term_month'].setValue(info[4])
+        self.all_input['term_month'].setEnabled(True)
+        self.all_input['rate'].setValue(info[5])
+        self.all_input['rate'].setEnabled(True)
+        self.all_input['currency'].setValue(info[6])
+        self.all_input['currency'].setEnabled(True)
+        self.all_input['currency_type'].setCurrentIndex(info[7])
+        self.all_input['currency_type'].setEnabled(True)
+        self.all_input['comment'].setText(info[8])
+        self.all_input['comment'].setEnabled(True)
 
-        self.setLayout(input_layout)
-
-    def get_data(self):
-        _name = self.all_input['name'].text()
-        _type = self.all_input['type'].currentIndex()
-        _rate = self.all_input['rate'].value()
-        _currency_type = self.all_input['currency_type'].currentIndex()
-        _start_date = self.all_input['start_date'].date().toString("yyyy-MM-dd")
-        _term_month = self.all_input['term_month'].value()
-        _comment = self.all_input['comment'].toPlainText()
-        return _name, _type, _rate, _currency_type, _start_date, _term_month, _comment
-
-    def check_valid(self) -> str:
-        _name, _type, _rate, _currency_type, _start_date, _term_month, _comment = self.get_data()
-        if not _name:
-            return '名称不能为空'
-
-        exist_name = query_by_col(self.database, 'liability', 'name', _name)
-        if len(exist_name) >= 1:
-            return '资产名已存在'
-
-        add_liability(self.database, _name, _type, _currency_type, _rate, _start_date,
-                      _term_month, _comment)
-
-        self.all_input['name'].setText('')
-        self.all_input['rate'].setValue(0)
-        self.all_input['term_month'].setValue(0)
-        self.all_input['comment'].setText('')
+    def commit_info(self):
+        if self.all_input['name'].text() == '':
+            logger.error(f"invalid prop name: {self.all_input['name'].text()}")
+        else:
+            val = dict(
+                type=self.all_input['type'].currentIndex(),
+                start_date=self.all_input['start_date'].date().toString("yyyy-MM-dd"),
+                term_month=self.all_input['term_month'].value(),
+                rate=self.all_input['rate'].value(),
+                currency=self.all_input['currency'].value(),
+                ctype=self.all_input['currency_type'].currentIndex(),
+                comment=self.all_input['comment'].toPlainText()
+            )
+            update_by_col(self.database, 'prop', 'name', self.all_input['name'].text(), val)
 
 
-class EditLiability(NewLiability):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.all_input['name'].setEnabled(False)
+class PropList(QWidget):
+    select_sig = Signal(str, int)
 
-    def set_values(self, _name: str, _type: int,
-                   currency_type: int, start_date: str, term_month: int,
-                   rate: float,
-                   comment: str, *args, **kwargs):
-        self.all_input['name'].setText(_name)
-        self.all_input['type'].setCurrentIndex(_type)
-        self.all_input['rate'].setValue(rate)
-        self.all_input['currency_type'].setCurrentIndex(currency_type)
-        self.all_input['start_date'].setDate(QDate.fromString(start_date, 'yyyy-MM-dd'))
-        self.all_input['term_month'].setValue(term_month)
-        self.all_input['comment'].setPlainText(comment)
+    def __init__(self, database: str):
+        super().__init__()
+        self.exist_props = []
+        self.database = database
+        left_layout = QVBoxLayout()
+        left_layout.addWidget(QLabel('账户列表'))
 
-    def check_valid(self) -> str:
-        _name, _type, rate, currency_type, start_date, term_month, comment = self.get_data()
-        values = {'type': _type, 'currency_type': currency_type,'start_date': start_date,
-                  'term_month': term_month, 'rate': rate, 'comment': comment}
-        update_by_col(self.database, 'liability', 'name', _name, values)
+        self.list = QListView(self)
+        self.list_model = QStandardItemModel()
+        self.list.setModel(self.list_model)
+        self.list.selectionModel().currentChanged.connect(self.update_prop_info)
+        left_layout.addWidget(self.list)
+        self.setLayout(left_layout)
 
+    def update_prop_info(self, current, pre):
+        prop_name = current.data()
+        self.select_sig.emit(prop_name, current.row())
+
+    def update_content(self):
+        self.list_model.clear()
+        if self.database is None:
+            props = []
+        else:
+            props = query_table(self.database, ['name'], 'prop')
+        self.exist_props = [item[0] for item in props]
+        for prop in self.exist_props:
+            item = QStandardItem(prop)
+            self.list_model.appendRow(item)
+
+
+class NewProp(QWidget):
+    def __init__(self, database: str):
+        super().__init__()
+        self.exist_props = []
+        self.left_groupbox = QGroupBox(self)
+        self.right_groupbox = QGroupBox(self)
+        self.setWindowTitle('管理账户')
+        self.database = database
+        self.current_name = None
+        main_layout = QHBoxLayout()
+
+        left_layout = QVBoxLayout()
+        self.left_groupbox.setLayout(left_layout)
+        self.left_groupbox.setMaximumWidth(200)
+
+        self.prop_list = PropList(self.database)
+        self.prop_list.select_sig.connect(self.update_prop_info)
+        left_layout.addWidget(self.prop_list)
+
+        button_layout = QHBoxLayout()
+        self.new_btn = QPushButton('新增')
+        self.new_btn.clicked.connect(self.new_prop_form)
+        self.del_btn = QPushButton('删除')
+        self.del_btn.clicked.connect(self.del_prop)
+        button_layout.addWidget(self.new_btn)
+        button_layout.addWidget(self.del_btn)
+        left_layout.addLayout(button_layout)
+
+        main_layout.addWidget(self.left_groupbox)
+        right_layout = QHBoxLayout()
+        self.prop_edit_widget = PropInfo(self.database)
+        right_layout.addWidget(self.prop_edit_widget)
+        self.right_groupbox.setLayout(right_layout)
+        main_layout.addWidget(self.right_groupbox)
+
+        self.setLayout(main_layout)
+        self.update_content()
+        self.resize(500, 400)
+
+    def update_content(self):
+        self.prop_list.update_content()
+
+    def update_prop_info(self, prop_name, prop_idx):
+        self.current_name = prop_name
+        info = query_by_col(self.database, 'prop', 'name', prop_name)
+        if len(info) == 1:
+            self.prop_edit_widget.update_content(info[0])
+        else:
+            logger.error(f'length of prop invalid {info}')
+
+    def update_after(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            res = func(self, *args, **kwargs)
+            self.update_content()
+            return res
+
+        return wrapper
+
+    @update_after
+    def new_prop_form(self):
+        prop_name, ok = QInputDialog.getText(self, '新建账户', '账户名称', QLineEdit.EchoMode.Normal, '')
+        if ok:
+            name_exist = add_prop(self.database, prop_name)
+            if name_exist:
+                QMessageBox.warning(self, '账户已存在', f'{prop_name}账户已存在，无法保存',
+                                    QMessageBox.StandardButton.Ok,
+                                    QMessageBox.StandardButton.Ok)
+
+    @update_after
+    def del_prop(self):
+        if self.current_name is None:
+            logger.error(f'not selected')
+        else:
+            del_confirm = QMessageBox.warning(self, '删除', f'确定删除{self.current_name}吗?',
+                                              QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok,
+                                              QMessageBox.StandardButton.Cancel)
+            if del_confirm == QMessageBox.StandardButton.Ok:
+                logger.debug(f'del {self.current_name}')
+                info = query_by_col(self.database, 'prop', 'name', self.current_name)
+                if len(info) == 1:
+                    rec = info[0]
+                    prop_id = rec[0]
+                    del_by_col(self.database, 'prop_details', 'target_id', prop_id)
+                    del_by_col(self.database, 'prop', 'name', self.current_name)
+                else:
+                    logger.error(f'length of prop invalid {info}')
