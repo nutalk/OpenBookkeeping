@@ -1,3 +1,4 @@
+import numpy as np
 from PySide6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, \
     QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QTableView
 from PySide6.QtCharts import QChart, QChartView, QPieSeries, QPieSlice, QLegend
@@ -5,12 +6,14 @@ from PySide6.QtWidgets import QTreeView, QWidget, QHBoxLayout, QApplication
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor, QPen
 from PySide6.QtCore import Qt
 from loguru import logger
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from OpenBookkeeping.sql_db import query_table, query_by_str
 from OpenBookkeeping.gloab_info import prop_type_items
 import pyqtgraph as pg
+from collections import defaultdict
+import pandas as pd
 
 
 class MainTree(QWidget):
@@ -89,12 +92,13 @@ class LineChart(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.graph_widget)
         self.setLayout(layout)
-        hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
-        # plot data: x, y values
-        pen = pg.mkPen(color=(25, 25, 25), width=3)
-        self.graph_widget.plot(hour, temperature, pen=pen)
 
+    def set_data(self, x: list, prop: np.ndarray, lib: np.ndarray):
+        net_prop = prop - lib
+        logger.debug(f'{x=}, {prop=}, {lib=}, {net_prop=}')
+        self.graph_widget.plot(x, prop)
+        self.graph_widget.plot(x, lib)
+        self.graph_widget.plot(x, net_prop)
 
 class PieChart(QWidget):
     def __init__(self, chart_name: str):
@@ -191,5 +195,43 @@ class PageOneWidget(QWidget):
 
         self.pie_chart.prop_pie.set_data(prop_data)
         self.pie_chart.liability_pie.set_data(liability_data)
+
+        self.update_hist_line()
+
+    def update_hist_line(self):
+        query_str = """
+                select type, target_id, occur_date, amount from prop 
+                LEFT outer join prop_details
+                on prop.id = prop_details.target_id;
+                """
+        all_props = query_by_str(self.database, query_str)
+        all_props = pd.DataFrame(all_props, columns=['type', 'tid', 'occur_date', 'amount'])
+        all_props.dropna(inplace=True)
+        all_props['date'] = pd.to_datetime(all_props['occur_date'])
+        all_props.sort_values(by='date')
+        ayear_before = datetime.today() - timedelta(days=366)
+        groups = all_props.groupby(pd.Grouper(key='date', axis=0, freq='M'))
+        x, lib_list, prop_list = [], [], []
+        lib, prop, xi = 0, 0, 0
+        for group_time, group in groups:
+            month_info = group_time.strftime('%Y%m%d')
+
+            type_info = group.groupby('type')
+            for type_id, group_sum_df in type_info:
+                sum_res = group_sum_df['amount'].sum() / 10000
+                print(f'{month_info=}, {type_id=}, {sum_res=}')
+                if type_id <= 1:
+                    prop += sum_res
+                else:
+                    lib += sum_res
+            if group_time < ayear_before:
+                continue
+            lib_list.append(lib)
+            prop_list.append(prop)
+            x.append(xi)
+            xi += 1
+        lib_list = np.array(lib_list)
+        prop_list = np.array(prop_list)
+        self.his_chart.set_data(x=x, lib=lib_list, prop=prop_list)
 
 
