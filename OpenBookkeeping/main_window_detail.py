@@ -137,6 +137,31 @@ class DetailNewForm(DetailForm):
         self.close()
 
 
+class DetailCheckForm(DetailNewForm):
+    """
+    账户明细--核对余额
+    """
+    def cfm_fuc(self):
+        new_amount = self.amount.value()
+        current_amount = 0
+        target_name = self.target_name.currentText()
+        exist_target_id = query_by_col(self.database, 'prop', 'name', target_name)
+        assert len(exist_target_id) == 1, f'{exist_target_id=}, not valid'
+        target_id = exist_target_id[0][0]
+
+        details = query_by_col(self.database, 'prop_details', 'target_id', target_id)
+        for row in details:
+            current_amount += row[3]
+        amount_adj = new_amount - current_amount
+
+        values = {'occur_date': self.occur_date.date().toString("yyyy-MM-dd"),
+                  'amount': amount_adj,
+                  'notes': self.note.toPlainText()}
+        add_detail(self.database, target_id, **values)
+        self.close_sig.emit()
+        self.close()
+
+
 class DetailTable(QWidget):
     edit_sig = Signal()
 
@@ -158,12 +183,14 @@ class DetailTable(QWidget):
         btn_layout = QHBoxLayout()
         spacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.new_btn = QPushButton('记一笔')
+        self.check_btn = QPushButton('核对余额')
         self.edit_btn = QPushButton('编辑')
         self.edit_btn.pressed.connect(self.edit_line)
         self.del_but = QPushButton('删除')
         self.del_but.pressed.connect(self.del_line)
 
         btn_layout.addWidget(self.new_btn)
+        btn_layout.addWidget(self.check_btn)
         btn_layout.addItem(spacer)
         btn_layout.addWidget(self.edit_btn)
         btn_layout.addWidget(self.del_but)
@@ -239,6 +266,8 @@ class DetailPage(QWidget):
         self.detail = DetailTable([])
         self.detail.new_btn.pressed.connect(self.new_detail)
         self.detail.edit_sig.connect(self.update_after_edit_detail)
+        self.detail.check_btn.pressed.connect(self.check_account)
+
         layout.addWidget(self.detail)
 
         self.setLayout(layout)
@@ -294,4 +323,19 @@ class DetailPage(QWidget):
             mesg = QMessageBox(self)
             mesg.warning(self, '请先选中', '请先选中一个账户')
 
+    def check_account(self):
+        """
+        核对余额
+        :return:
+        """
+        current_prop_idx = self.prop_list.list.currentIndex().row()
+        logger.debug(f'check prop, {current_prop_idx=}')
+        if current_prop_idx != -1:
+            self.check_detail_form = DetailCheckForm(self.database, 0, self.prop_list.exist_props,
+                                                 current_prop_idx)
+            self.check_detail_form.close_sig.connect(self.update_after_edit_detail)
+            self.check_detail_form.show()
+        else:
+            mesg = QMessageBox(self)
+            mesg.warning(self, '请先选中', '请先选中一个账户')
 

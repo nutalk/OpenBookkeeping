@@ -29,9 +29,6 @@ class MyWindow(QMainWindow):
         self.propMenu = QAction('账户管理')
         self.menuBar().addAction(self.propMenu)
 
-        self.check_action = QMenu('对账')
-        self.menuBar().addMenu(self.check_action)
-
         self.pred_action = QMenu('预测')
         self.menuBar().addMenu(self.pred_action)
 
