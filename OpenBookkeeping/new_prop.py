@@ -108,6 +108,9 @@ class PropInfo(QWidget):
 
 
 class PropList(QWidget):
+    """
+    账户列表
+    """
     select_sig = Signal(str, int)
 
     def __init__(self, database: str):
@@ -133,7 +136,7 @@ class PropList(QWidget):
         if self.database is None:
             props = []
         else:
-            props = query_table(self.database, ['name'], 'prop')
+            props = query_table(self.database, ['name'], 'prop', orderby=['type'])
         self.exist_props = [item[0] for item in props]
         for prop in self.exist_props:
             item = QStandardItem(prop)

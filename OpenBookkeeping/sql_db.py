@@ -66,10 +66,20 @@ def add_detail(database: str,
         db.conn.commit()
 
 
-def query_table(database: str, cols: list, table_name: str):
+def query_table(database: str, cols: list, table_name: str, orderby: list = None):
+    """
+    查询一个表的某些列
+    :param database: sqllite数据库地址
+    :param cols: 需要查询的列
+    :param table_name: 需要查询的表名称
+    :param orderby: 排序列
+    :return:
+    """
     cols_str = ', '.join(cols)
     with Connect(database) as db:
         sql_str = f"""select {cols_str} from {table_name}"""
+        if orderby is not None:
+            sql_str += f" order by {', '.join(orderby)}"
         logger.debug(f'{sql_str=}')
         db.cur.execute(sql_str)
         records = db.cur.fetchall()
