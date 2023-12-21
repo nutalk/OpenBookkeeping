@@ -6,7 +6,6 @@ from functools import wraps
 from pathlib import Path
 from loguru import logger
 
-from OpenBookkeeping.main_window_tree import PageOneWidget
 from OpenBookkeeping.main_window_detail import DetailPage
 from OpenBookkeeping.sql_db import init_db
 from OpenBookkeeping.new_prop import NewProp
@@ -29,15 +28,9 @@ class MyWindow(QMainWindow):
         self.propMenu = QAction('账户管理')
         self.menuBar().addAction(self.propMenu)
 
-        self.pred_action = QMenu('预测')
-        self.menuBar().addMenu(self.pred_action)
-
         self.tab_widget = QTabWidget(self)
         self.setCentralWidget(self.tab_widget)
         self.tab_widget.tabBarClicked.connect(self.update_content)
-
-        self.center_widgets = PageOneWidget()
-        self.tab_widget.addTab(self.center_widgets, '概览')
         self.detail_widget = DetailPage()
         self.tab_widget.addTab(self.detail_widget, '明细')
 
@@ -57,13 +50,10 @@ class MyWindow(QMainWindow):
     def update_content(self):
         if self.ready:
             self.propMenu.setEnabled(True)
-            self.pred_action.setEnabled(True)
             self.tab_widget.setEnabled(True)
-            self.center_widgets.update_content(self.database)
             self.detail_widget.update_content(self.database)
         else:
             self.propMenu.setEnabled(False)
-            self.pred_action.setEnabled(False)
             self.tab_widget.setEnabled(False)
 
     def update_after(func):

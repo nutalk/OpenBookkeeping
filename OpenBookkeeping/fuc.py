@@ -39,19 +39,3 @@ class DetailTableModel(QAbstractTableModel):
         if orientation == Qt.Horizontal:
             return self._header[section]
 
-
-from OpenBookkeeping.sql_db import query_by_str
-
-
-def get_month_amount(data_base: str) -> list:
-    """
-    计算每个月每个类别的金额
-    :param data_base: 数据库路径
-    :return: list of dict
-    """
-    sql_str = """
-    select occur_date, amount, type from prop 
-    LEFT outer join prop_details
-    on prop.id = prop_details.target_id
-    """
-    all_prop_detail = query_by_str(database, )
