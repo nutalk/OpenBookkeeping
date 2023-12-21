@@ -8,8 +8,14 @@ import feffery_antd_components as fac
 from dash.dependencies import Input, Output
 
 
-app = dash.Dash(__name__)
+main_menu_dict = {
+    'antd-pie-chart': "资产负债表",
+    'antd-history': '趋势表',
+    'antd-line-chart': '预测'
+}
 
+
+app = dash.Dash(__name__)
 app.layout = html.Div(
     [
         fac.AntdLayout(
@@ -34,20 +40,17 @@ app.layout = html.Div(
                         fac.AntdSider(
                             [
                             fac.AntdMenu(
+                                id='main_menu',
                                 menuItems=[
                                     {
                                         'component': 'Item',
                                         'props': {
-                                            'key': f'k{icon}',
+                                            'key': f'{icon}',
                                             'title': f'{title}',
                                             'icon': icon
                                         }
                                     }
-                                    for icon, title in {
-                                        'antd-pie-chart': "资产负债表",
-                                        'antd-history': '趋势表',
-                                        'antd-line-chart': '预测'
-                                    }.items()
+                                    for icon, title in main_menu_dict.items()
                                 ],
                             mode='inline',
                             style={
@@ -66,13 +69,8 @@ app.layout = html.Div(
                             [
                                 fac.AntdContent(
                                     html.Div(
-                                        fac.AntdTitle(
-                                            '内容区示例',
-                                            level=2,
-                                            style={
-                                                'margin': '0'
-                                            }
-                                        ),
+                                        'OpenBookkeeping',
+                                        id='main_disp',
                                         style={
                                             'display': 'flex',
                                             'height': '100%',
@@ -100,6 +98,16 @@ app.layout = html.Div(
         'display': 'flex',
     }
 )
+
+
+# 定义回调函数串起相关交互逻辑
+@app.callback(
+    Output('main_disp', 'children'),
+    Input('main_menu', 'currentKey')
+)
+def handle_main_menu(current_key):
+    print(current_key)
+    return f'{current_key}'
 
 
 if __name__ == "__main__":
