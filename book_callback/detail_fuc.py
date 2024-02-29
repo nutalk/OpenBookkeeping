@@ -36,3 +36,12 @@ def get_prop_list(db_path: str):
         div_items.append(accordion_item)
     res = dbc.Accordion(div_items, always_open=True, active_item=prop_type_items)
     return res
+
+
+def get_prop_form(prop_info: tuple = None):
+    """
+    依据账户的信息，创建form，如果是新增，就是空form。否则是有内容的form
+    :param prop_info: 数据库返回的账户信息
+    :return: children
+    """
+    ...
