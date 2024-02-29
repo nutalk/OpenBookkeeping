@@ -8,7 +8,7 @@ import book_callback.detail_call
 
 app = dash.Dash(
     __name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
-    suppress_callback_exceptions=True
+    suppress_callback_exceptions=False
 )
 
 server = app.server
@@ -52,5 +52,4 @@ def render_page_content(pathname):
 
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0")
-
+    app.run_server(host="0.0.0.0", debug=True)

@@ -86,7 +86,7 @@ def query_table(database: str, cols: list, table_name: str, orderby: list = None
     return records
 
 
-def query_by_col(database: str, table_name: str, col_name: str, col_value: str):
+def query_by_col(database: str, table_name: str, col_name: str, col_value: str) -> tuple:
     """
     按一列作为条件，查询数据库中的数据
     :param database: 数据库路径

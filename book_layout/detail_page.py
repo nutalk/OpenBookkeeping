@@ -26,13 +26,13 @@ account_list = dbc.Stack([
             dbc.ModalHeader(dbc.ModalTitle('删除账户')),
             dbc.ModalBody([
                 dbc.Input(id='del_prop_id', type='hidden', readonly=True),
-                dbc.Alert('确定删除该账户吗？', color='danger', id='del_prop_confirm_txt'),
+                html.Div('确定删除该账户吗？', id='del_prop_confirm_txt'),
             ]),
             dbc.ModalFooter([
                 dbc.Button('确定', id='del_prop_save'),
                 dbc.Button('取消', id='del_prop_cancel')]
             )
-        ], id='del_prop_modal', size='lg', is_open=False
+        ], id='del_prop_modal', is_open=False
     )
     ]
 )
