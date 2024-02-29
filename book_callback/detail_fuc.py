@@ -1,5 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import html
+from loguru import logger
 from book_callback.web_fuc import get_prop_data
 from OpenBookkeeping.gloab_info import prop_type_items
 
@@ -25,11 +26,13 @@ def get_prop_list(db_path: str):
                                className='me-1', color='light')
                 ], style={'textAlign': 'right'})
             ])
-            item = dbc.ListGroupItem(group_item_content, id=f"prop_list_{row['id']}")
+            item = dbc.ListGroupItem(group_item_content, id={"type": "prop_list_item", "index": row['id']})
             list_items.append(item)
         accordion_item = dbc.AccordionItem(
             dbc.ListGroup(list_items, flush=True),
-            title=prop_type_name
+            title=prop_type_name,
+            id=prop_type_name
         )
         div_items.append(accordion_item)
-    return dbc.Accordion(div_items, always_open=True)
+    res = dbc.Accordion(div_items, always_open=True, active_item=prop_type_items)
+    return res

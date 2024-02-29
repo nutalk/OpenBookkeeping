@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import html, dcc
 from book_callback.detail_fuc import get_prop_list
 from config import db_path
 
@@ -10,7 +10,7 @@ prop_list = get_prop_list(db_path)
 account_list = dbc.Stack([
     html.H4('账户列表'),
     html.Hr(),
-    prop_list,
+    html.Div(prop_list, id='detail_prop_list'),
     dbc.Modal(
         [
             dbc.ModalHeader(dbc.ModalTitle('编辑账户')),
@@ -21,11 +21,11 @@ account_list = dbc.Stack([
             )
         ], id='edit_prop_modal', size='lg', is_open=False
     ),
+    dcc.Store(id='edit_prop_info', storage_type='session', data={}),
     dbc.Modal(
         [
             dbc.ModalHeader(dbc.ModalTitle('删除账户')),
             dbc.ModalBody([
-                dbc.Input(id='del_prop_id', type='hidden', readonly=True),
                 html.Div('确定删除该账户吗？', id='del_prop_confirm_txt'),
             ]),
             dbc.ModalFooter([
