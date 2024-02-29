@@ -9,7 +9,7 @@ from OpenBookkeeping.gloab_info import prop_type_items
 
 
 prop_query_str = """
-select id, type, name, start_date, term_month, rate, currency, ctype, sum(amount) from prop 
+select prop.id, type, name, start_date, term_month, rate, currency, ctype, sum(amount) from prop 
 LEFT outer join prop_details
 on prop.id = prop_details.target_id group by name;
 """
