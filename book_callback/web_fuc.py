@@ -1,29 +1,28 @@
 import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
-import json
 import pandas as pd
-from loguru import logger
-import csv
-import re
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from OpenBookkeeping.sql_db import query_by_col, update_by_col, add_detail, del_by_col, query_table, query_by_str
+from OpenBookkeeping.sql_db import query_by_str
 from OpenBookkeeping.cash_flow import EqualDelt, InterestLoan, FinishLoan, EqualPrincipalPayment
-from OpenBookkeeping.gloab_info import prop_type_items, liability_currency_types
+from OpenBookkeeping.gloab_info import prop_type_items
 
 
 prop_query_str = """
-select type, name, start_date, term_month, rate, currency, ctype, sum(amount) from prop 
+select id, type, name, start_date, term_month, rate, currency, ctype, sum(amount) from prop 
 LEFT outer join prop_details
 on prop.id = prop_details.target_id group by name;
 """
 
 
 def get_prop_data(db_path: str):
+    """
+    获取资产负债清单数据
+    :param db_path:
+    :return:
+    """
     props = query_by_str(db_path, prop_query_str)
-    prop_df = pd.DataFrame(props, columns=['type', 'name', 'start_date', 'term_month', 'rate', 'currency', 'ctype',
+    prop_df = pd.DataFrame(props, columns=['id', 'type', 'name', 'start_date', 'term_month', 'rate', 'currency', 'ctype',
                                            'sum_amount'])
     prop_df.fillna(0, inplace=True)
     prop_df['type_cn'] = prop_df['type'].apply(lambda x: prop_type_items[x])
@@ -77,6 +76,13 @@ def get_month_history_data(db_path: str, history_month_term: int) -> pd.DataFram
 
 
 def get_predict_df(prop_df: pd.DataFrame, show_term: int, prop_amount: dict):
+    """
+    预测各月的现金流情况
+    :param prop_df:
+    :param show_term:
+    :param prop_amount:
+    :return:
+    """
     today = datetime.today().date()
     all_df = []
     udf = prop_df[(prop_df['sum_amount'] != 0) | (prop_df['currency'] != 0)]

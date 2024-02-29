@@ -25,7 +25,7 @@ account_list = dbc.Stack([
             dbc.ListGroupItem('账户1'),
             dbc.ListGroupItem('账户2'),
             dbc.ListGroupItem('账户3')
-        ], flush=True)
+        ], flush=True, id='detail_account_list')
     ]
 )
 

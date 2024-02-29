@@ -2,7 +2,8 @@ from dash import Dash, dcc, html, callback, Input, Output
 import dash
 import dash_bootstrap_components as dbc
 
-from layout.detail_page import detail_layout
+from book_layout.detail_page import detail_layout
+import book_callback.detail_call
 
 
 app = dash.Dash(
