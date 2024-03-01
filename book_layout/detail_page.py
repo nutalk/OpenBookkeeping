@@ -3,6 +3,8 @@ from dash import html, dcc
 import pandas as pd
 from book_callback.detail_fuc import get_prop_list, get_prop_form
 from config import db_path
+from OpenBookkeeping.gloab_info import account_info_show
+
 
 prop_list = get_prop_list(db_path)
 
@@ -36,31 +38,19 @@ account_list = dbc.Stack([
 ]
 )
 
+
+def get_row(id_str, show_label: str):
+    row = dbc.Row([
+        dbc.Col(show_label, md=2),
+        dbc.Col('----', id=f'account_info_{id_str}', md=10),
+    ])
+    return row
+
+
 account_info = html.Div([
     html.H4('---', id='account_info_name'),
     html.Hr(),
-    dbc.Row([
-        dbc.Col('类型', md=2),
-        dbc.Col('----', id='account_info_type', md=4),
-        dbc.Col('开始日期', md=2),
-        dbc.Col('----', id='account_info_sdate', md=4),
-    ]),
-    dbc.Row([
-        dbc.Col('期数', md=2),
-        dbc.Col('----', id='account_info_term', md=4),
-        dbc.Col('年利率', md=2),
-        dbc.Col('----', id='account_info_rate', md=4),
-    ]),
-    dbc.Row([
-        dbc.Col('月现金流', md=2),
-        dbc.Col('----', id='account_info_current', md=4),
-        dbc.Col('还款方式', md=2),
-        dbc.Col('----', id='account_info_ptype', md=4)
-    ]),
-    dbc.Row([
-        dbc.Col('备注', md=2),
-        dbc.Col('----', id='account_info_note', md=8)
-    ])
+    *[get_row(k, v) for k, v in account_info_show.items() if k != 'name']
 ])
 
 df = pd.DataFrame(

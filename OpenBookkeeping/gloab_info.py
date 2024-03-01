@@ -17,6 +17,18 @@ on prop.id = prop_details.target_id group by name;
 """
 
 
+account_info_show = {
+    'name': '名称',
+    'type': '类型',
+    'start_date': '开始日期',
+    'term_month': '期数',
+    'rate': '年利率',
+    'currency': '现金流',
+    'ctype': '还款方式',
+    'comment': '备注'
+}
+
+
 create_prop_table = """
 CREATE TABLE "prop" (
     "id"	INTEGER NOT NULL,
