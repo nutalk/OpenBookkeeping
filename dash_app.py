@@ -8,7 +8,8 @@ import book_callback.detail_call
 
 app = dash.Dash(
     __name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
-    suppress_callback_exceptions=False
+    suppress_callback_exceptions=False,
+    prevent_initial_callbacks="initial_duplicate"
 )
 
 server = app.server

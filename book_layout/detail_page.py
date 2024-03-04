@@ -23,6 +23,7 @@ account_list = dbc.Stack([
         ], id='edit_prop_modal', size='lg', is_open=False
     ),
     dcc.Store(id='current_prop_info', storage_type='session', data={}),
+    dcc.Store(id='to_update_prop_table', storage_type='session', data={}),
     dbc.Modal(
         [
             dbc.ModalHeader(dbc.ModalTitle('删除账户')),
