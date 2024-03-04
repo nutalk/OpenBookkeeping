@@ -11,23 +11,31 @@ general_layout = html.Div(
     [dbc.Row([
         dbc.Col([
             html.P('资产'),
-            html.H3('5000')
+            html.H3('5000', id='general_asset_value')
         ],md=4),
         dbc.Col([
             html.P('负债'),
-            html.H3('3000')
+            html.H3('3000', id='general_debt_value')
         ], md=4),
         dbc.Col([
             html.P('净资产'),
-            html.H3('2000')
+            html.H3('2000', id='general_net_value')
         ],md=4),
     ]),
     html.Hr(),
      # 资产饼图
      dbc.Row([
          # 资产
-         dbc.Col([], md=6),
+         dbc.Col([
+             html.Div('饼图'),
+             dcc.Graph(id='general_asset_pie'),
+             html.Div('资产列表')
+         ], md=6),
          # 负债
-         dbc.Col([], md=6)
+         dbc.Col([
+             html.Div('负债饼图'),
+             dcc.Graph(id='general_debt_pie'),
+             html.Div('负债列表')
+         ], md=6)
      ])]
 )
