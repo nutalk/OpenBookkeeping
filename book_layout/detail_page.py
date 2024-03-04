@@ -47,6 +47,5 @@ detail_layout = dbc.Row([
         dbc.Row(account_info),
         html.Hr(),
         dbc.Row(account_detail),
-
     ], md=9)]
 )

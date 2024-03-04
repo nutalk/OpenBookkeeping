@@ -3,6 +3,7 @@ import dash
 import dash_bootstrap_components as dbc
 
 from book_layout.detail_page import detail_layout
+from book_layout.general_page import general_layout
 import book_callback.detail_call
 
 
@@ -36,7 +37,7 @@ app.layout = html.Div(
           [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
-        return 'home'
+        return general_layout
     elif pathname == "/detail":
         return detail_layout
     elif pathname == '/ana':
