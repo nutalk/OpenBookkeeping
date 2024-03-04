@@ -46,18 +46,7 @@ detail_layout = dbc.Row([
     dbc.Col([
         dbc.Row(account_info),
         html.Hr(),
-        dbc.ButtonGroup(
-            [dbc.Button("编辑账户", id='prop_edit_btn', outline=True, color="primary"),
-             dbc.Button("删除账户", id='prop_del_btn', outline=True, color="primary"),
-             dbc.Button("记一笔", id='prop_add_detail_btn', outline=True, color="primary"),
-             dbc.Button('核对余额', id='prop_check_amount_btn', outline=True, color="primary")]),
-        html.Hr(),
         dbc.Row(account_detail),
-        html.Hr(),
-        dbc.ButtonGroup([
-            dbc.Button('编辑记录', id='detail_edit_btn', outline=True, color="primary"),
-            dbc.Button('删除记录', id='detail_del_btn', outline=True, color="primary")
-        ])
 
     ], md=9)]
 )
