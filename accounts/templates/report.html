@@ -1,0 +1,106 @@
+{% extends '_head_foot.html' %}
+{% load static %}
+{% block head_js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="{% static 'bs_table/bootstrap-table.min.css' %}">
+<script src="{% static 'bs_table/bootstrap-table.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{% static 'accounts/js/chart_fuc.js' %}"></script>
+<script src="{% static 'accounts/js/report.js' %}"></script>
+{% endblock %}
+
+{% block main_page %}
+<div class="row row-dec row-cards">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">资产</div>
+                <h5 id="assets">￥5000</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">负债</div>
+                <h5 id="debt">￥4000</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">净值</div>
+                <h5 id="net">￥4000</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">流动资金</div>
+                <h5 id="cash">￥4000</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-6">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">资产组成</div>
+                <div id="assets_part"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-6">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">负债组成</div>
+                <div id="det_part"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-6">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">资产负债变化</div>
+                <div id="total_change"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-6">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">资产负债明细</div>
+                    <table 
+                        id="total_change_table" 
+                        data-pagination="true" 
+                        data-height="360">
+                    </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">负债、净资产预测</div>
+                <div id="total_predict"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">净资产、现金流变动</div>
+                <div id="cash_predict"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+FROM python:3.11
+WORKDIR /usr/src/app
+
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+RUN pip install --no-cache-dir -r requirement.txt
+COPY . .
+ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:7788", "--settings", "bookkeep.settings.docker"]

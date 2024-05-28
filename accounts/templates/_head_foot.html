@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>财记</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link href="{% static 'accounts/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'accounts/cus.css' %}" rel="stylesheet"/>
+    <script src="{% static 'accounts/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'accounts/jquery/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'accounts/js/csrf_get.js' %}"></script>
+
+    {% block head_js %}
+
+    {% endblock %}
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-sm bg-primary navbar-light">
+      <div class="container">
+        <div class="container">
+          <span class="navbar-brand text-white">财记</span>
+        </div>
+        <div class="container-fluid d-flex flex-row-reverse">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/">账户列表</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/account_ana">账户分析</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/check">对账</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/report">报表</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container pt-4" id="body_container">
+      {% block main_page %}
+
+      {% endblock %}
+    </div>
+  </body>
+</html>

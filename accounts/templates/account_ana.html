@@ -1,0 +1,55 @@
+{% extends '_head_foot.html' %}
+{% load static %}
+{% block head_js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="{% static 'bs_table/bootstrap-table.min.css' %}">
+<script src="{% static 'bs_table/bootstrap-table.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{% static 'accounts/js/chart_fuc.js' %}"></script>
+<script src="{% static 'accounts/js/account_ana.js' %}"></script>
+{% endblock %}
+
+{% block main_page %}
+<div class="row row-dec row-cards">
+    {%for prop_list in type_prop%}
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">{{prop_list.type_name}}</div>
+                {%for prop in prop_list.recs%}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id={{prop.id}}>
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{prop.name}}
+                    </label>
+                  </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+
+    <div class="d-grid gap-2 col-6 mx-auto mt-2">
+        <button class="btn btn-primary" type="button" id="ana_bnt">分析</button>
+      </div>
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">长期债务与固定资产净值变化</div>
+                <div id="long_term_chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">现金变动</div>
+                <div id="short_term_chart"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
