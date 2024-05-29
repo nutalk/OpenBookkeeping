@@ -13,6 +13,7 @@
 另外出于安全性考虑，数据用sqlite在本地保存。
 
 ## 安装
+### 直接安装
 在linux服务器上执行以下命令：
 
 ```
@@ -24,6 +25,11 @@ python manage.py runserver 0.0.0.0:7788
 
 在windows上应该也行，但我没有测试过。
 
+### 通过docker安装
+```
+docker pull nutalk/bookkeep:latest
+docker run -p 7788:7788 nutalk/bookkeep
+```
 ## 具体使用
 TBD
 
