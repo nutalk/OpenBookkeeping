@@ -27,7 +27,7 @@ python manage.py runserver 0.0.0.0:7788
 
 ### 通过docker安装
 ```
-docker pull nutalk/bookkeep:latest
+docker pull nutalk/bookkeep:main
 docker run -p 7788:7788 nutalk/bookkeep
 ```
 ## 具体使用
