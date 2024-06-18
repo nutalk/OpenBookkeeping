@@ -19,6 +19,7 @@ class PropNewForm(forms.Form):
     ctype = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(liability_currency_types)], 
                               required=True, label='还款方式')
     comment = forms.CharField(label='备注', max_length=255, required=False)
+    init_ammount = forms.IntegerField(required=True, initial=0, label='初始金额')
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,7 +37,8 @@ class PropNewForm(forms.Form):
             AppendedText('rate', '%', active=False),
             'currency',
             'ctype',
-            'comment'
+            'comment',
+            AppendedText('init_ammount', '元', active=False)
         )
 
         self.helper.add_input(Submit('submit', '提交'))

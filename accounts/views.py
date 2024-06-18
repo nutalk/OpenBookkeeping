@@ -108,6 +108,13 @@ def prop_new(request):
             comment=request.POST.get('comment')
         )
         new_prop.save()
+        detail = Detail(
+            target_id = new_prop,
+            occur_date = retrans_date_str(request.POST.get('start_date')),
+            amount = request.POST.get('init_ammount'),
+            comment = '初始金额'
+        )
+        detail.save()
     return redirect("/")
 
 # 删除账户
