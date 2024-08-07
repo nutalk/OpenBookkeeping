@@ -3,6 +3,6 @@ from .settings import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'empty.sqlite3',
+        'NAME': '/data/empty.sqlite3',
     }
 }
