@@ -141,7 +141,15 @@ class EqualPrincipalPayment:
 
 
 # 获取特定id的账户
-def get_prop_df(allow_idx: set = None):
+def get_prop_df(allow_idx: set = None) -> pd.DataFrame:
+    """
+    return:
+```
+    name  sum_amount  type  id  p_type  start_date  term_month  rate  currency  ctype comment  remains
+0   房子     3000000     0   1       0  01/06/2023           0   0.0      5000      0          3000000
+1   房贷     1800000     2   2       2  01/06/2023         360   3.8         0      1          1800000
+```
+    """
     total_res = Prop.objects.annotate(remains=Sum('detail__amount')).values()
     all_prop = []
     for prop in total_res:
@@ -166,7 +174,7 @@ def get_amount(prop_df: pd.DataFrame) -> dict:
             'ne': ne_amount, 'cash': cash}
 
 
-def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None):
+def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None)->pd.DataFrame:
     
     all_df = []
     udf = prop_df[(prop_df['sum_amount'] != 0) | (prop_df['currency'] != 0)]
@@ -197,6 +205,7 @@ def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None):
         schedule = loan.schedule()
         schedule['name'] = row['name']
         schedule['type'] = row['type']
+        schedule['account_id'] = row['id']
         all_df.append(schedule)
 
     all_pred = pd.concat(all_df)
@@ -263,5 +272,52 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int, prop_amount: dict):
         result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000)})
         result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add)})
         result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add)})
+
+    return result
+
+
+def get_next_cash(prop_df: pd.DataFrame, show_term: int):
+    """
+    下个月的现金流组成
+    """
+    result = {
+        'income':[
+            {'name':'本金',
+             'data': []},
+             {'name': '利息',
+              'data': []},
+        ],
+        'income_categories':[],
+
+        'outcome':[
+            {'name': '本金',
+             'data': []},
+             {'name': '利息',
+              'data': []}
+        ],
+        'outcome_categories': []
+    }
+    all_pred = get_schedule(prop_df, adjust_today=True, show_term=show_term)
+    all_id = sorted(list(set(all_pred['account_id'])))
+    for id, account_id in enumerate(all_id):
+        recs = all_pred[all_pred['account_id'] == account_id]
+        for idx, row in recs.iterrows():
+            # print(row)
+            if row['payment'] == 0:
+                continue
+            if row['type'] <= 1:
+                # 资产
+                prop_add = round(row['interest'])
+                det_add = round(row['amortization'])
+                result['income'][0]['data'].append(det_add)
+                result['income'][1]['data'].append(prop_add)
+                result['income_categories'].append(row['name'])
+            else:
+                prop_add = round(row['interest'])
+                det_add = round(row['amortization'])
+                result['outcome'][0]['data'].append(det_add)
+                result['outcome'][1]['data'].append(prop_add)
+                result['outcome_categories'].append(row['name'])
+            break
 
     return result

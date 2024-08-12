@@ -91,3 +91,17 @@ $(document).ready(function () {
   
 })
 
+
+// 更新下个月的现金流情况
+$(document).ready(function () {
+  $.post("/cash_change_next_month/",
+    {
+      csrfmiddlewaretoken: csrftoken
+    },
+    function (data, status) {
+      console.log(data);
+      // update_chart(data.series, data.x_axis, 'total_change', 'line');
+      update_next_chart('income_part', data.income, data.income_categories),
+      update_next_chart('outcome_part', data.outcome, data.outcome_categories)
+    });
+})
