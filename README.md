@@ -28,8 +28,11 @@ python manage.py runserver 0.0.0.0:7788
 ### 通过docker安装
 ```
 docker pull nutalk/bookkeep:main
-docker run -p 7788:7788 nutalk/bookkeep:main
+docker run -p 7788:7788 -v /path_to_data:/data nutalk/bookkeep:main
 ```
+
+### 数据导出
+在docker的挂载目录有一个db.sqlite3文件。
 
 ## django账户密码
 user: admin
