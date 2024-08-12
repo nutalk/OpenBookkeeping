@@ -295,7 +295,10 @@ def get_next_cash(prop_df: pd.DataFrame, show_term: int):
              {'name': '利息',
               'data': []}
         ],
-        'outcome_categories': []
+        'outcome_categories': [],
+        'income_total':0,
+        'outcome_total': 0,
+        'netcome_total': 0
     }
     all_pred = get_schedule(prop_df, adjust_today=True, show_term=show_term)
     all_id = sorted(list(set(all_pred['account_id'])))
@@ -312,12 +315,18 @@ def get_next_cash(prop_df: pd.DataFrame, show_term: int):
                 result['income'][0]['data'].append(det_add)
                 result['income'][1]['data'].append(prop_add)
                 result['income_categories'].append(row['name'])
+                result['income_total'] += round(row['payment'])
             else:
+                # 负债
                 prop_add = round(row['interest'])
                 det_add = round(row['amortization'])
                 result['outcome'][0]['data'].append(det_add)
                 result['outcome'][1]['data'].append(prop_add)
                 result['outcome_categories'].append(row['name'])
+                result['outcome_total'] += round(row['payment'])
             break
+    result['netcome_total'] = f"￥{result['income_total'] - result['outcome_total']:,}"
+    result['income_total'] = f"￥{result['income_total']:,}"
+    result['outcome_total'] = f"￥{result['outcome_total']:,}"
 
     return result

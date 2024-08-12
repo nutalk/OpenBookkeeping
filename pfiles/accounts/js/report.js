@@ -99,9 +99,13 @@ $(document).ready(function () {
       csrfmiddlewaretoken: csrftoken
     },
     function (data, status) {
-      console.log(data);
+      // console.log(data);
       // update_chart(data.series, data.x_axis, 'total_change', 'line');
-      update_next_chart('income_part', data.income, data.income_categories),
-      update_next_chart('outcome_part', data.outcome, data.outcome_categories)
+      update_next_chart('income_part', data.income, data.income_categories);
+      update_next_chart('outcome_part', data.outcome, data.outcome_categories);
+      $("#income_total").text(data.income_total);
+      $("#outcome_total").text(data.outcome_total);
+      $("#netcome_total").text(data.netcome_total);
+
     });
 })
