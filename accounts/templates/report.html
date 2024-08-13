@@ -10,97 +10,163 @@
 {% endblock %}
 
 {% block main_page %}
-<div class="row row-dec row-cards">
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">资产</div>
-                <h5 id="assets">￥5000</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">负债</div>
-                <h5 id="debt">￥4000</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">净值</div>
-                <h5 id="net">￥4000</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">流动资金</div>
-                <h5 id="cash">￥4000</h5>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-sm-12 col-lg-6">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">资产组成</div>
-                <div id="assets_part"></div>
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-3 col-lg-1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">账户概览</button>
+      <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">历史变动</button>
+      <button class="nav-link" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false">资金预测</button>
+
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+        <div class="row row-dec row-cards">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">资产</div>
+                        <h5 id="assets">￥5000</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">负债</div>
+                        <h5 id="debt">￥4000</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">净值</div>
+                        <h5 id="net">￥4000</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">流动资金</div>
+                        <h5 id="cash">￥4000</h5>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12 col-lg-6">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">资产组成</div>
+                        <div id="assets_part"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12 col-lg-6">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">负债组成</div>
+                        <div id="det_part"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">总收入</div>
+                        <h5 id="income_total">￥5000</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">总支出</div>
+                        <h5 id="outcome_total">￥4000</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">净收入</div>
+                        <h5 id="netcome_total">￥4000</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">收入组成</div>
+                        <div id="income_part"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12 col-lg-6">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">支出组成</div>
+                        <div id="outcome_part"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+      </div>
 
-    <div class="col-sm-12 col-lg-6">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">负债组成</div>
-                <div id="det_part"></div>
+      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+        <div class="row row-dec row-cards">
+            <div class="col-sm-12 col-lg-12">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">资产负债变化</div>
+                        <div id="total_change"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12 col-lg-12">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">资产负债明细</div>
+                            <table 
+                                id="total_change_table" 
+                                data-pagination="true">
+                            </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+      </div>
 
-    <div class="col-sm-12 col-lg-6">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">资产负债变化</div>
-                <div id="total_change"></div>
+      <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">
+        <div class="row row-dec row-cards">
+            <div class="col-sm-12 col-lg-12">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">负债、净资产预测</div>
+                        <div id="total_predict"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12 col-lg-12">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <div class="subheader">净资产、现金流变动</div>
+                        <div id="cash_predict"></div>
+                    </div>
+                </div>
             </div>
         </div>
+      </div>
     </div>
-
-    <div class="col-sm-12 col-lg-6">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">资产负债明细</div>
-                    <table 
-                        id="total_change_table" 
-                        data-pagination="true" 
-                        data-height="360">
-                    </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-12 col-lg-12">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">负债、净资产预测</div>
-                <div id="total_predict"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-12 col-lg-12">
-        <div class="card mt-2">
-            <div class="card-body">
-                <div class="subheader">净资产、现金流变动</div>
-                <div id="cash_predict"></div>
-            </div>
-        </div>
-    </div>
-
+  </div>
 </div>
+  
+
+
 {% endblock %}

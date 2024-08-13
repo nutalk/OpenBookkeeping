@@ -3,13 +3,12 @@ import pandas as pd
 import numpy as np
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Sum
 from .models import Prop, Detail
-from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule
-from .gloab_info import history_month_term, predict_month_term, prop_type_ids
+from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule, get_next_cash
+from .gloab_info import history_month_term, prop_type_ids
 
 
 # 报表页面
@@ -103,6 +102,14 @@ def post_month_history(request):
     result = json.dumps(result)
     return HttpResponse(result, content_type='application/json;charset=utf-8')
 
+# 下个月的现金流、权益变化
+def cash_change_next_month(request):
+    result = {}
+    if request.method == 'POST':
+        prop_df = get_prop_df()
+        result = get_next_cash(prop_df, 4)
+    result = json.dumps(result)
+    return HttpResponse(result, content_type='application/json;charset=utf-8')
 
 # 预测现金流和净值变动
 def post_month_predict(request):

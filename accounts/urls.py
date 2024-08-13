@@ -8,6 +8,7 @@ report_urls = [
     path('post_month_predict/', report_views.post_month_predict, name='post_month_predict'),
     path('account_ana/', report_views.account_ana, name="account_ana"),
     path('post_account_ana/', report_views.post_account_ana, name="post_account_ana"),
+    path('cash_change_next_month/', report_views.cash_change_next_month, name='cash_change_next_month')
 ]
 
 urlpatterns=[
