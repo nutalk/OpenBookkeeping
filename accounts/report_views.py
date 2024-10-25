@@ -89,9 +89,9 @@ def post_month_history(request):
             det_sum = np.sum(end_df[end_df['type'] > 1]['amount'])
             net_sum = prop_sum - det_sum
             x = end_date.strftime("%m-%d-%Y")
-            result['series'][0]['data'].append({'x':x,"y": int(prop_sum / 10000)})
-            result['series'][1]['data'].append({'x':x,"y": int(det_sum / 10000)})
-            result['series'][2]['data'].append({'x':x,"y": int(net_sum/ 10000)})
+            result['series'][0]['data'].append({'x':x,"y": round(prop_sum / 10000, 2)})
+            result['series'][1]['data'].append({'x':x,"y": round(det_sum / 10000, 2)})
+            result['series'][2]['data'].append({'x':x,"y": round(net_sum/ 10000, 2)})
             result['table'].append({
                 'occur_date': end_date.strftime("%Y-%m-%d"),
                 'prop': f"{prop_sum:,}",

@@ -267,11 +267,11 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int, prop_amount: dict):
         current_cash += cash_add
         current_det += det_add
         x = day.strftime("%m-%d-%Y")
-        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000)})
-        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000)})
-        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000)})
-        result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add)})
-        result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add)})
+        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000, 2)})
+        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000, 2)})
+        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000, 2)})
+        result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add, 2)})
+        result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add, 2)})
 
     return result
 
