@@ -47,6 +47,7 @@ class InterestLoan:
         """
         先息后本
         """
+        self.term_month = term_month
         end_date = start_date + relativedelta(months=term_month)
         self.terms_left = (end_date.year - today.year) * 12 + end_date.month - today.month
         self.amount = amount
@@ -199,7 +200,8 @@ def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None)->pd
             start_date = datetime.strptime(row['start_date'], "%d/%m/%Y").date()
             loan = InterestLoan(row['sum_amount'], row['rate'], start_date, today, row['term_month'])
         elif row['ctype'] == 4:
-            loan = FinishLoan(row['sum_amount'], row['rate'], today, row['term_month'])
+            start_date = datetime.strptime(row['start_date'], "%d/%m/%Y").date()
+            loan = FinishLoan(row['sum_amount'], row['rate'], start_date, today, row['term_month'])
         else:
             raise ValueError(f'ctype error, {row=}')
         schedule = loan.schedule()
@@ -267,11 +269,11 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int, prop_amount: dict):
         current_cash += cash_add
         current_det += det_add
         x = day.strftime("%m-%d-%Y")
-        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000)})
-        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000)})
-        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000)})
-        result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add)})
-        result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add)})
+        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000, 2)})
+        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000, 2)})
+        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000, 2)})
+        result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add, 2)})
+        result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add, 2)})
 
     return result
 
