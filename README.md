@@ -19,11 +19,12 @@
 ```
 get clone git@github.com:nutalk/OpenBookkeeping.git
 pip install --no-cache-dir -r requirement.txt
-python manage.py runserver 0.0.0.0:7788
+sudo mkdir /data
+sudo chmod -R 777 /data
+bash docker/init_run.sh
 ```
 你就能打开浏览器，通过http://ip:7788 访问了。
 
-在windows上应该也行，但我没有测试过。
 
 ### 通过docker安装
 ```
