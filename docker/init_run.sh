@@ -4,4 +4,5 @@ if [ -f "/data/db.sqlite3" ];then
     cp docker/db.sqlite3 /data
 fi
 
+python manage.py migrate
 python manage.py runserver 0.0.0.0:7788
