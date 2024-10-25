@@ -47,6 +47,7 @@ class InterestLoan:
         """
         先息后本
         """
+        self.term_month = term_month
         end_date = start_date + relativedelta(months=term_month)
         self.terms_left = (end_date.year - today.year) * 12 + end_date.month - today.month
         self.amount = amount
@@ -199,7 +200,8 @@ def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None)->pd
             start_date = datetime.strptime(row['start_date'], "%d/%m/%Y").date()
             loan = InterestLoan(row['sum_amount'], row['rate'], start_date, today, row['term_month'])
         elif row['ctype'] == 4:
-            loan = FinishLoan(row['sum_amount'], row['rate'], today, row['term_month'])
+            start_date = datetime.strptime(row['start_date'], "%d/%m/%Y").date()
+            loan = FinishLoan(row['sum_amount'], row['rate'], start_date, today, row['term_month'])
         else:
             raise ValueError(f'ctype error, {row=}')
         schedule = loan.schedule()
