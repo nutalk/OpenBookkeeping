@@ -99,7 +99,7 @@ $(function(){
     }
 });
 
-
+// delete prop
 $(function(){
     $("#prop_del_btn").click(function(){
         var current_id = $("#account_id_p").text();
@@ -110,8 +110,11 @@ $(function(){
             {
                 prop_id: current_id,
                 csrfmiddlewaretoken: csrftoken
+            }).done(function(){
+                location.reload();
             })
         }
+        
     })
 });
 
