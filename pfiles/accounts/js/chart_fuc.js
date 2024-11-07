@@ -1,4 +1,4 @@
-function update_ts_chart(pic_id, data_series, chart_type, ytitle) {
+function update_ts_chart(pic_id, data_series, chart_type, ytitle, detail_data=null) {
     var options = {
         chart: {
           height: 380,
@@ -7,6 +7,16 @@ function update_ts_chart(pic_id, data_series, chart_type, ytitle) {
           animations: {
             initialAnimation: {
               enabled: false
+            }
+          },
+          events:{
+            click(event, chartContext, opts){
+              if (detail_data){
+                console.log(opts.dataPointIndex);
+                $('#total_month_detail').bootstrapTable('load', detail_data[opts.dataPointIndex]);
+                // var show_detail = detail_data[opts.dataPointIndex];
+              }
+              
             }
           }
         },

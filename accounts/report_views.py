@@ -64,6 +64,7 @@ def post_month_history(request):
         for detail in all_details:
             rec = {'type': detail.target_id.p_type,
                    'name': detail.target_id.name,
+                   'target_id': detail.target_id.pk,
                    'o_date': datetime.strptime(detail.occur_date, "%d/%m/%Y").date(),
                    'amount': detail.amount}
             recs.append(rec)
@@ -81,10 +82,23 @@ def post_month_history(request):
               {'name': '净值',
                'data': []}
         ]
-        result['table'] =  []
+        result['table'] = []
+        result['detail'] = []
         for i in range(0-history_month_term, 1, 1):
             end_date = next_month_first_day + relativedelta(months=i, day=1)
             end_df = prop_detail_df[prop_detail_df['o_date'] < end_date]
+            detail_df = end_df[['type','target_id', 'name','amount']]
+            end_detail = detail_df.groupby(['type', 'target_id']).sum()
+            
+            if end_detail.empty:
+                end_detailres = []
+            else:
+                end_detailres = []
+                for idx, row in end_detail.iterrows():
+                    type_rec = '资产' if idx[0] <= 1 else '负债'
+                    name_rec = Prop.objects.filter(pk=idx[1]).values()[0]['name']
+                    amount = row['amount']
+                    end_detailres.append({'type': type_rec, 'name': name_rec, 'amount': amount})
             prop_sum = np.sum(end_df[end_df['type'] <= 1]['amount'])
             det_sum = np.sum(end_df[end_df['type'] > 1]['amount'])
             net_sum = prop_sum - det_sum
@@ -98,6 +112,7 @@ def post_month_history(request):
                 'det': f"{det_sum:,}",
                 'net': f"{net_sum:,}"
             })
+            result['detail'].append(end_detailres)
 
     result = json.dumps(result)
     return HttpResponse(result, content_type='application/json;charset=utf-8')
