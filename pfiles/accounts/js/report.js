@@ -62,6 +62,25 @@ $(document).ready(function(){
   });
 })
 
+
+$(document).ready(function(){
+  $('#total_month_detail').bootstrapTable({
+    columns: [
+      {
+        field: 'type',
+        title: '类别'
+      }, {
+        field: 'name',
+        title: '名称'
+      }, {
+        field: 'amount',
+        title: '金额'
+      }],
+      data:[]
+  });
+})
+
+
 // 更新资产负债和净值的变动
 $(document).ready(function () {
   $.post("/post_month_history/",
@@ -71,7 +90,7 @@ $(document).ready(function () {
     function (data, status) {
       console.log(data);
       // update_chart(data.series, data.x_axis, 'total_change', 'line');
-      update_ts_chart('total_change', data.series, 'line', '万元')
+      update_ts_chart('total_change', data.series, 'line', '万元', data.detail)
       $('#total_change_table').bootstrapTable('load', data.table)
     });
 })
