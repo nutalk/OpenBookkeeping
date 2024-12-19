@@ -23,11 +23,11 @@
     <thead>
     <tr>
       <th>名称</th>
-      <th>大类</th>
-      <th>小类</th>
+      <th>类别</th>
+      <th>还款方式</th>
       <th>当前价值</th>
       <th>年利率 (%)</th>
-      <th>现金流</th>
+      <th>额外现金流</th>
       <th>期数</th>
       <th>操作</th>
     </tr>
@@ -39,14 +39,17 @@
       <td><input type="text" class="form-control" id="name" required></td>
       <td>
         <select class="form-control" id="categoryLarge" onchange="updateSubCategory()">
-          <option value="资产">资产</option>
-          <option value="负债">负债</option>
-          <option value="自由现金流">自由现金流</option>
+          <option value="1">资产</option>
+          <option value="2">负债</option>
         </select>
       </td>
       <td>
         <select class="form-control" id="categorySmall">
-          <option value="">选择小类</option>
+          <option value="0">还款方式</option>
+          <option value="1">等额本息</option>
+          <option value="2">先息后本</option>
+          <option value="3">等额本金</option>
+          <option value="4">到期还本付息</option>
         </select>
       </td>
       <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>
@@ -54,7 +57,7 @@
       <td><input type="number" class="form-control" id="cashFlow" value="0"></td>
       <td><input type="number" class="form-control" id="periods" value="0"></td>
       <td>
-        <button class="btn btn-primary" onclick="addRow()">提交</button>
+        <button class="btn btn-primary" onclick="addRow()">增加</button>
       </td>
     </tr>
     </tbody>

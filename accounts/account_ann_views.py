@@ -4,41 +4,33 @@ from loguru import logger
 from datetime import datetime
 from django.http import JsonResponse
 from .web_fuc import EqualDelt, InterestLoan, FinishLoan, \
-    EqualPrincipalPayment, get_predict_res
+    EqualPrincipalPayment, get_predict_res, get_amount
 
 
-def calculate_cash_flow(item: dict) -> pd.DataFrame:
+def get_chart_ts(data: list) -> dict:
     """
-    依据账户类别，计算现金流
+    根据账户信息，产生prop_df，然后get_predict_res计算绘图需要的时许信息
     """
-    logger.debug(item)
-    # item = json.loads(item)
-    name = item.get("name", "")
-    loan_type = item.get("categorySmall", "")
-    principal = float(item.get("currentValue", 0))
-    annual_rate = float(item.get("annualRate", 0))
-    periods = int(item.get("periods", 0))
-    cash_flow = int(item.get("cashFlow", 0))
-    stype = 1 # 1: 资产， 2： 负债
-    if loan_type in ['等额本息', '先息后本', '等额本金', '到期还本付息']:
-        stype = 2
+    logger.debug(data)
     today = datetime.today().date()
-    if loan_type =='月度':
-        loan = EqualPrincipalPayment(principal, cash_flow, today, periods)
-    elif loan_type == '等额本息':
-        loan = EqualDelt(principal, annual_rate, today, today, periods, 1)
-    elif loan_type == '等额本金':
-        loan = EqualDelt(principal, annual_rate, today, today, periods, 3)
-    elif loan_type in ['先息后本', '按月收利']:
-        loan = InterestLoan(principal, annual_rate, today, today, periods)
-    elif loan_type in ['到期还本付息', '到期收本息']:
-        loan = FinishLoan(principal, annual_rate, today, today, periods)
-    else:
-        raise ValueError(f'error: {loan_type=}')
-    schedule = loan.schedule()
-    schedule['name'] = name
-    schedule['type'] = stype
-    return schedule
+    today_str = today.strftime("%d/%m/%Y")
+    res_conver = []
+    for id, item in enumerate(data):
+        rec = {'start_date': today_str, 'id': id}
+        for k, v in item.items():
+            try:
+                v = float(v)
+                rec[k] = v
+            except Exception as why:
+                rec[k] = v
+        res_conver.append(rec)
+    prop_df = pd.DataFrame(res_conver)
+    max_term = max(prop_df['term_month'])
+
+    prop_amount = get_amount(prop_df)
+    output = get_predict_res(prop_df, max_term, prop_amount)
+
+    return output
     
 
 
@@ -49,16 +41,9 @@ def analyze_debt(request):
     if request.method == "POST":
         data = request.POST.get('ssdata')
         data = json.loads(data)
-        results = []
 
-        for item in data:
-            # 计算现金流和余额
-            schedule = calculate_cash_flow(item)
-            results.append(schedule)
+        res = get_chart_ts(data)
 
-        all_schedule = pd.concat(results)
-        predict_res = get_predict_res(all_schedule)
-
-        return JsonResponse(predict_res, status=200)
+        return JsonResponse(res, status=200)
     else:
         return JsonResponse({"error": "只支持POST请求"}, status=405)

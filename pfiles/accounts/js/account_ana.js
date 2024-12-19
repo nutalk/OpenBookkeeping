@@ -4,12 +4,12 @@ $(document).ready(function(){
         const rows = document.querySelectorAll('#dataTable tbody tr');
         const sdata = Array.from(rows).slice(0, -1).map(row => ({
             name: row.cells[0].innerText,
-            categoryLarge: row.cells[1].innerText,
-            categorySmall: row.cells[2].innerText,
-            currentValue: row.cells[3].innerText.replace(/,/g, ''),
-            annualRate: row.cells[4].innerText.replace('%', ''),
-            cashFlow: row.cells[5].innerText,
-            periods: row.cells[6].innerText,
+            type: row.cells[1].innerText,
+            ctype: row.cells[2].innerText,
+            sum_amount: row.cells[3].innerText.replace(/,/g, ''),
+            rate: row.cells[4].innerText.replace('%', ''),
+            currency: row.cells[5].innerText,
+            term_month: row.cells[6].innerText,
         }));
         $.post("/analyze_debt/",
         {
@@ -24,26 +24,6 @@ $(document).ready(function(){
     })
 })
 
-
-// 动态更新小类选项
-function updateSubCategory() {
-const category = document.getElementById('categoryLarge').value;
-const subCategory = document.getElementById('categorySmall');
-subCategory.innerHTML = ''; // 清空小类
-
-let options = [];
-if (category === '资产') options = ['按月收利', '到期收本息'];
-else if (category === '负债') options = ['等额本息', '先息后本', '等额本金', '到期还本付息'];
-else if (category === '自由现金流') options = ['月度'];
-
-options.forEach(option => {
-    const opt = document.createElement('option');
-    opt.value = option;
-    opt.textContent = option;
-    subCategory.appendChild(opt);
-});
-}
-
 // 格式化数字为千位分隔符
 function formatInput(input) {
 input.value = input.value.replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -52,14 +32,7 @@ input.value = input.value.replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ','
 // 表单验证
 function validateForm() {
 const name = document.getElementById('name').value.trim();
-const categoryLarge = document.getElementById('categoryLarge').value;
-const categorySmall = document.getElementById('categorySmall').value;
-const currentValue = document.getElementById('currentValue').value.replace(/,/g, '').trim();
-
 if (!name) return alert('请填写名称！');
-if (!categoryLarge) return alert('请选择大类！');
-if (!categorySmall) return alert('请选择小类！');
-if (!currentValue || currentValue === '0') return alert('请填写当前价值！');
 
 return true;
 }
