@@ -38,18 +38,20 @@
     <tr>
       <td><input type="text" class="form-control" id="name" required></td>
       <td>
-        <select class="form-control" id="categoryLarge" onchange="updateSubCategory()">
-          <option value="1">资产</option>
-          <option value="2">负债</option>
+        <select class="form-control" id="categoryLarge">
+          <option value="固定资产">固定资产</option>
+          <option value="流动资产">流动资产</option>
+          <option value="长期负债">长期负债</option>
+          <option value="短期负债">短期负债</option>
         </select>
       </td>
       <td>
         <select class="form-control" id="categorySmall">
-          <option value="0">还款方式</option>
-          <option value="1">等额本息</option>
-          <option value="2">先息后本</option>
-          <option value="3">等额本金</option>
-          <option value="4">到期还本付息</option>
+          <option value="无">无</option>
+          <option value="等额本息">等额本息</option>
+          <option value="先息后本">先息后本</option>
+          <option value="等额本金">等额本金</option>
+          <option value="到期还本付息">到期还本付息</option>
         </select>
       </td>
       <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>
@@ -64,6 +66,39 @@
   </table>
   <!-- 预测按钮 -->
   <button class="btn btn-success btn-block mt-3" id="ana_btn">预测</button>
+
+  <div class="row row-dec row-cards">
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">负债、净资产预测</div>
+                <div id="ana_total_predict"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">净资产、现金流变动</div>
+                <div id="ana_cash_predict"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-lg-12">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="subheader">现金流明细</div>
+                    <table 
+                        id="ana_cashflow_table" 
+                        data-pagination="true">
+                    </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 {% endblock %}

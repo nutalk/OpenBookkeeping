@@ -18,8 +18,8 @@ $(document).ready(function(){
         },
         function (data, status) {
             console.log(data);
-            // update_ts_chart("long_term_chart", data.long_series, "area", '万元');
-            // update_ts_chart("short_term_chart", data.short_series, "line", '万元');
+            update_ts_chart("ana_total_predict", data.total_series, "line", '万元');
+            update_ts_chart("ana_cash_predict", data.cash_series, "bar", '元');
         });
     })
 })
@@ -69,7 +69,7 @@ row.insertCell(7).appendChild(deleteBtn);
 // 清空表单
 document.getElementById('name').value = '';
 document.getElementById('categoryLarge').value = '';
-document.getElementById('categorySmall').innerHTML = '';
+document.getElementById('categorySmall').value = '';
 document.getElementById('currentValue').value = '0';
 document.getElementById('annualRate').value = '0';
 document.getElementById('cashFlow').value = '0';

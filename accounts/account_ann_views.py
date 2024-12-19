@@ -3,8 +3,8 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from django.http import JsonResponse
-from .web_fuc import EqualDelt, InterestLoan, FinishLoan, \
-    EqualPrincipalPayment, get_predict_res, get_amount
+from .web_fuc import get_predict_res, get_amount
+from .gloab_info import prop_type_ids, liability_currency_ids
 
 
 def get_chart_ts(data: list) -> dict:
@@ -18,11 +18,16 @@ def get_chart_ts(data: list) -> dict:
     for id, item in enumerate(data):
         rec = {'start_date': today_str, 'id': id}
         for k, v in item.items():
-            try:
-                v = float(v)
+            if k == 'name':
                 rec[k] = v
-            except Exception as why:
-                rec[k] = v
+            elif k == 'type':
+                rec[k] = prop_type_ids[v]
+            elif k == 'ctype':
+                rec[k] = liability_currency_ids[v]
+            elif k == 'rate':
+                rec[k] = float(v)
+            else:
+                rec[k] = int(v)
         res_conver.append(rec)
     prop_df = pd.DataFrame(res_conver)
     max_term = max(prop_df['term_month'])
