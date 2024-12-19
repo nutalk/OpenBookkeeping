@@ -2,18 +2,19 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-from datetime import date
 from loan_calculator import Loan
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
-from .models import Prop, Detail
+from .models import Prop
 
 
 class EqualDelt:
     def __init__(self, amount: float, rate: float, start_date, today, term_month: int, ctype: int):
         """
-        等额本息，等额本金
+        rage: 3%那就是3.
+        ctype=1:等额本息，
+        ctype=3:等额本金
         """
         end_date = start_date + relativedelta(months=term_month)
         self.terms_left = (end_date.year - today.year) * 12 + end_date.month - today.month
@@ -214,7 +215,8 @@ def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None)->pd
     return all_pred
 
 
-def get_predict_res(prop_df: pd.DataFrame, show_term: int, prop_amount: dict):
+def get_predict_res(prop_df: pd.DataFrame, show_term: int, 
+                    prop_amount: dict) -> dict:
     """
     预测各月的现金流情况
     :param prop_df:

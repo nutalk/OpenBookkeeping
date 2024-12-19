@@ -1,24 +1,25 @@
-
+// 发送预测请求
 $(document).ready(function(){
-    $("#ana_bnt").click(function(){
-        var all_id = "";
-        $(":checkbox").each(function(){
-            console.log( $(this).attr("id"));
-
-            if($(this).is(":checked")==true){
-                all_id = all_id + '|';
-                all_id = all_id + $(this).attr("id");
-            }
-        })
-        $.post("/post_account_ana/",
+    $("#ana_btn").click(function(){
+        const rows = document.querySelectorAll('#dataTable tbody tr');
+        const sdata = Array.from(rows).slice(0, -1).map(row => ({
+            name: row.cells[0].innerText,
+            categoryLarge: row.cells[1].innerText,
+            categorySmall: row.cells[2].innerText,
+            currentValue: row.cells[3].innerText.replace(/,/g, ''),
+            annualRate: row.cells[4].innerText.replace('%', ''),
+            cashFlow: row.cells[5].innerText,
+            periods: row.cells[6].innerText,
+        }));
+        $.post("/analyze_debt/",
         {
+            ssdata: JSON.stringify(sdata),
             csrfmiddlewaretoken: csrftoken,
-            all_id: all_id
         },
         function (data, status) {
-        console.log(data);
-        update_ts_chart("long_term_chart", data.long_series, "area", '万元');
-        update_ts_chart("short_term_chart", data.short_series, "line", '万元');
+            console.log(data);
+            // update_ts_chart("long_term_chart", data.long_series, "area", '万元');
+            // update_ts_chart("short_term_chart", data.short_series, "line", '万元');
         });
     })
 })
@@ -32,8 +33,8 @@ subCategory.innerHTML = ''; // 清空小类
 
 let options = [];
 if (category === '资产') options = ['按月收利', '到期收本息'];
-else if (category === '负债') options = ['等额本息', '先息后本', '等额本金'];
-else if (category === '自由现金流') options = ['月度', '年度'];
+else if (category === '负债') options = ['等额本息', '先息后本', '等额本金', '到期还本付息'];
+else if (category === '自由现金流') options = ['月度'];
 
 options.forEach(option => {
     const opt = document.createElement('option');
@@ -102,25 +103,3 @@ document.getElementById('cashFlow').value = '0';
 document.getElementById('periods').value = '0';
 }
 
-// 发送预测请求
-function sendPredictionRequest() {
-const rows = document.querySelectorAll('#dataTable tbody tr');
-const data = Array.from(rows).slice(0, -1).map(row => ({
-    name: row.cells[0].innerText,
-    categoryLarge: row.cells[1].innerText,
-    categorySmall: row.cells[2].innerText,
-    currentValue: row.cells[3].innerText.replace(/,/g, ''),
-    annualRate: row.cells[4].innerText.replace('%', ''),
-    cashFlow: row.cells[5].innerText,
-    periods: row.cells[6].innerText,
-}));
-
-fetch('http://127.0.0.1/api', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-})
-    .then(response => response.json())
-    .then(data => alert('预测成功：' + JSON.stringify(data)))
-    .catch(error => alert('请求失败，请稍后重试！'));
-}
