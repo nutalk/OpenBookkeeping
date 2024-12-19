@@ -9,9 +9,14 @@
 <script src="{% static 'accounts/js/account_ana.js' %}"></script>
 <style>
     /* 设置大类和小类列的宽度 */
-    #dataTable th:nth-child(2), #dataTable td:nth-child(2), 
-    #dataTable th:nth-child(3), #dataTable td:nth-child(3) {
+    #dataTable td:nth-child(2) {
+      width: 120px; /* 设置宽度，可以根据需求调整 */
+    }
+    #dataTable td:nth-child(3) {
       width: 160px; /* 设置宽度，可以根据需求调整 */
+    }
+    #dataTable td:nth-child(8) {
+      width: 80px; /* 设置宽度，可以根据需求调整 */
     }
   </style>
 {% endblock %}
@@ -59,7 +64,7 @@
       <td><input type="number" class="form-control" id="cashFlow" value="0"></td>
       <td><input type="number" class="form-control" id="periods" value="0"></td>
       <td>
-        <button class="btn btn-primary" onclick="addRow()">增加</button>
+        <button class="btn btn-primary btn-sm" onclick="addRow()">增加</button>
       </td>
     </tr>
     </tbody>
