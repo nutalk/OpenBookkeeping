@@ -20,6 +20,7 @@ $(document).ready(function(){
             console.log(data);
             update_ts_chart("ana_total_predict", data.total_series, "line", '万元');
             update_ts_chart("ana_cash_predict", data.cash_series, "bar", '元');
+            $('#ana_cashflow_table').bootstrapTable('load', data.table)
         });
     })
 })
@@ -76,3 +77,53 @@ document.getElementById('cashFlow').value = '0';
 document.getElementById('periods').value = '0';
 }
 
+// 现金流明细表
+$(document).ready(function(){
+    $('#ana_cashflow_table').bootstrapTable({
+      columns: [
+        {
+          field: 'date',
+          title: '日期'
+        }, {
+          field: 'name',
+          title: '名称'
+        }, {
+          field: 'balance',
+          title: '余额',
+          formatter: function (value, row, index) {
+            value = parseInt(value).toString();
+            var parts = value.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+          }
+        }, {
+            field: 'payment',
+            title: "现金流",
+            formatter: function (value, row, index) {
+                value = parseInt(value).toString();
+                var parts = value.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts.join('.');
+              }
+        },{
+            field: 'amortization',
+            title: "本金",
+            formatter: function (value, row, index) {
+                value = parseInt(value).toString();
+                var parts = value.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts.join('.');
+              }
+        },{
+            field: 'interest',
+            title: "利息",
+            formatter: function (value, row, index) {
+                value = parseInt(value).toString();
+                var parts = value.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts.join('.');
+              }
+        }],
+        data:[]
+    });
+  })

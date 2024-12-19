@@ -212,6 +212,7 @@ def get_schedule(prop_df, adjust_today: bool = False, show_term: int = None)->pd
         all_df.append(schedule)
 
     all_pred = pd.concat(all_df)
+    all_pred.sort_values(['date', 'account_id'], inplace=True)
     return all_pred
 
 
@@ -230,12 +231,14 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int,
     current_det = prop_amount['de']
     result = {
         'total_series':[
-            {'name':'净资产',
+            {'name':'净值',
              'data': []},
-             {'name': '负债',
-              'data': []},
-              {'name': "现金",
-               'data': []}
+            {'name': '负债',
+            'data': []},
+            {'name': "现金",
+            'data': []},
+            {'name':'资产',
+             'data': []}
         ],
         'cash_series':[
             {'name': '净资产变动',
@@ -254,15 +257,17 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int,
         prop_add = 0
         cash_add = 0
         det_add = 0
+        current_prop = 0
         detail_str = ''
         for idx, row in recs.iterrows():
             # print(row)
-            if row['payment'] == 0:
-                continue
+            # if row['payment'] == 0:
+                # continue
             detail_str += f"{row['name']}:{round(row['payment'])},\n"
             if row['type'] <= 1:
                 prop_add += row['interest']
                 cash_add += row['payment']
+                current_prop += row['balance']
             else:
                 prop_add -= row['interest']
                 cash_add -= row['payment']
@@ -274,6 +279,7 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int,
         result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000, 2)})
         result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000, 2)})
         result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000, 2)})
+        result['total_series'][3]['data'].append({'x':x, "y":round(current_prop/10000, 2)})
         result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add, 2)})
         result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add, 2)})
 

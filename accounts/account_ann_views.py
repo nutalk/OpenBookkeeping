@@ -3,7 +3,7 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from django.http import JsonResponse
-from .web_fuc import get_predict_res, get_amount
+from .web_fuc import get_predict_res, get_amount, get_schedule
 from .gloab_info import prop_type_ids, liability_currency_ids
 
 
@@ -34,7 +34,9 @@ def get_chart_ts(data: list) -> dict:
 
     prop_amount = get_amount(prop_df)
     output = get_predict_res(prop_df, max_term, prop_amount)
-
+    schedule = get_schedule(prop_df, show_term=max_term)
+    schedule = schedule.to_dict('records')
+    output['table'] = schedule
     return output
     
 
