@@ -105,7 +105,7 @@ $(document).ready(function () {
       // update_chart(data.total_series, data.x_axis, 'total_predict', 'line');
       update_ts_chart('total_predict', data.total_series, 'line', '万元')
       // update_chart(data.cash_series, data.x_axis, 'cash_predict', 'bar');
-      update_ts_chart('cash_predict', data.cash_series, 'line', '元')
+      update_ts_chart('cash_predict', data.cash_series, 'bar', '元')
     });
   
 })

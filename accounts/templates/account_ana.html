@@ -7,49 +7,103 @@
 <script src="https://cdn.staticfile.net/apexcharts/3.45.1/apexcharts.min.js"></script>
 <script src="{% static 'accounts/js/chart_fuc.js' %}"></script>
 <script src="{% static 'accounts/js/account_ana.js' %}"></script>
+<style>
+    /* 设置大类和小类列的宽度 */
+    #dataTable td:nth-child(2) {
+      width: 120px; /* 设置宽度，可以根据需求调整 */
+    }
+    #dataTable td:nth-child(3) {
+      width: 160px; /* 设置宽度，可以根据需求调整 */
+    }
+    #dataTable td:nth-child(8) {
+      width: 80px; /* 设置宽度，可以根据需求调整 */
+    }
+  </style>
 {% endblock %}
 
 {% block main_page %}
-<div class="row row-dec row-cards">
-    {%for prop_list in type_prop%}
-    <div class="col-sm-6 col-lg-3">
+<h2>资产负债清单</h2>
+  <!-- 表格 -->
+  <table class="table table-bordered" id="dataTable">
+    <thead>
+    <tr>
+      <th>名称</th>
+      <th>类别</th>
+      <th>还款方式</th>
+      <th>当前价值</th>
+      <th>年利率 (%)</th>
+      <th>额外现金流</th>
+      <th>期数</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 数据行 -->
+    <!-- 表单行 -->
+    <tr>
+      <td><input type="text" class="form-control" id="name" required></td>
+      <td>
+        <select class="form-control" id="categoryLarge">
+          <option value="固定资产">固定资产</option>
+          <option value="流动资产">流动资产</option>
+          <option value="长期负债">长期负债</option>
+          <option value="短期负债">短期负债</option>
+        </select>
+      </td>
+      <td>
+        <select class="form-control" id="categorySmall">
+          <option value="无">无</option>
+          <option value="等额本息">等额本息</option>
+          <option value="先息后本">先息后本</option>
+          <option value="等额本金">等额本金</option>
+          <option value="到期还本付息">到期还本付息</option>
+        </select>
+      </td>
+      <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>
+      <td><input type="number" class="form-control" id="annualRate" value="0" step="0.01"></td>
+      <td><input type="number" class="form-control" id="cashFlow" value="0"></td>
+      <td><input type="number" class="form-control" id="periods" value="0"></td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick="addRow()">增加</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <!-- 预测按钮 -->
+  <button class="btn btn-success btn-block mt-3" id="ana_btn">预测</button>
+
+  <div class="row row-dec row-cards">
+    <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">{{prop_list.type_name}}</div>
-                {%for prop in prop_list.recs%}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id={{prop.id}}>
-                    <label class="form-check-label" for="flexCheckDefault">
-                      {{prop.name}}
-                    </label>
-                  </div>
-                {%endfor%}
+                <div class="subheader">负债、净资产预测</div>
+                <div id="ana_total_predict"></div>
             </div>
         </div>
     </div>
-    {%endfor%}
-
-    <div class="d-grid gap-2 col-6 mx-auto mt-2">
-        <button class="btn btn-primary" type="button" id="ana_bnt">分析</button>
-      </div>
 
     <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">长期债务与固定资产净值变化</div>
-                <div id="long_term_chart"></div>
+                <div class="subheader">净资产、现金流变动</div>
+                <div id="ana_cash_predict"></div>
             </div>
         </div>
     </div>
-
+    </div>
     <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">现金变动</div>
-                <div id="short_term_chart"></div>
+                <div class="subheader">现金流明细</div>
+                    <table 
+                        id="ana_cashflow_table" 
+                        data-pagination="true">
+                    </table>
             </div>
         </div>
     </div>
-
 </div>
+
+
+
 {% endblock %}
