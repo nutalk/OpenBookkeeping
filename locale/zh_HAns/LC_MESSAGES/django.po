@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-20 06:18+0000\n"
+"POT-Creation-Date: 2024-12-20 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "OpenBookkeep"
 msgstr "财记"
 
-#: accounts/templates/_head_foot.html:31
+#: accounts/templates/_head_foot.html:31 accounts/templates/detail.html:19
 msgid "Accounts"
 msgstr "账户"
 
@@ -36,3 +36,45 @@ msgstr "报表"
 #: accounts/templates/_head_foot.html:40
 msgid "CashFlow"
 msgstr "现金流预测"
+
+#: accounts/templates/detail.html:23 accounts/templates/detail.html:103
+#, fuzzy
+#| msgid "Accounts"
+msgid "New Account"
+msgstr "新建账户"
+
+#: accounts/templates/detail.html:53
+#, fuzzy
+#| msgid "Accounts"
+msgid "Account Info"
+msgstr "账户信息"
+
+#: accounts/templates/detail.html:58
+msgid "Edit"
+msgstr "编辑"
+
+#: accounts/templates/detail.html:59
+msgid "Delete"
+msgstr "删除"
+
+#: accounts/templates/detail.html:77
+msgid "Trades"
+msgstr "交易明细"
+
+#: accounts/templates/detail.html:82 accounts/templates/detail.html:137
+msgid "Add Trades"
+msgstr "记一笔交易"
+
+#: accounts/templates/detail.html:84 accounts/templates/detail.html:155
+msgid "Edit Trades"
+msgstr "编辑交易"
+
+#: accounts/templates/detail.html:85
+msgid "Delete Trades"
+msgstr "删除交易"
+
+#: accounts/templates/detail.html:119
+#, fuzzy
+#| msgid "Accounts"
+msgid "Edit Account"
+msgstr "编辑账户"

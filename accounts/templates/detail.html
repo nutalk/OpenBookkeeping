@@ -1,5 +1,6 @@
 {% extends '_head_foot.html' %}
 {% load static %}
+{% load i18n %}
 {% block head_js %}
 <script src="{% static 'accounts/js/account_list.js' %}"></script>
 <link rel="stylesheet" href="https://cdn.staticfile.net/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
@@ -16,11 +17,11 @@
     <div>
       <div class="row">
         <div class="col-6 pt-2">
-          <h4>账户列表</h4>
+          <h4>{% trans "Accounts" %}</h4>
         </div>
         <div class="col-6">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_account_modal">
-            新增账户
+            {% trans "New Account" %}
           </button>
         </div>
       </div>
@@ -50,13 +51,13 @@
   <div class="col-sm-9">
     <div class="row">
       <div class="col-4 pt-2">
-        <h4>账户信息</h4>
+        <h4>{% trans "Account Info" %}</h4>
       </div>
       <div class="container-fluid d-flex flex-row-reverse col-8">
       <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-primary btn-sm" id="prop_edit_btn" 
-          data-bs-toggle="modal" data-bs-target="#prop_edit_modal" disabled><i class="bi bi-pencil-square"></i>编辑</button>
-        <button type="button" class="btn btn-danger btn-sm" id="prop_del_btn" disabled><i class="bi bi-trash"></i>删除</button>
+          data-bs-toggle="modal" data-bs-target="#prop_edit_modal" disabled><i class="bi bi-pencil-square"></i>{% trans "Edit" %}</button>
+        <button type="button" class="btn btn-danger btn-sm" id="prop_del_btn" disabled><i class="bi bi-trash"></i>{% trans "Delete" %}</button>
       </div>
       </div>
     </div>
@@ -74,15 +75,15 @@
     <hr />
     <div class="row">
       <div class="col-4 pt-2">
-        <h4>交易明细</h4>
+        <h4>{% trans "Trades" %}</h4>
       </div>
       <div class="container-fluid d-flex flex-row-reverse col-8">
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-primary btn-sm" id="detail_add_btn" 
-          data-bs-toggle="modal" data-bs-target="#detail_new_modal" disabled><i class="bi bi-file-plus"></i>增加明细</button>
+          data-bs-toggle="modal" data-bs-target="#detail_new_modal" disabled><i class="bi bi-file-plus"></i>{% trans "Add Trades" %}</button>
           <button type="button" class="btn btn-primary btn-sm" id="detail_edit_btn" 
-            data-bs-toggle="modal" data-bs-target="#detail_edit_modal" disabled><i class="bi bi-pencil-square"></i>编辑明细</button>
-          <button type="button" class="btn btn-danger btn-sm" id="detail_del_btn" disabled><i class="bi bi-trash"></i>删除明细</button>
+            data-bs-toggle="modal" data-bs-target="#detail_edit_modal" disabled><i class="bi bi-pencil-square"></i>{% trans "Edit Trades" %}</button>
+          <button type="button" class="btn btn-danger btn-sm" id="detail_del_btn" disabled><i class="bi bi-trash"></i>{% trans "Delete Trades" %}</button>
         </div>
       </div>
     </div>
@@ -100,7 +101,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">新增账户</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "New Account" %}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -116,7 +117,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="prop_edit_modal">编辑账户</h1>
+        <h1 class="modal-title fs-5" id="prop_edit_modal">{% trans "Edit Account" %}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -134,7 +135,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">新增明细</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Add Trades" %}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -152,7 +153,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">编辑明细</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Edit Trades" %}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
