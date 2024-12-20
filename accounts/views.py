@@ -10,7 +10,6 @@ from .forms import PropNewForm, DetailForm, PropEditForm
 from .gloab_info import prop_type_ids, prop_type_items, \
     liability_currency_ids, liability_currency_types, account_info_show
 from django.utils.translation import get_language, gettext as _
-import gettext as gg
 # Create your views here.
 
 
@@ -27,9 +26,6 @@ def retrans_date_str(input_date: str) -> str:
 
 # 账户与明细页面
 def details(request):
-    current_language = get_language()
-    test_message = _("Hello, world!")
-    print(f"Current language: {current_language}， {test_message=}")
     prop_new_form = PropNewForm(action_str='/prop_new/', form_id='prop_new', form_class='prop_new_form')
     prop_edit_form = PropEditForm(action_str='/prop_edit/', form_id='prop_edit', form_class='prop_edit_form')
     detail_new_form = DetailForm(action_str='/detail_new/', form_id='detail_new', form_class='detail_new_form')

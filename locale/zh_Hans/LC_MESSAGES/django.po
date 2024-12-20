@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-20 08:48+0000\n"
+"POT-Creation-Date: 2024-12-20 09:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +15,66 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: accounts/forms.py:11 accounts/forms.py:53
+#| msgid "Accounts"
+msgid "Account Name"
+msgstr "账户"
+
+#: accounts/forms.py:13 accounts/forms.py:55
+#| msgid "Accounts"
+msgid "Account Type"
+msgstr "账户类型"
+
+#: accounts/forms.py:14 accounts/forms.py:56
+msgid "Start Date"
+msgstr "起始日期"
+
+#: accounts/forms.py:16 accounts/forms.py:58
+msgid "Terms"
+msgstr "期限"
+
+#: accounts/forms.py:17 accounts/forms.py:27 accounts/forms.py:59
+msgid "Interest Rate"
+msgstr "年利率"
+
+#: accounts/forms.py:18 accounts/forms.py:60
+#| msgid "CashFlow"
+msgid "Cash Flow"
+msgstr "现金流预测"
+
+#: accounts/forms.py:20 accounts/forms.py:62
+msgid "Repayment"
+msgstr "还款方式"
+
+#: accounts/forms.py:21 accounts/forms.py:63 accounts/forms.py:92
+msgid "Comment"
+msgstr "备注"
+
+#: accounts/forms.py:22
+#| msgid "Balance"
+msgid "Init Balance"
+msgstr "初始余额"
+
+#: accounts/forms.py:40 accounts/forms.py:77
+msgid "month"
+msgstr "月"
+
+#: accounts/forms.py:45 accounts/forms.py:105
+msgid "$"
+msgstr "￥"
+
+#: accounts/forms.py:48 accounts/forms.py:83 accounts/forms.py:109
+msgid "Submit"
+msgstr "提交"
+
+#: accounts/forms.py:89
+msgid "Date"
+msgstr "日期"
+
+#: accounts/forms.py:91
+msgid "amount"
+msgstr "金额"
 
 #: accounts/templates/_head_foot.html:7 accounts/templates/_head_foot.html:26
 msgid "OpenBookkeep"
@@ -38,13 +97,11 @@ msgid "CashFlow"
 msgstr "现金流预测"
 
 #: accounts/templates/detail.html:24 accounts/templates/detail.html:104
-#, fuzzy
 #| msgid "Accounts"
 msgid "New Account"
 msgstr "新建账户"
 
 #: accounts/templates/detail.html:54
-#, fuzzy
 #| msgid "Accounts"
 msgid "Account Info"
 msgstr "账户信息"
@@ -74,11 +131,6 @@ msgid "Delete Trades"
 msgstr "删除交易"
 
 #: accounts/templates/detail.html:120
-#, fuzzy
 #| msgid "Accounts"
 msgid "Edit Account"
 msgstr "编辑账户"
-
-#: accounts/views.py:31
-msgid "Hello, world!"
-msgstr "你好世界"
