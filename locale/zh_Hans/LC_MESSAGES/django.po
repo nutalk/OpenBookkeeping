@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-26 02:35+0000\n"
+"POT-Creation-Date: 2024-12-26 06:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,11 +56,12 @@ msgstr "初始余额"
 msgid "month"
 msgstr "月"
 
-#: accounts/forms.py:45 accounts/forms.py:105
+#: accounts/forms.py:45 accounts/forms.py:105 accounts/templates/check.html:27
 msgid "$"
 msgstr "￥"
 
 #: accounts/forms.py:48 accounts/forms.py:83 accounts/forms.py:109
+#: accounts/templates/check.html:36
 msgid "Submit"
 msgstr "提交"
 
@@ -91,6 +92,10 @@ msgstr "报表"
 #: accounts/templates/_head_foot.html:40
 msgid "CashFlow"
 msgstr "现金流预测"
+
+#: accounts/templates/check.html:9
+msgid "Check the account balance"
+msgstr "核对余额"
 
 #: accounts/templates/detail.html:24 accounts/templates/detail.html:104
 msgid "New Account"
@@ -128,18 +133,78 @@ msgstr "删除交易"
 msgid "Edit Account"
 msgstr "编辑账户"
 
+#: accounts/templates/report.html:28
+#| msgid "Capital Assets"
+msgid "Total Assets"
+msgstr "固定资产"
+
+#: accounts/templates/report.html:36
+#| msgid "Long-term Liabilities"
+msgid "Total Liabilities"
+msgstr "长期负债"
+
+#: accounts/templates/report.html:44
+msgid "Net asset"
+msgstr "净资产"
+
+#: accounts/templates/report.html:52
+msgid "Liquid Fund"
+msgstr "流动资金"
+
+#: accounts/templates/report.html:61
+msgid "Asset Composition"
+msgstr "资产组成"
+
+#: accounts/templates/report.html:70
+msgid "Liability Composition"
+msgstr "负债组成"
+
+#: accounts/templates/report.html:79
+msgid "Income"
+msgstr "收入"
+
+#: accounts/templates/report.html:87
+msgid "Expense"
+msgstr "支出"
+
+#: accounts/templates/report.html:95
+msgid "Net Income"
+msgstr "净收入"
+
+#: accounts/templates/report.html:104
+msgid "Income Composition"
+msgstr "收入组成"
+
+#: accounts/templates/report.html:113
+msgid "Expense Composition"
+msgstr "支出组成"
+
+#: accounts/templates/report.html:126
+msgid "History of assets and liabilities"
+msgstr "资产负债变化"
+
+#: accounts/templates/report.html:134
+msgid "Detial of selected month"
+msgstr "所选月详情"
+
+#: accounts/templates/report.html:146
+msgid "Details of assets and liabilities"
+msgstr "资产负债明细"
+
+#: accounts/templates/report.html:162
+msgid "Prediction of assets and liabilities"
+msgstr "资产负债预测"
+
+#: accounts/templates/report.html:171
+msgid "History of net asset and cash"
+msgstr "净资产、现金流变动"
+
 #: accounts/views.py:117
 msgid "Init ammount"
 msgstr "初始金额"
 
-msgid "Capital Assets"
-msgstr "固定资产"
-
 msgid "Liquid Assets"
 msgstr "流动资产"
-
-msgid "Long-term Liabilities"
-msgstr "长期负债"
 
 msgid "Current Liability"
 msgstr "短期负债"
@@ -158,6 +223,3 @@ msgstr "等额本金"
 
 msgid "Upon maturity"
 msgstr "到期还本付息"
-
-msgid "Check the account balance"
-msgstr "核对余额"

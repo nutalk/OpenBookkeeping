@@ -1,5 +1,6 @@
 {% extends '_head_foot.html' %}
 {% load static %}
+{% load i18n %}
 {% block head_js %}
 <link rel="stylesheet" href="https://cdn.staticfile.net/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="{% static 'bs_table/bootstrap-table.min.css' %}">
@@ -24,7 +25,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">资产</div>
+                        <div class="subheader">{% trans "Total Assets" %}</div>
                         <h5 id="assets">￥5000</h5>
                     </div>
                 </div>
@@ -32,7 +33,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">负债</div>
+                        <div class="subheader">{%trans "Total Liabilities" %}</div>
                         <h5 id="debt">￥4000</h5>
                     </div>
                 </div>
@@ -40,7 +41,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">净值</div>
+                        <div class="subheader">{%trans "Net asset"%}</div>
                         <h5 id="net">￥4000</h5>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">流动资金</div>
+                        <div class="subheader">{%trans "Liquid Fund"%}</div>
                         <h5 id="cash">￥4000</h5>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
             <div class="col-sm-12 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">资产组成</div>
+                        <div class="subheader">{%trans "Asset Composition"%}</div>
                         <div id="assets_part"></div>
                     </div>
                 </div>
@@ -66,7 +67,7 @@
             <div class="col-sm-12 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">负债组成</div>
+                        <div class="subheader">{%trans "Liability Composition"%}</div>
                         <div id="det_part"></div>
                     </div>
                 </div>
@@ -75,7 +76,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">总收入</div>
+                        <div class="subheader">{%trans "Income"%}</div>
                         <h5 id="income_total">￥5000</h5>
                     </div>
                 </div>
@@ -83,7 +84,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">总支出</div>
+                        <div class="subheader">{%trans "Expense"%}</div>
                         <h5 id="outcome_total">￥4000</h5>
                     </div>
                 </div>
@@ -91,7 +92,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">净收入</div>
+                        <div class="subheader">{%trans "Net Income"%}</div>
                         <h5 id="netcome_total">￥4000</h5>
                     </div>
                 </div>
@@ -100,7 +101,7 @@
             <div class="col-sm-12 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">收入组成</div>
+                        <div class="subheader">{%trans "Income Composition"%}</div>
                         <div id="income_part"></div>
                     </div>
                 </div>
@@ -109,7 +110,7 @@
             <div class="col-sm-12 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">支出组成</div>
+                        <div class="subheader">{%trans "Expense Composition"%}</div>
                         <div id="outcome_part"></div>
                     </div>
                 </div>
@@ -122,7 +123,7 @@
             <div class="col-sm-12 col-lg-12">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">资产负债变化</div>
+                        <div class="subheader">{%trans "History of assets and liabilities"%}</div>
                         <div id="total_change"></div>
                     </div>
                 </div>
@@ -130,7 +131,7 @@
             <div class="col-sm-6 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">所选月详情</div>
+                        <div class="subheader">{%trans "Detial of selected month"%}</div>
                             <table 
                                 id="total_month_detail" 
                                 data-pagination="true">
@@ -142,7 +143,7 @@
             <div class="col-sm-6 col-lg-6">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">资产负债明细</div>
+                        <div class="subheader">{%trans "Details of assets and liabilities"%}</div>
                             <table 
                                 id="total_change_table" 
                                 data-pagination="true">
@@ -158,7 +159,7 @@
             <div class="col-sm-12 col-lg-12">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">负债、净资产预测</div>
+                        <div class="subheader">{% trans "Prediction of assets and liabilities"%}</div>
                         <div id="total_predict"></div>
                     </div>
                 </div>
@@ -167,7 +168,7 @@
             <div class="col-sm-12 col-lg-12">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <div class="subheader">净资产、现金流变动</div>
+                        <div class="subheader">{%trans "History of net asset and cash"%}</div>
                         <div id="cash_predict"></div>
                     </div>
                 </div>
