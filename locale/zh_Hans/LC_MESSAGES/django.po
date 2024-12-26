@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-20 09:18+0000\n"
+"POT-Creation-Date: 2024-12-26 02:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: accounts/forms.py:11 accounts/forms.py:53
-#| msgid "Accounts"
 msgid "Account Name"
 msgstr "账户"
 
 #: accounts/forms.py:13 accounts/forms.py:55
-#| msgid "Accounts"
 msgid "Account Type"
 msgstr "账户类型"
 
@@ -34,12 +32,11 @@ msgstr "起始日期"
 msgid "Terms"
 msgstr "期限"
 
-#: accounts/forms.py:17 accounts/forms.py:27 accounts/forms.py:59
+#: accounts/forms.py:17 accounts/forms.py:59
 msgid "Interest Rate"
 msgstr "年利率"
 
 #: accounts/forms.py:18 accounts/forms.py:60
-#| msgid "CashFlow"
 msgid "Cash Flow"
 msgstr "现金流预测"
 
@@ -51,8 +48,7 @@ msgstr "还款方式"
 msgid "Comment"
 msgstr "备注"
 
-#: accounts/forms.py:22
-#| msgid "Balance"
+#: accounts/forms.py:22 accounts/forms.py:27
 msgid "Init Balance"
 msgstr "初始余额"
 
@@ -97,12 +93,10 @@ msgid "CashFlow"
 msgstr "现金流预测"
 
 #: accounts/templates/detail.html:24 accounts/templates/detail.html:104
-#| msgid "Accounts"
 msgid "New Account"
 msgstr "新建账户"
 
 #: accounts/templates/detail.html:54
-#| msgid "Accounts"
 msgid "Account Info"
 msgstr "账户信息"
 
@@ -131,6 +125,9 @@ msgid "Delete Trades"
 msgstr "删除交易"
 
 #: accounts/templates/detail.html:120
-#| msgid "Accounts"
 msgid "Edit Account"
 msgstr "编辑账户"
+
+#: accounts/views.py:117
+msgid "Init ammount"
+msgstr "初始金额"

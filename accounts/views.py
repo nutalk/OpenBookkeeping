@@ -36,7 +36,7 @@ def details(request):
         "prop_edit_form": prop_edit_form,
         'detail_new_form': detail_new_form,
         'detail_edit_form': detail_edit_form,
-        'show_info': [{'id': k, 'show': v} for k, v in account_info_show.items()]
+        'show_info': [{'id': k, 'show': _(v)} for k, v in account_info_show.items()]
     }
     for prop_type_name, prop_type_id in prop_type_ids.items():
         rec = {'type_name': _(prop_type_name),
