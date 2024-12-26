@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-26 06:45+0000\n"
+"POT-Creation-Date: 2024-12-26 06:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,69 +133,80 @@ msgstr "删除交易"
 msgid "Edit Account"
 msgstr "编辑账户"
 
-#: accounts/templates/report.html:28
-#| msgid "Capital Assets"
+#: accounts/templates/report.html:18
+#| msgid "Account Name"
+msgid "Account overview"
+msgstr "账户概述"
+
+#: accounts/templates/report.html:20
+msgid "History report"
+msgstr "历史变动"
+
+#: accounts/templates/report.html:22
+msgid "Prediction report"
+msgstr "资产预测"
+
+#: accounts/templates/report.html:31
 msgid "Total Assets"
 msgstr "固定资产"
 
-#: accounts/templates/report.html:36
-#| msgid "Long-term Liabilities"
+#: accounts/templates/report.html:39
 msgid "Total Liabilities"
 msgstr "长期负债"
 
-#: accounts/templates/report.html:44
+#: accounts/templates/report.html:47
 msgid "Net asset"
 msgstr "净资产"
 
-#: accounts/templates/report.html:52
+#: accounts/templates/report.html:55
 msgid "Liquid Fund"
 msgstr "流动资金"
 
-#: accounts/templates/report.html:61
+#: accounts/templates/report.html:64
 msgid "Asset Composition"
 msgstr "资产组成"
 
-#: accounts/templates/report.html:70
+#: accounts/templates/report.html:73
 msgid "Liability Composition"
 msgstr "负债组成"
 
-#: accounts/templates/report.html:79
+#: accounts/templates/report.html:82
 msgid "Income"
 msgstr "收入"
 
-#: accounts/templates/report.html:87
+#: accounts/templates/report.html:90
 msgid "Expense"
 msgstr "支出"
 
-#: accounts/templates/report.html:95
+#: accounts/templates/report.html:98
 msgid "Net Income"
 msgstr "净收入"
 
-#: accounts/templates/report.html:104
+#: accounts/templates/report.html:107
 msgid "Income Composition"
 msgstr "收入组成"
 
-#: accounts/templates/report.html:113
+#: accounts/templates/report.html:116
 msgid "Expense Composition"
 msgstr "支出组成"
 
-#: accounts/templates/report.html:126
+#: accounts/templates/report.html:129
 msgid "History of assets and liabilities"
 msgstr "资产负债变化"
 
-#: accounts/templates/report.html:134
+#: accounts/templates/report.html:137
 msgid "Detial of selected month"
 msgstr "所选月详情"
 
-#: accounts/templates/report.html:146
+#: accounts/templates/report.html:149
 msgid "Details of assets and liabilities"
 msgstr "资产负债明细"
 
-#: accounts/templates/report.html:162
+#: accounts/templates/report.html:165
 msgid "Prediction of assets and liabilities"
 msgstr "资产负债预测"
 
-#: accounts/templates/report.html:171
+#: accounts/templates/report.html:174
 msgid "History of net asset and cash"
 msgstr "净资产、现金流变动"
 
@@ -203,23 +214,23 @@ msgstr "净资产、现金流变动"
 msgid "Init ammount"
 msgstr "初始金额"
 
-msgid "Liquid Assets"
-msgstr "流动资产"
+ msgid "Liquid Assets"
+ msgstr "流动资产"
 
-msgid "Current Liability"
-msgstr "短期负债"
+ msgid "Current Liability"
+ msgstr "短期负债"
 
-msgid "No"
-msgstr "无"
+ msgid "No"
+ msgstr "无"
 
-msgid "Fixed-payment"
-msgstr "等额本息"
+ msgid "Fixed-payment"
+ msgstr "等额本息"
 
-msgid "Interest-first"
-msgstr "先息后本"
+ msgid "Interest-first"
+ msgstr "先息后本"
 
-msgid "Fixed-principal"
-msgstr "等额本金"
+ msgid "Fixed-principal"
+ msgstr "等额本金"
 
-msgid "Upon maturity"
-msgstr "到期还本付息"
+ msgid "Upon maturity"
+ msgstr "到期还本付息"
