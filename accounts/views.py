@@ -63,9 +63,9 @@ def prop_detail_post(request):
         result= []
         for k, v in prop.items():
             if k == 'p_type':
-                res = prop_type_items[v]
+                res = _(prop_type_items[v])
             elif k == 'ctype':
-                res = liability_currency_types[v]
+                res = _(liability_currency_types[v])
             elif k == 'start_date':
                 res = trans_date_str(v)
             else:

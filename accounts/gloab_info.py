@@ -2,7 +2,7 @@ prop_type_items = ['Capital Assets', 'Liquid Assets', 'Long-term Liabilities', '
 
 prop_type_ids = {item: idx for idx, item in enumerate(prop_type_items)}
 
-liability_currency_types = ['No', 'Fixed-payment ', 'Interest-first', 'Fixed-principal', 'Upon maturity']
+liability_currency_types = ['No', 'Fixed-payment', 'Interest-first', 'Fixed-principal', 'Upon maturity']
 
 liability_currency_ids = {item: idx for idx, item in enumerate(liability_currency_types)}
 

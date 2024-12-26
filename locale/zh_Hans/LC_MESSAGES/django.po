@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-26 02:31+0000\n"
+"POT-Creation-Date: 2024-12-26 02:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,3 +131,30 @@ msgstr "编辑账户"
 #: accounts/views.py:117
 msgid "Init ammount"
 msgstr "初始金额"
+
+msgid "Capital Assets"
+msgstr "固定资产"
+
+msgid "Liquid Assets"
+msgstr "流动资产"
+
+msgid "Long-term Liabilities"
+msgstr "长期负债"
+
+msgid "Current Liability"
+msgstr "短期负债"
+
+msgid "No"
+msgstr "无"
+
+msgid "Fixed-payment"
+msgstr "等额本息"
+
+msgid "Interest-first"
+msgstr "先息后本"
+
+msgid "Fixed-principal"
+msgstr "等额本金"
+
+msgid "Upon maturity"
+msgstr "到期还本付息"
