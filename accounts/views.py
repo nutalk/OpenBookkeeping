@@ -39,7 +39,7 @@ def details(request):
         'show_info': [{'id': k, 'show': v} for k, v in account_info_show.items()]
     }
     for prop_type_name, prop_type_id in prop_type_ids.items():
-        rec = {'type_name': prop_type_name,
+        rec = {'type_name': _(prop_type_name),
                'id': f"collapse_{prop_type_id}",
                'href': f"#collapse_{prop_type_id}"}
         type_prop = Prop.objects.filter(p_type=prop_type_id).values()
@@ -51,7 +51,7 @@ def details(request):
 
 def get_prop_from_request(request, pname = 'prop_id'):
     prop_id = request.POST.get(pname)
-    *_, id = prop_id.split('_')
+    *ww, id = prop_id.split('_')
     prop = Prop.objects.filter(id=id).values()[0]
     return prop
 
@@ -114,7 +114,7 @@ def prop_new(request):
             target_id = new_prop,
             occur_date = retrans_date_str(request.POST.get('start_date')),
             amount = request.POST.get('init_ammount'),
-            comment = '初始金额'
+            comment = _('Init ammount')
         )
         detail.save()
     return redirect("/")
