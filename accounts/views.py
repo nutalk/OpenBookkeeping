@@ -9,7 +9,7 @@ from .models import Prop, Detail
 from .forms import PropNewForm, DetailForm, PropEditForm
 from .gloab_info import prop_type_ids, prop_type_items, \
     liability_currency_ids, liability_currency_types, account_info_show
-from django.utils.translation import get_language, gettext as _
+from django.utils.translation import gettext as _
 # Create your views here.
 
 

@@ -6,6 +6,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Sum
+from django.utils.translation import gettext as _
 from .models import Prop, Detail
 from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule, get_next_cash
 from .gloab_info import history_month_term, prop_type_ids
