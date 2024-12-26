@@ -205,7 +205,7 @@ def book_check(request):
         output[obj_type].append(rec)
 
     for k, v in output.items():
-        rec = {'k': k, 'v': v}
+        rec = {'k': _(k), 'v': v}
         contex['type_prop'].append(rec)
     
     template = loader.get_template('check.html')

@@ -158,3 +158,6 @@ msgstr "等额本金"
 
 msgid "Upon maturity"
 msgstr "到期还本付息"
+
+msgid "Check the account balance"
+msgstr "核对余额"
