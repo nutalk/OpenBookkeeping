@@ -9,6 +9,7 @@ from .models import Prop, Detail
 from .forms import PropNewForm, DetailForm, PropEditForm
 from .gloab_info import prop_type_ids, prop_type_items, \
     liability_currency_ids, liability_currency_types, account_info_show
+from django.utils.translation import gettext as _
 # Create your views here.
 
 
@@ -22,6 +23,7 @@ def retrans_date_str(input_date: str) -> str:
     res = true_date.strftime("%d/%m/%Y")
     return res
 
+
 # 账户与明细页面
 def details(request):
     prop_new_form = PropNewForm(action_str='/prop_new/', form_id='prop_new', form_class='prop_new_form')
@@ -34,10 +36,10 @@ def details(request):
         "prop_edit_form": prop_edit_form,
         'detail_new_form': detail_new_form,
         'detail_edit_form': detail_edit_form,
-        'show_info': [{'id': k, 'show': v} for k, v in account_info_show.items()]
+        'show_info': [{'id': k, 'show': _(v)} for k, v in account_info_show.items()]
     }
     for prop_type_name, prop_type_id in prop_type_ids.items():
-        rec = {'type_name': prop_type_name,
+        rec = {'type_name': _(prop_type_name),
                'id': f"collapse_{prop_type_id}",
                'href': f"#collapse_{prop_type_id}"}
         type_prop = Prop.objects.filter(p_type=prop_type_id).values()
@@ -49,7 +51,7 @@ def details(request):
 
 def get_prop_from_request(request, pname = 'prop_id'):
     prop_id = request.POST.get(pname)
-    *_, id = prop_id.split('_')
+    *ww, id = prop_id.split('_')
     prop = Prop.objects.filter(id=id).values()[0]
     return prop
 
@@ -61,9 +63,9 @@ def prop_detail_post(request):
         result= []
         for k, v in prop.items():
             if k == 'p_type':
-                res = prop_type_items[v]
+                res = _(prop_type_items[v])
             elif k == 'ctype':
-                res = liability_currency_types[v]
+                res = _(liability_currency_types[v])
             elif k == 'start_date':
                 res = trans_date_str(v)
             else:
@@ -112,7 +114,7 @@ def prop_new(request):
             target_id = new_prop,
             occur_date = retrans_date_str(request.POST.get('start_date')),
             amount = request.POST.get('init_ammount'),
-            comment = '初始金额'
+            comment = _('Init ammount')
         )
         detail.save()
     return redirect("/")
@@ -203,7 +205,7 @@ def book_check(request):
         output[obj_type].append(rec)
 
     for k, v in output.items():
-        rec = {'k': k, 'v': v}
+        rec = {'k': _(k), 'v': v}
         contex['type_prop'].append(rec)
     
     template = loader.get_template('check.html')

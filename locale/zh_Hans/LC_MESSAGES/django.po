@@ -1,0 +1,273 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-27 08:16+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: accounts/forms.py:11 accounts/forms.py:53
+#: accounts/templates/account_ana.html:31
+msgid "Account Name"
+msgstr "账户名称"
+
+#: accounts/forms.py:13 accounts/forms.py:55
+#: accounts/templates/account_ana.html:32
+msgid "Account Type"
+msgstr "账户类型"
+
+#: accounts/forms.py:14 accounts/forms.py:56
+msgid "Start Date"
+msgstr "起始日期"
+
+#: accounts/forms.py:16 accounts/forms.py:58
+#: accounts/templates/account_ana.html:37
+msgid "Terms"
+msgstr "期限"
+
+#: accounts/forms.py:17 accounts/forms.py:59
+#: accounts/templates/account_ana.html:35
+msgid "Interest Rate"
+msgstr "年利率"
+
+#: accounts/forms.py:18 accounts/forms.py:60
+#: accounts/templates/account_ana.html:36
+msgid "Cash Flow"
+msgstr "现金流"
+
+#: accounts/forms.py:20 accounts/forms.py:62
+#: accounts/templates/account_ana.html:33
+msgid "Repayment"
+msgstr "还款方式"
+
+#: accounts/forms.py:21 accounts/forms.py:63 accounts/forms.py:92
+msgid "Comment"
+msgstr "备注"
+
+#: accounts/forms.py:22 accounts/forms.py:27
+#: accounts/templates/account_ana.html:34
+msgid "Init Balance"
+msgstr "初始余额"
+
+#: accounts/forms.py:40 accounts/forms.py:77
+msgid "month"
+msgstr "月"
+
+#: accounts/forms.py:45 accounts/forms.py:105 accounts/templates/check.html:27
+msgid "$"
+msgstr "￥"
+
+#: accounts/forms.py:48 accounts/forms.py:83 accounts/forms.py:109
+#: accounts/templates/check.html:36
+msgid "Submit"
+msgstr "提交"
+
+#: accounts/forms.py:89
+msgid "Date"
+msgstr "日期"
+
+#: accounts/forms.py:91
+msgid "amount"
+msgstr "金额"
+
+#: accounts/templates/_head_foot.html:7 accounts/templates/_head_foot.html:26
+msgid "OpenBookkeep"
+msgstr "财记"
+
+#: accounts/templates/_head_foot.html:31 accounts/templates/detail.html:20
+msgid "Accounts"
+msgstr "账户"
+
+#: accounts/templates/_head_foot.html:34
+msgid "Balance"
+msgstr "余额"
+
+#: accounts/templates/_head_foot.html:37
+msgid "Report"
+msgstr "报表"
+
+#: accounts/templates/_head_foot.html:40
+msgid "CashFlow"
+msgstr "现金流预测"
+
+#: accounts/templates/account_ana.html:26
+#| msgid "History of assets and liabilities"
+msgid "Assets and liabilities"
+msgstr "资产负债变化"
+
+#: accounts/templates/account_ana.html:38 accounts/templates/detail.html:59
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Capital Assets"
+msgstr "固定资产"
+
+#: accounts/templates/account_ana.html:49
+msgid "Liquid Assets"
+msgstr "流动资产"
+
+#: accounts/templates/account_ana.html:50
+msgid "Long-term Liabilities"
+msgstr "长期负债"
+
+#: accounts/templates/account_ana.html:51
+msgid "Current Liability"
+msgstr "短期负债"
+
+#: accounts/templates/account_ana.html:56
+msgid "No"
+msgstr "无"
+
+#: accounts/templates/account_ana.html:57
+msgid "Fixed-payment"
+msgstr "等额本息"
+
+#: accounts/templates/account_ana.html:58
+msgid "Interest-first"
+msgstr "先息后本"
+
+#: accounts/templates/account_ana.html:59
+msgid "Fixed-principal"
+msgstr "等额本金"
+
+#: accounts/templates/account_ana.html:60
+msgid "Upon maturity"
+msgstr "到期还本付息"
+
+#: accounts/templates/account_ana.html:68
+msgid "Add"
+msgstr "增加"
+
+#: accounts/templates/account_ana.html:74
+msgid "Predict"
+msgstr "预测"
+
+#: accounts/templates/account_ana.html:80 accounts/templates/report.html:165
+msgid "Prediction of assets and liabilities"
+msgstr "资产负债预测"
+
+#: accounts/templates/account_ana.html:89 accounts/templates/report.html:174
+msgid "History of net asset and cash"
+msgstr "净资产、现金流变动"
+
+#: accounts/templates/account_ana.html:98
+msgid "Detail of cash flow"
+msgstr "现金流明细"
+
+#: accounts/templates/check.html:9
+msgid "Check the account balance"
+msgstr "核对余额"
+
+#: accounts/templates/detail.html:24 accounts/templates/detail.html:104
+msgid "New Account"
+msgstr "新建账户"
+
+#: accounts/templates/detail.html:54
+msgid "Account Info"
+msgstr "账户信息"
+
+#: accounts/templates/detail.html:60
+msgid "Delete"
+msgstr "删除"
+
+#: accounts/templates/detail.html:78
+msgid "Trades"
+msgstr "交易明细"
+
+#: accounts/templates/detail.html:83 accounts/templates/detail.html:138
+msgid "Add Trades"
+msgstr "记一笔交易"
+
+#: accounts/templates/detail.html:85 accounts/templates/detail.html:156
+msgid "Edit Trades"
+msgstr "编辑交易"
+
+#: accounts/templates/detail.html:86
+msgid "Delete Trades"
+msgstr "删除交易"
+
+#: accounts/templates/detail.html:120
+msgid "Edit Account"
+msgstr "编辑账户"
+
+#: accounts/templates/report.html:18
+msgid "Account overview"
+msgstr "账户概述"
+
+#: accounts/templates/report.html:20
+msgid "History report"
+msgstr "历史变动"
+
+#: accounts/templates/report.html:22
+msgid "Prediction report"
+msgstr "资产预测"
+
+#: accounts/templates/report.html:31
+msgid "Total Assets"
+msgstr "资产"
+
+#: accounts/templates/report.html:39
+msgid "Total Liabilities"
+msgstr "负债"
+
+#: accounts/templates/report.html:47
+msgid "Net asset"
+msgstr "净资产"
+
+#: accounts/templates/report.html:55
+msgid "Liquid Fund"
+msgstr "流动资金"
+
+#: accounts/templates/report.html:64
+msgid "Asset Composition"
+msgstr "资产组成"
+
+#: accounts/templates/report.html:73
+msgid "Liability Composition"
+msgstr "负债组成"
+
+#: accounts/templates/report.html:82
+msgid "Income"
+msgstr "收入"
+
+#: accounts/templates/report.html:90
+msgid "Expense"
+msgstr "支出"
+
+#: accounts/templates/report.html:98
+msgid "Net Income"
+msgstr "净收入"
+
+#: accounts/templates/report.html:107
+msgid "Income Composition"
+msgstr "收入组成"
+
+#: accounts/templates/report.html:116
+msgid "Expense Composition"
+msgstr "支出组成"
+
+#: accounts/templates/report.html:129
+msgid "History of assets and liabilities"
+msgstr "资产负债变化"
+
+#: accounts/templates/report.html:137
+msgid "Detial of selected month"
+msgstr "所选月详情"
+
+#: accounts/templates/report.html:149
+msgid "Details of assets and liabilities"
+msgstr "资产负债明细"
+
+#: accounts/views.py:117
+msgid "Init ammount"
+msgstr "初始金额"

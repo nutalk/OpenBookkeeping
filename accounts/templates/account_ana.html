@@ -1,5 +1,6 @@
 {% extends '_head_foot.html' %}
 {% load static %}
+{% load i18n %}
 {% block head_js %}
 <link rel="stylesheet" href="https://cdn.staticfile.net/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="{% static 'bs_table/bootstrap-table.min.css' %}">
@@ -22,19 +23,19 @@
 {% endblock %}
 
 {% block main_page %}
-<h2>资产负债清单</h2>
+<h2>{% trans "Assets and liabilities" %}</h2>
   <!-- 表格 -->
   <table class="table table-bordered" id="dataTable">
     <thead>
     <tr>
-      <th>名称</th>
-      <th>类别</th>
-      <th>还款方式</th>
-      <th>当前价值</th>
-      <th>年利率 (%)</th>
-      <th>额外现金流</th>
-      <th>期数</th>
-      <th>操作</th>
+      <th>{% trans "Account Name" %}</th>
+      <th>{% trans "Account Type" %}</th>
+      <th>{% trans "Repayment" %}</th>
+      <th>{% trans "Init Balance" %}</th>
+      <th>{% trans "Interest Rate" %}(%)</th>
+      <th>{% trans "Cash Flow" %}</th>
+      <th>{% trans "Terms" %}</th>
+      <th>{% trans "Edit" %}</th>
     </tr>
     </thead>
     <tbody>
@@ -44,19 +45,19 @@
       <td><input type="text" class="form-control" id="name" required></td>
       <td>
         <select class="form-control" id="categoryLarge">
-          <option value="固定资产">固定资产</option>
-          <option value="流动资产">流动资产</option>
-          <option value="长期负债">长期负债</option>
-          <option value="短期负债">短期负债</option>
+          <option value="固定资产">{% trans "Capital Assets" %}</option>
+          <option value="流动资产">{% trans "Liquid Assets" %}</option>
+          <option value="长期负债">{% trans "Long-term Liabilities" %}</option>
+          <option value="短期负债">{% trans "Current Liability" %}</option>
         </select>
       </td>
       <td>
         <select class="form-control" id="categorySmall">
-          <option value="无">无</option>
-          <option value="等额本息">等额本息</option>
-          <option value="先息后本">先息后本</option>
-          <option value="等额本金">等额本金</option>
-          <option value="到期还本付息">到期还本付息</option>
+          <option value="无">{% trans "No" %}</option>
+          <option value="等额本息">{% trans "Fixed-payment" %}</option>
+          <option value="先息后本">{% trans "Interest-first" %}</option>
+          <option value="等额本金">{% trans "Fixed-principal" %}</option>
+          <option value="到期还本付息">{% trans "Upon maturity" %}</option>
         </select>
       </td>
       <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>
@@ -64,19 +65,19 @@
       <td><input type="number" class="form-control" id="cashFlow" value="0"></td>
       <td><input type="number" class="form-control" id="periods" value="0"></td>
       <td>
-        <button class="btn btn-primary btn-sm" onclick="addRow()">增加</button>
+        <button class="btn btn-primary btn-sm" onclick="addRow()">{% trans "Add" %}</button>
       </td>
     </tr>
     </tbody>
   </table>
   <!-- 预测按钮 -->
-  <button class="btn btn-success btn-block mt-3" id="ana_btn">预测</button>
+  <button class="btn btn-success btn-block mt-3" id="ana_btn">{% trans "Predict" %}</button>
 
   <div class="row row-dec row-cards">
     <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">负债、净资产预测</div>
+                <div class="subheader">{% trans "Prediction of assets and liabilities" %}</div>
                 <div id="ana_total_predict"></div>
             </div>
         </div>
@@ -85,7 +86,7 @@
     <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">净资产、现金流变动</div>
+                <div class="subheader">{%trans "History of net asset and cash"%}</div>
                 <div id="ana_cash_predict"></div>
             </div>
         </div>
@@ -94,7 +95,7 @@
     <div class="col-sm-12 col-lg-12">
         <div class="card mt-2">
             <div class="card-body">
-                <div class="subheader">现金流明细</div>
+                <div class="subheader">{%trans "Detail of cash flow"%}</div>
                     <table 
                         id="ana_cashflow_table" 
                         data-pagination="true">

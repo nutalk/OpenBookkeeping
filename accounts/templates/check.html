@@ -1,11 +1,12 @@
 {% extends '_head_foot.html' %}
 {% load static %}
+{% load i18n %}
 {% block head_js %}
 <link rel="stylesheet" href="https://cdn.staticfile.net/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
 {% endblock %}
 
 {% block main_page %}
-<h4>核对账户余额</h4>
+<h4>{% trans "Check the account balance" %}</h4>
 <hr />
 
 <form action="/check_submit/", method="post">
@@ -23,7 +24,7 @@
                 <div class="input-group mb-3">
                     <label for={{prop.id}} class="col-3 col-form-label">{{prop.name}}</label>
                     <input type="number" class="form-control" name={{prop.id}} id={{prop.id}} value={{prop.remains}}>
-                    <span class="input-group-text">元</span>
+                    <span class="input-group-text">{% trans "$" %}</span>
                 </div>
                 {%endfor%}
             </div>
@@ -32,7 +33,7 @@
         {% endfor %}
     </div>
 
-    <button type="submit" class="btn btn-primary">确认</button>
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 
 {% endblock %}

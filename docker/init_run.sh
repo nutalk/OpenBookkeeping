@@ -5,4 +5,5 @@ if [ -f "/data/db.sqlite3" ];then
 fi
 
 python manage.py migrate
+python manage.py compilemessages
 python manage.py runserver 0.0.0.0:7788

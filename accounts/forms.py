@@ -2,27 +2,31 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.bootstrap import AppendedText
 from crispy_forms.layout import Submit, Layout, Field
-from .gloab_info import prop_type_ids, prop_type_items, \
-    liability_currency_ids, liability_currency_types, account_info_show
+from .gloab_info import prop_type_items, liability_currency_types
+from django.utils.translation import get_language, gettext_lazy as _
 
 
 class PropNewForm(forms.Form):
     id = forms.IntegerField(label='id')
-    name = forms.CharField(label='账户名称', max_length=255, required=True)
-    p_type = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(prop_type_items)], 
-                                  required=True, label='账户类型')
-    start_date = forms.DateField(required=True, label='开始日期',
+    name = forms.CharField(label=_('Account Name'), max_length=255, required=True)
+    p_type = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(prop_type_items)], 
+                                  required=True, label=_('Account Type'))
+    start_date = forms.DateField(required=True, label=_('Start Date'),
                                  widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    term_month = forms.IntegerField(required=True, initial=0, label='期数')
-    rate = forms.FloatField(required=True, initial=0.0, label='年利率')
-    currency = forms.IntegerField(required=True, initial=0, label='现金流')
-    ctype = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(liability_currency_types)], 
-                              required=True, label='还款方式')
-    comment = forms.CharField(label='备注', max_length=255, required=False)
-    init_ammount = forms.IntegerField(required=True, initial=0, label='初始金额')
+    term_month = forms.IntegerField(required=True, initial=0, label=_('Terms'))
+    rate = forms.FloatField(required=True, initial=0.0, label=_('Interest Rate'))
+    currency = forms.IntegerField(required=True, initial=0, label=_('Cash Flow'))
+    ctype = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(liability_currency_types)], 
+                              required=True, label=_('Repayment'))
+    comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
+    init_ammount = forms.IntegerField(required=True, initial=0, label=_('Init Balance'))
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        user_language = get_language()
+        out = _('Init Balance')
+        # iout = _('Interest Rate')
+        print(f"{user_language=}, {out=}")
         self.helper = FormHelper()
         self.helper.form_id = form_id
         self.helper.form_class = form_class
@@ -33,30 +37,30 @@ class PropNewForm(forms.Form):
             'name',
             'p_type',
             'start_date',
-            AppendedText('term_month', '月', active=False),
+            AppendedText('term_month', _('month'), active=False),
             AppendedText('rate', '%', active=False),
             'currency',
             'ctype',
             'comment',
-            AppendedText('init_ammount', '元', active=False)
+            AppendedText('init_ammount', _('$'), active=False)
         )
 
-        self.helper.add_input(Submit('submit', '提交'))
+        self.helper.add_input(Submit('submit', _('Submit')))
 
 
 class PropEditForm(forms.Form):
     id = forms.IntegerField(label='id')
-    name = forms.CharField(label='账户名称', max_length=255, required=True)
+    name = forms.CharField(label=_('Account Name'), max_length=255, required=True)
     p_type = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(prop_type_items)], 
-                                  required=True, label='账户类型')
-    start_date = forms.DateField(required=True, label='开始日期',
+                                  required=True, label=_('Account Type'))
+    start_date = forms.DateField(required=True, label=_('Start Date'),
                                  widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    term_month = forms.IntegerField(required=True, initial=0, label='期数')
-    rate = forms.FloatField(required=True, initial=0.0, label='年利率')
-    currency = forms.IntegerField(required=True, initial=0, label='现金流')
+    term_month = forms.IntegerField(required=True, initial=0, label=_('Terms'))
+    rate = forms.FloatField(required=True, initial=0.0, label=_('Interest Rate'))
+    currency = forms.IntegerField(required=True, initial=0, label=_('Cash Flow'))
     ctype = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(liability_currency_types)], 
-                              required=True, label='还款方式')
-    comment = forms.CharField(label='备注', max_length=255, required=False)
+                              required=True, label=_('Repayment'))
+    comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -70,22 +74,22 @@ class PropEditForm(forms.Form):
             'name',
             'p_type',
             'start_date',
-            AppendedText('term_month', '月', active=False),
+            AppendedText('term_month', _('month'), active=False),
             AppendedText('rate', '%', active=False),
             'currency',
             'ctype',
             'comment'
         )
-        self.helper.add_input(Submit('submit', '提交'))
+        self.helper.add_input(Submit('submit', _('Submit')))
 
 
 class DetailForm(forms.Form):
     id = forms.IntegerField(label='id')
     target_id = forms.ImageField(label='tid')
-    occur_date = forms.DateField(required=True, label='日期',
+    occur_date = forms.DateField(required=True, label=_('Date'),
                                  widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    amount = forms.IntegerField(label='金额', required=True, initial=0)
-    comment = forms.CharField(label='备注', max_length=255, required=False)
+    amount = forms.IntegerField(label=_('amount'), required=True, initial=0)
+    comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -98,9 +102,9 @@ class DetailForm(forms.Form):
             Field('id', type='hidden'),
             Field('target_id', type='hidden'),
             'occur_date',
-            AppendedText('amount', '元', active=False),
+            AppendedText('amount', _('$'), active=False),
             'comment'
         )
 
-        self.helper.add_input(Submit('submit', '提交'))
+        self.helper.add_input(Submit('submit', _('Submit')))
 

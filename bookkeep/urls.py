@@ -16,8 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
+from accounts.views import details, book_check
+from accounts.report_views import report, account_ana
+
+page_urls = i18n_patterns(
+    path("", details, name='details'),
+    path('check/', book_check, name='check'),
+    path('report/', report, name='report'),
+    path('account_ana/', account_ana, name="account_ana")
+)
 
 urlpatterns = [
     path('', include('accounts.urls')),
     path('admin/', admin.site.urls),
 ]
+
+urlpatterns += page_urls
