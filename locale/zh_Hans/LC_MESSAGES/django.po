@@ -18,7 +18,7 @@ msgstr ""
 
 #: accounts/forms.py:11 accounts/forms.py:53
 msgid "Account Name"
-msgstr "账户"
+msgstr "账户名称"
 
 #: accounts/forms.py:13 accounts/forms.py:55
 msgid "Account Type"
@@ -38,7 +38,7 @@ msgstr "年利率"
 
 #: accounts/forms.py:18 accounts/forms.py:60
 msgid "Cash Flow"
-msgstr "现金流预测"
+msgstr "现金流"
 
 #: accounts/forms.py:20 accounts/forms.py:62
 msgid "Repayment"
