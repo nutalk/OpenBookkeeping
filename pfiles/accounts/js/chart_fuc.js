@@ -53,6 +53,12 @@ function update_ts_chart(pic_id, data_series, chart_type, ytitle, detail_data=nu
 }
 
 function update_next_chart(pic_id, data_series, v_categories){
+  var translations = {
+    "en": "$",
+    "zh-hans": "元"
+    // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
   var options = {
     series: data_series,
     chart: {
@@ -84,7 +90,7 @@ function update_next_chart(pic_id, data_series, v_categories){
     categories: v_categories,
     labels: {
       formatter: function (val) {
-        return val + "元"
+        return val + translations[currentLanguage]
       }
     }
   },
@@ -96,7 +102,7 @@ function update_next_chart(pic_id, data_series, v_categories){
   tooltip: {
     y: {
       formatter: function (val) {
-        return val + "元"
+        return val + translations[currentLanguage]
       }
     }
   },
