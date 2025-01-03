@@ -43,20 +43,37 @@ function update_pie(series, labels, pic_id) {
 }
 
 $(document).ready(function(){
+  var translations = {
+    "en": {
+        "Occur Date": "Occur Date",
+        "prop": "Total Assets",
+        "det": "Total Liabilities",
+        "net": "Net asset"
+    },
+    "zh-hans": {
+      "Occur Date": "日期",
+      "prop": "总资产",
+      "det": "负债",
+      "net": "净资产"
+  }
+    // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
+
   $('#total_change_table').bootstrapTable({
     columns: [
       {
         field: 'occur_date',
-        title: '日期'
+        title: translations[currentLanguage]["Occur Date"]
       }, {
         field: 'prop',
-        title: '总资产'
+        title: translations[currentLanguage]["prop"]
       }, {
         field: 'det',
-        title: '负债'
+        title: translations[currentLanguage]["det"]
       }, {
           field: 'net',
-          title: "净资产"
+          title: translations[currentLanguage]["net"]
       }],
       data:[]
   });
@@ -64,17 +81,31 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
+  var translations = {
+    "en": {
+        "type": "Type",
+        "name": "Name",
+        "amount": "Amount",
+    },
+    "zh-hans": {
+      "type": "类别",
+      "name": "名称",
+      "amount": "金额",
+  }
+    // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
   $('#total_month_detail').bootstrapTable({
     columns: [
       {
         field: 'type',
-        title: '类别'
+        title: translations[currentLanguage]["type"]
       }, {
         field: 'name',
-        title: '名称'
+        title: translations[currentLanguage]["name"]
       }, {
         field: 'amount',
-        title: '金额'
+        title: translations[currentLanguage]["amount"]
       }],
       data:[]
   });
@@ -88,9 +119,14 @@ $(document).ready(function () {
       csrfmiddlewaretoken: csrftoken
     },
     function (data, status) {
-      console.log(data);
+      var translations = {
+        "en": "K$",
+        "zh-hans": "万元"
+        // 添加更多语言的翻译
+    };
+    var currentLanguage = $('#current_lan').text();
       // update_chart(data.series, data.x_axis, 'total_change', 'line');
-      update_ts_chart('total_change', data.series, 'line', '万元', data.detail)
+      update_ts_chart('total_change', data.series, 'line', translations[currentLanguage], data.detail)
       $('#total_change_table').bootstrapTable('load', data.table)
     });
 })
@@ -102,10 +138,19 @@ $(document).ready(function () {
       csrfmiddlewaretoken: csrftoken
     },
     function (data, status) {
-      // update_chart(data.total_series, data.x_axis, 'total_predict', 'line');
-      update_ts_chart('total_predict', data.total_series, 'line', '万元')
-      // update_chart(data.cash_series, data.x_axis, 'cash_predict', 'bar');
-      update_ts_chart('cash_predict', data.cash_series, 'bar', '元')
+      var trans1 = {
+        "en": "K$",
+        "zh-hans": "万元"
+        // 添加更多语言的翻译
+    };
+    var trans2 = {
+      "en": "$",
+      "zh-hans": "元"
+      // 添加更多语言的翻译
+  };
+    var currentLanguage = $('#current_lan').text();
+      update_ts_chart('total_predict', data.total_series, 'line', trans1[currentLanguage])
+      update_ts_chart('cash_predict', data.cash_series, 'bar', trans2[currentLanguage])
     });
   
 })
