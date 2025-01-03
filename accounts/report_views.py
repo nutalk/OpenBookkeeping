@@ -6,7 +6,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Sum
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 from .models import Prop, Detail
 from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule, get_next_cash
 from .gloab_info import history_month_term, prop_type_ids
@@ -18,6 +18,16 @@ def report(request):
     template = loader.get_template('report.html')
     return HttpResponse(template.render(contex, request))
 
+
+def get_split_time()-> int:
+    current_lan = get_language()
+    if current_lan == 'zh-hans':
+        return 10000
+    else:
+        return 1000
+    
+split_time = get_split_time()
+    
 
 # 资产组成的饼图、资产、负载和净值数值
 def post_total_info(request):
@@ -104,9 +114,9 @@ def post_month_history(request):
             det_sum = np.sum(end_df[end_df['type'] > 1]['amount'])
             net_sum = prop_sum - det_sum
             x = end_date.strftime("%m-%d-%Y")
-            result['series'][0]['data'].append({'x':x,"y": round(prop_sum / 10000, 2)})
-            result['series'][1]['data'].append({'x':x,"y": round(det_sum / 10000, 2)})
-            result['series'][2]['data'].append({'x':x,"y": round(net_sum/ 10000, 2)})
+            result['series'][0]['data'].append({'x':x,"y": round(prop_sum / split_time, 2)})
+            result['series'][1]['data'].append({'x':x,"y": round(det_sum / split_time, 2)})
+            result['series'][2]['data'].append({'x':x,"y": round(net_sum/ split_time, 2)})
             result['table'].append({
                 'occur_date': end_date.strftime("%Y-%m-%d"),
                 'prop': f"{prop_sum:,}",
@@ -198,10 +208,10 @@ def post_account_ana(request):
                         cash_add -= row['payment']
                         det += row['balance']
                 x = day.strftime("%m-%d-%Y")
-                result['long_series'][0]['data'].append({'x':x,"y": det/10000})
-                result['long_series'][1]['data'].append({"x":x, "y": prop/10000})
-                result['long_series'][2]['data'].append({'x':x, 'y': (prop-det)/10000})
-                result['short_series'][0]['data'].append({'x': x, 'y': cash_add/10000})
+                result['long_series'][0]['data'].append({'x':x,"y": round(det/split_time, 2)})
+                result['long_series'][1]['data'].append({"x":x, "y": round(prop/split_time, 2)})
+                result['long_series'][2]['data'].append({'x':x, 'y': round((prop-det)/split_time, 2)})
+                result['short_series'][0]['data'].append({'x': x, 'y': round(cash_add/split_time, 2)})
 
     result = json.dumps(result)
     return HttpResponse(result, content_type='application/json;charset=utf-8')
