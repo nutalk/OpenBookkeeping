@@ -57,7 +57,7 @@ def post_total_info(request):
 
         total_info['net'] = total_info['assets'] - total_info['debt']
 
-        total_info = [{'k': k, 'v': f"￥{v:,}"} for k, v in total_info.items()]
+        total_info = [{'k': k, 'v': f"{_('$')}{v:,}"} for k, v in total_info.items()]
         result = {'total': total_info, 'an': assets_names, 'ar': assets_remains,
                   'dn': dets_names, 'dr': dets_remains}
         result = json.dumps(result)
@@ -86,11 +86,11 @@ def post_month_history(request):
         next_month_first_day = datetime.today().date() + td
 
         result['series'] = [
-            {'name': '资产',
+            {'name': _('Total Assets'),
              'data': []},
-             {'name': '负债',
+             {'name': _('Total Liabilities'),
               'data': []},
-              {'name': '净值',
+              {'name': _('Net asset'),
                'data': []}
         ]
         result['table'] = []
@@ -106,7 +106,7 @@ def post_month_history(request):
             else:
                 end_detailres = []
                 for idx, row in end_detail.iterrows():
-                    type_rec = '资产' if idx[0] <= 1 else '负债'
+                    type_rec = _('Assets') if idx[0] <= 1 else _('Liabilities')
                     name_rec = Prop.objects.filter(pk=idx[1]).values()[0]['name']
                     amount = row['amount']
                     end_detailres.append({'type': type_rec, 'name': name_rec, 'amount': amount})
@@ -179,20 +179,20 @@ def post_account_ana(request):
             all_date = sorted(list(set(schedule['date'])))
             result['long_series'] = [
                 {
-                    "name": "负债",
+                    "name": _("Total Liabilities"),
                     "data": []
                 },
                 {
-                    "name": "资产",
+                    "name": _("Total Assets"),
                     "data": [],
                 },
                 {
-                    "name": "净值",
+                    "name": _("Net asset"),
                     "data": []
                 }]
             result['short_series'] = [
                 {
-                    "name": "现金变动",
+                    "name": _("Cash Movement"),
                     "data": []
                 }
             ]

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-27 08:16+0000\n"
+"POT-Creation-Date: 2025-01-03 08:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,6 +80,36 @@ msgstr "日期"
 msgid "amount"
 msgstr "金额"
 
+#: accounts/report_views.py:89 accounts/report_views.py:186
+#: accounts/templates/report.html:31
+msgid "Total Assets"
+msgstr "资产"
+
+#: accounts/report_views.py:91 accounts/report_views.py:182
+#: accounts/templates/report.html:39
+msgid "Total Liabilities"
+msgstr "负债"
+
+#: accounts/report_views.py:93 accounts/report_views.py:190
+#: accounts/templates/report.html:47
+msgid "Net asset"
+msgstr "净资产"
+
+#: accounts/report_views.py:109
+#| msgid "Total Assets"
+msgid "Assets"
+msgstr "资产"
+
+#: accounts/report_views.py:109
+#| msgid "Total Liabilities"
+msgid "Liabilities"
+msgstr "负债"
+
+#: accounts/report_views.py:195
+#| msgid "Comment"
+msgid "Cash Movement"
+msgstr "现金变动"
+
 #: accounts/templates/_head_foot.html:7 accounts/templates/_head_foot.html:26
 msgid "OpenBookkeep"
 msgstr "财记"
@@ -103,12 +133,13 @@ msgstr "现金流预测"
 #: accounts/templates/account_ana.html:26
 #| msgid "History of assets and liabilities"
 msgid "Assets and liabilities"
-msgstr "资产负债变化"
+msgstr "资产与负债"
 
 #: accounts/templates/account_ana.html:38 accounts/templates/detail.html:59
 msgid "Edit"
 msgstr "编辑"
 
+#: accounts/templates/account_ana.html:48
 msgid "Capital Assets"
 msgstr "固定资产"
 
@@ -211,18 +242,6 @@ msgstr "历史变动"
 #: accounts/templates/report.html:22
 msgid "Prediction report"
 msgstr "资产预测"
-
-#: accounts/templates/report.html:31
-msgid "Total Assets"
-msgstr "资产"
-
-#: accounts/templates/report.html:39
-msgid "Total Liabilities"
-msgstr "负债"
-
-#: accounts/templates/report.html:47
-msgid "Net asset"
-msgstr "净资产"
 
 #: accounts/templates/report.html:55
 msgid "Liquid Fund"
