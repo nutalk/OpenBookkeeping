@@ -346,8 +346,8 @@ def get_next_cash(prop_df: pd.DataFrame, show_term: int):
                 result['outcome_categories'].append(row['name'])
                 result['outcome_total'] += round(row['payment'])
             break
-    result['netcome_total'] = f"{_("$")}{result['income_total'] - result['outcome_total']:,}"
-    result['income_total'] = f"{_("$")}{result['income_total']:,}"
-    result['outcome_total'] = f"{_("$")}{result['outcome_total']:,}"
+    result['netcome_total'] = f"{_('$')}{result['income_total'] - result['outcome_total']:,}"
+    result['income_total'] = f"{_('$')}{result['income_total']:,}"
+    result['outcome_total'] = f"{_('$')}{result['outcome_total']:,}"
 
     return result
