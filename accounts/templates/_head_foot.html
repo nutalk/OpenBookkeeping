@@ -50,4 +50,6 @@
       {% endblock %}
     </div>
   </body>
+  {% get_current_language as LANGUAGE_CODE %}
+  <p id="current_lan" style="display: none;">{{LANGUAGE_CODE}}</p>
 </html>

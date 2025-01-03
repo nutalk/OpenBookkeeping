@@ -16,25 +16,44 @@ $(document).ready(function () {
 });
 
 $(document).ready(function(){
+    var translations = {
+        "en": {
+            "ID": "ID",
+            "Occur Date": "Occur Date",
+            "Amount": "Amount",
+            "Balance": "Balance",
+            "Comment": "Comment"
+        },
+        "zh-hans": {
+            "ID": "ID",
+            "Occur Date": "日期",
+            "Amount": "金额",
+            "Balance": "余额",
+            "Comment": "备注"
+        }
+        // 添加更多语言的翻译
+    };
+    var currentLanguage = $('#current_lan').text();
+
     $('#detail_table').bootstrapTable({
         columns: [
         {
             radio: true
         },{
           field: 'id',
-          title: 'ID'
+          title: translations[currentLanguage]["ID"]
         },{
             field: 'occur_date',
-            title: '日期'
+            title: translations[currentLanguage]["Occur Date"]
         }, {
           field: 'amount',
-          title: '金额'
+          title: translations[currentLanguage]["Amount"]
         }, {
           field: 'rem_amount',
-          title: '余额'
+          title: translations[currentLanguage]["Balance"]
         }, {
             field: 'comment',
-            title: "备注"
+            title: translations[currentLanguage]["Comment"]
         }],
         data:[]
     });
