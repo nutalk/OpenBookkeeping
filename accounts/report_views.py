@@ -6,9 +6,10 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Sum
-from django.utils.translation import gettext as _, get_language
+from django.utils.translation import gettext as _
 from .models import Prop, Detail
-from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule, get_next_cash
+from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule,\
+      get_next_cash, split_time
 from .gloab_info import history_month_term, prop_type_ids
 
 
@@ -17,16 +18,6 @@ def report(request):
     contex = {}
     template = loader.get_template('report.html')
     return HttpResponse(template.render(contex, request))
-
-
-def get_split_time()-> int:
-    current_lan = get_language()
-    if current_lan == 'zh-hans':
-        return 10000
-    else:
-        return 1000
-    
-split_time = get_split_time()
     
 
 # 资产组成的饼图、资产、负载和净值数值

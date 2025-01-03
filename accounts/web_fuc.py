@@ -7,6 +7,17 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 from .models import Prop
+from django.utils.translation import gettext as _, get_language
+
+
+def get_split_time()-> int:
+    current_lan = get_language()
+    if current_lan == 'zh-hans':
+        return 10000
+    else:
+        return 1000
+    
+split_time = get_split_time()
 
 
 class EqualDelt:
@@ -231,19 +242,19 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int,
     current_det = prop_amount['de']
     result = {
         'total_series':[
-            {'name':'净值',
+            {'name':_('Net asset'),
              'data': []},
-            {'name': '负债',
+            {'name': _("Total Liabilities"),
             'data': []},
-            {'name': "现金",
+            {'name': _("Cash"),
             'data': []},
-            {'name':'资产',
+            {'name':_('Total Assets'),
              'data': []}
         ],
         'cash_series':[
-            {'name': '净资产变动',
+            {'name': _('Change of net asset'),
              'data': []},
-             {'name': '现金变动',
+             {'name': _('Change of cash'),
               'data': []}
         ]
     }
@@ -276,10 +287,10 @@ def get_predict_res(prop_df: pd.DataFrame, show_term: int,
         current_cash += cash_add
         current_det += det_add
         x = day.strftime("%m-%d-%Y")
-        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/10000, 2)})
-        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/10000, 2)})
-        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/10000, 2)})
-        result['total_series'][3]['data'].append({'x':x, "y":round(current_prop/10000, 2)})
+        result['total_series'][0]['data'].append({'x': x, 'y':round(current_net/split_time, 2)})
+        result['total_series'][1]['data'].append({'x': x, "y":round(current_det/split_time, 2)})
+        result['total_series'][2]['data'].append({'x':x, "y":round(current_cash/split_time, 2)})
+        result['total_series'][3]['data'].append({'x':x, "y":round(current_prop/split_time, 2)})
         result['cash_series'][0]['data'].append({'x':x, "y":round(prop_add, 2)})
         result['cash_series'][1]['data'].append({'x':x, "y":round(cash_add, 2)})
 
@@ -292,18 +303,18 @@ def get_next_cash(prop_df: pd.DataFrame, show_term: int):
     """
     result = {
         'income':[
-            {'name':'本金',
+            {'name':_('Principal'),
              'data': []},
-             {'name': '利息',
+             {'name': _('Interest'),
               'data': []},
         ],
         'income_categories':[],
 
         'outcome':[
-            {'name': '本金',
+            {'name':_('Principal'),
              'data': []},
-             {'name': '利息',
-              'data': []}
+             {'name': _('Interest'),
+              'data': []},
         ],
         'outcome_categories': [],
         'income_total':0,
@@ -335,8 +346,8 @@ def get_next_cash(prop_df: pd.DataFrame, show_term: int):
                 result['outcome_categories'].append(row['name'])
                 result['outcome_total'] += round(row['payment'])
             break
-    result['netcome_total'] = f"￥{result['income_total'] - result['outcome_total']:,}"
-    result['income_total'] = f"￥{result['income_total']:,}"
-    result['outcome_total'] = f"￥{result['outcome_total']:,}"
+    result['netcome_total'] = f"{_("$")}{result['income_total'] - result['outcome_total']:,}"
+    result['income_total'] = f"{_("$")}{result['income_total']:,}"
+    result['outcome_total'] = f"{_("$")}{result['outcome_total']:,}"
 
     return result
