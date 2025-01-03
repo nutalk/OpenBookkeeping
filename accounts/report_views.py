@@ -152,7 +152,7 @@ def post_month_predict(request):
 def account_ana(request):
     contex = {'type_prop': []}
     for prop_type_name, prop_type_id in prop_type_ids.items():
-        rec = {'type_name': prop_type_name,
+        rec = {'type_name': _(prop_type_name),
                'id': f"collapse_{prop_type_id}",
                'href': f"#collapse_{prop_type_id}"}
         type_prop = Prop.objects.filter(p_type=prop_type_id).values()
