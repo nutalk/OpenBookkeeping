@@ -3,15 +3,17 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from django.http import JsonResponse
+from django.utils.translation import gettext as _
 from .web_fuc import get_predict_res, get_amount, get_schedule
-from .gloab_info import prop_type_ids, liability_currency_ids
+from .gloab_info import prop_type_ids_local, liability_currency_ids_local
 
 
 def get_chart_ts(data: list) -> dict:
     """
     根据账户信息，产生prop_df，然后get_predict_res计算绘图需要的时许信息
     """
-    logger.debug(data)
+    logger.debug(liability_currency_ids_local)
+    logger.debug(prop_type_ids_local)
     today = datetime.today().date()
     today_str = today.strftime("%d/%m/%Y")
     res_conver = []
@@ -21,9 +23,9 @@ def get_chart_ts(data: list) -> dict:
             if k == 'name':
                 rec[k] = v
             elif k == 'type':
-                rec[k] = prop_type_ids[v]
+                rec[k] = prop_type_ids_local[v]
             elif k == 'ctype':
-                rec[k] = liability_currency_ids[v]
+                rec[k] = liability_currency_ids_local[v]
             elif k == 'rate':
                 rec[k] = float(v)
             else:
@@ -53,4 +55,4 @@ def analyze_debt(request):
 
         return JsonResponse(res, status=200)
     else:
-        return JsonResponse({"error": "只支持POST请求"}, status=405)
+        return JsonResponse({"error": "ERROR"}, status=405)

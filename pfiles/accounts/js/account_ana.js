@@ -18,8 +18,19 @@ $(document).ready(function(){
         },
         function (data, status) {
             console.log(data);
-            update_ts_chart("ana_total_predict", data.total_series, "line", '万元');
-            update_ts_chart("ana_cash_predict", data.cash_series, "bar", '元');
+            var trans1 = {
+              "en": "K$",
+              "zh-hans": "万元"
+              // 添加更多语言的翻译
+          };
+          var trans2 = {
+            "en": "$",
+            "zh-hans": "元"
+            // 添加更多语言的翻译
+        };
+          var currentLanguage = $('#current_lan').text();
+            update_ts_chart("ana_total_predict", data.total_series, "line", trans1[currentLanguage]);
+            update_ts_chart("ana_cash_predict", data.cash_series, "bar", trans2[currentLanguage]);
             $('#ana_cashflow_table').bootstrapTable('load', data.table)
         });
     })
@@ -32,10 +43,16 @@ input.value = input.value.replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ','
 
 // 表单验证
 function validateForm() {
-const name = document.getElementById('name').value.trim();
-if (!name) return alert('请填写名称！');
+  var trans1 = {
+    "en": "Please fill account name!",
+    "zh-hans": "请填写名称！"
+    // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
+  const name = document.getElementById('name').value.trim();
+  if (!name) return alert(trans1[currentLanguage]);
 
-return true;
+  return true;
 }
 
 // 添加表格行
@@ -43,8 +60,10 @@ function addRow() {
 if (!validateForm()) return;
 
 const name = document.getElementById('name').value.trim();
-const categoryLarge = document.getElementById('categoryLarge').value;
-const categorySmall = document.getElementById('categorySmall').value;
+var selLarge = document.getElementById("categoryLarge");
+var categoryLarge = selLarge.options[selLarge.selectedIndex].text;
+var selSmall = document.getElementById("categorySmall");
+var categorySmall = selSmall.options[selSmall.selectedIndex].text;
 const currentValue = document.getElementById('currentValue').value;
 const annualRate = document.getElementById('annualRate').value;
 const cashFlow = document.getElementById('cashFlow').value;
@@ -61,9 +80,16 @@ row.insertCell(4).innerText = annualRate + '%';
 row.insertCell(5).innerText = cashFlow;
 row.insertCell(6).innerText = periods;
 
+var trans1 = {
+  "en": "Delet",
+  "zh-hans": "删除"
+  // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
+
 const deleteBtn = document.createElement('button');
 deleteBtn.className = 'btn btn-danger btn-sm';
-deleteBtn.textContent = '删除';
+deleteBtn.textContent = trans1[currentLanguage];
 deleteBtn.onclick = () => tbody.deleteRow(row.rowIndex-1);
 row.insertCell(7).appendChild(deleteBtn);
 
@@ -79,17 +105,37 @@ document.getElementById('periods').value = '0';
 
 // 现金流明细表
 $(document).ready(function(){
+  var translations = {
+    "en": {
+        "date": "Data",
+        "name": "Name",
+        "balance": "Balance",
+        "payment": "Repayment",
+        "amortization": "Principal",
+        "interest": "Interest"
+    },
+    "zh-hans": {
+      "date": "日期",
+      "name": "名称",
+      "balance": "余额",
+      "payment": "现金流",
+      "amortization": "本金",
+      "interest": "利息"
+  }
+    // 添加更多语言的翻译
+};
+var currentLanguage = $('#current_lan').text();
     $('#ana_cashflow_table').bootstrapTable({
       columns: [
         {
           field: 'date',
-          title: '日期'
+          title: translations[currentLanguage]['date']
         }, {
           field: 'name',
-          title: '名称'
+          title: translations[currentLanguage]['name']
         }, {
           field: 'balance',
-          title: '余额',
+          title: translations[currentLanguage]['balance'],
           formatter: function (value, row, index) {
             value = parseInt(value).toString();
             var parts = value.split('.');
@@ -98,7 +144,7 @@ $(document).ready(function(){
           }
         }, {
             field: 'payment',
-            title: "现金流",
+            title: translations[currentLanguage]['payment'],
             formatter: function (value, row, index) {
                 value = parseInt(value).toString();
                 var parts = value.split('.');
@@ -107,7 +153,7 @@ $(document).ready(function(){
               }
         },{
             field: 'amortization',
-            title: "本金",
+            title: translations[currentLanguage]['amortization'],
             formatter: function (value, row, index) {
                 value = parseInt(value).toString();
                 var parts = value.split('.');
@@ -116,7 +162,7 @@ $(document).ready(function(){
               }
         },{
             field: 'interest',
-            title: "利息",
+            title: translations[currentLanguage]['interest'],
             formatter: function (value, row, index) {
                 value = parseInt(value).toString();
                 var parts = value.split('.');
