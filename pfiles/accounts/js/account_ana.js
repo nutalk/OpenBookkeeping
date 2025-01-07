@@ -85,6 +85,9 @@ row.insertCell(5).innerText = cashFlow;
 row.insertCell(6).innerText = periods;
 row.insertCell(7).innerText = account_type;
 row.insertCell(8).innerText = repayment_type; 
+ // 隐藏新插入行的最后两列
+ row.cells[7].classList.add('hidden-column');
+ row.cells[8].classList.add('hidden-column');
 
 var trans1 = {
   "en": "Delet",
@@ -97,7 +100,7 @@ const deleteBtn = document.createElement('button');
 deleteBtn.className = 'btn btn-danger btn-sm';
 deleteBtn.textContent = trans1[currentLanguage];
 deleteBtn.onclick = () => tbody.deleteRow(row.rowIndex-1);
-row.insertCell(7).appendChild(deleteBtn);
+row.insertCell(9).appendChild(deleteBtn);
 
 // 清空表单
 document.getElementById('name').value = '';

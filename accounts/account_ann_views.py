@@ -21,8 +21,12 @@ def get_chart_ts(data: list) -> dict:
             if k == 'name':
                 rec[k] = v
             elif k == 'type':
+                v = ' '.join(v.split('_'))
+                logger.debug(f'{v=}')
                 rec[k] = prop_type_ids[v]
             elif k == 'ctype':
+                v = ' '.join(v.split('_'))
+                logger.debug(f'{v=}')
                 rec[k] = liability_currency_ids[v]
             elif k == 'rate':
                 rec[k] = float(v)

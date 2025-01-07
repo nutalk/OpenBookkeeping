@@ -11,8 +11,8 @@
 <script>
   $(document).ready(function() {
     // 隐藏列
-    $('#dataTable').bootstrapTable('hideColumn', 'account_type');
-    $('#dataTable').bootstrapTable('hideColumn', 'repayment_type');
+    // $('#dataTable').bootstrapTable('hideColumn', 'account_type');
+    // $('#dataTable').bootstrapTable('hideColumn', 'repayment_type');
   });
 </script>
 <style>
@@ -45,9 +45,9 @@
       <th>{% trans "Interest Rate" %}(%)</th>
       <th>{% trans "Cash Flow" %}</th>
       <th>{% trans "Terms" %}</th>
-      <th>{% trans "Edit" %}</th>
       <th data-field="account_type" data-visible="false" class="hidden-column">account_type</th>
       <th data-field="repayment_type" data-visible="false" class="hidden-column">repayment_type</th>
+      <th>{% trans "Edit" %}</th>
     </tr>
     </thead>
     <tbody>
