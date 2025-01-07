@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-27 08:16+0000\n"
+"POT-Creation-Date: 2025-01-03 09:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,6 +80,33 @@ msgstr "日期"
 msgid "amount"
 msgstr "金额"
 
+#: accounts/report_views.py:80 accounts/report_views.py:177
+#: accounts/templates/report.html:31 accounts/web_fuc.py:251
+msgid "Total Assets"
+msgstr "资产"
+
+#: accounts/report_views.py:82 accounts/report_views.py:173
+#: accounts/templates/report.html:39 accounts/web_fuc.py:247
+msgid "Total Liabilities"
+msgstr "负债"
+
+#: accounts/report_views.py:84 accounts/report_views.py:181
+#: accounts/templates/report.html:47 accounts/web_fuc.py:245
+msgid "Net asset"
+msgstr "净资产"
+
+#: accounts/report_views.py:100
+msgid "Assets"
+msgstr "资产"
+
+#: accounts/report_views.py:100
+msgid "Liabilities"
+msgstr "负债"
+
+#: accounts/report_views.py:186
+msgid "Cash Movement"
+msgstr "现金变动"
+
 #: accounts/templates/_head_foot.html:7 accounts/templates/_head_foot.html:26
 msgid "OpenBookkeep"
 msgstr "财记"
@@ -101,14 +128,14 @@ msgid "CashFlow"
 msgstr "现金流预测"
 
 #: accounts/templates/account_ana.html:26
-#| msgid "History of assets and liabilities"
 msgid "Assets and liabilities"
-msgstr "资产负债变化"
+msgstr "资产与负债"
 
 #: accounts/templates/account_ana.html:38 accounts/templates/detail.html:59
 msgid "Edit"
 msgstr "编辑"
 
+#: accounts/templates/account_ana.html:48
 msgid "Capital Assets"
 msgstr "固定资产"
 
@@ -212,18 +239,6 @@ msgstr "历史变动"
 msgid "Prediction report"
 msgstr "资产预测"
 
-#: accounts/templates/report.html:31
-msgid "Total Assets"
-msgstr "资产"
-
-#: accounts/templates/report.html:39
-msgid "Total Liabilities"
-msgstr "负债"
-
-#: accounts/templates/report.html:47
-msgid "Net asset"
-msgstr "净资产"
-
 #: accounts/templates/report.html:55
 msgid "Liquid Fund"
 msgstr "流动资金"
@@ -271,3 +286,30 @@ msgstr "资产负债明细"
 #: accounts/views.py:117
 msgid "Init ammount"
 msgstr "初始金额"
+
+#: accounts/views.py:235
+msgid "Balance Check"
+msgstr "余额核对"
+
+#: accounts/web_fuc.py:249
+#| msgid "CashFlow"
+msgid "Cash"
+msgstr "现金"
+
+#: accounts/web_fuc.py:255
+msgid "Change of net asset"
+msgstr "净值变化"
+
+#: accounts/web_fuc.py:257
+msgid "Change of cash"
+msgstr "现金变化"
+
+#: accounts/web_fuc.py:306 accounts/web_fuc.py:314
+#| msgid "Fixed-principal"
+msgid "Principal"
+msgstr "本金"
+
+#: accounts/web_fuc.py:308 accounts/web_fuc.py:316
+#| msgid "Interest Rate"
+msgid "Interest"
+msgstr "利息"

@@ -232,7 +232,7 @@ def check_submit(request):
                         target_id = target_prop,
                         occur_date = today_str,
                         amount = v - prop_remain_dict[tid],
-                        comment = '对账'
+                        comment = _("Balance Check")
                     )
                     detail.save()
     return redirect("/")

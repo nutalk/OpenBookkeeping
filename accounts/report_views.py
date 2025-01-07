@@ -8,7 +8,8 @@ from django.template import loader
 from django.db.models import Sum
 from django.utils.translation import gettext as _
 from .models import Prop, Detail
-from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule, get_next_cash
+from .web_fuc import get_amount, get_predict_res, get_prop_df, get_schedule,\
+      get_next_cash, split_time
 from .gloab_info import history_month_term, prop_type_ids
 
 
@@ -17,7 +18,7 @@ def report(request):
     contex = {}
     template = loader.get_template('report.html')
     return HttpResponse(template.render(contex, request))
-
+    
 
 # 资产组成的饼图、资产、负载和净值数值
 def post_total_info(request):
@@ -47,7 +48,7 @@ def post_total_info(request):
 
         total_info['net'] = total_info['assets'] - total_info['debt']
 
-        total_info = [{'k': k, 'v': f"￥{v:,}"} for k, v in total_info.items()]
+        total_info = [{'k': k, 'v': f"{_('$')}{v:,}"} for k, v in total_info.items()]
         result = {'total': total_info, 'an': assets_names, 'ar': assets_remains,
                   'dn': dets_names, 'dr': dets_remains}
         result = json.dumps(result)
@@ -76,11 +77,11 @@ def post_month_history(request):
         next_month_first_day = datetime.today().date() + td
 
         result['series'] = [
-            {'name': '资产',
+            {'name': _('Total Assets'),
              'data': []},
-             {'name': '负债',
+             {'name': _('Total Liabilities'),
               'data': []},
-              {'name': '净值',
+              {'name': _('Net asset'),
                'data': []}
         ]
         result['table'] = []
@@ -96,7 +97,7 @@ def post_month_history(request):
             else:
                 end_detailres = []
                 for idx, row in end_detail.iterrows():
-                    type_rec = '资产' if idx[0] <= 1 else '负债'
+                    type_rec = _('Assets') if idx[0] <= 1 else _('Liabilities')
                     name_rec = Prop.objects.filter(pk=idx[1]).values()[0]['name']
                     amount = row['amount']
                     end_detailres.append({'type': type_rec, 'name': name_rec, 'amount': amount})
@@ -104,9 +105,9 @@ def post_month_history(request):
             det_sum = np.sum(end_df[end_df['type'] > 1]['amount'])
             net_sum = prop_sum - det_sum
             x = end_date.strftime("%m-%d-%Y")
-            result['series'][0]['data'].append({'x':x,"y": round(prop_sum / 10000, 2)})
-            result['series'][1]['data'].append({'x':x,"y": round(det_sum / 10000, 2)})
-            result['series'][2]['data'].append({'x':x,"y": round(net_sum/ 10000, 2)})
+            result['series'][0]['data'].append({'x':x,"y": round(prop_sum / split_time, 2)})
+            result['series'][1]['data'].append({'x':x,"y": round(det_sum / split_time, 2)})
+            result['series'][2]['data'].append({'x':x,"y": round(net_sum/ split_time, 2)})
             result['table'].append({
                 'occur_date': end_date.strftime("%Y-%m-%d"),
                 'prop': f"{prop_sum:,}",
@@ -142,7 +143,7 @@ def post_month_predict(request):
 def account_ana(request):
     contex = {'type_prop': []}
     for prop_type_name, prop_type_id in prop_type_ids.items():
-        rec = {'type_name': prop_type_name,
+        rec = {'type_name': _(prop_type_name),
                'id': f"collapse_{prop_type_id}",
                'href': f"#collapse_{prop_type_id}"}
         type_prop = Prop.objects.filter(p_type=prop_type_id).values()
@@ -169,20 +170,20 @@ def post_account_ana(request):
             all_date = sorted(list(set(schedule['date'])))
             result['long_series'] = [
                 {
-                    "name": "负债",
+                    "name": _("Total Liabilities"),
                     "data": []
                 },
                 {
-                    "name": "资产",
+                    "name": _("Total Assets"),
                     "data": [],
                 },
                 {
-                    "name": "净值",
+                    "name": _("Net asset"),
                     "data": []
                 }]
             result['short_series'] = [
                 {
-                    "name": "现金变动",
+                    "name": _("Cash Movement"),
                     "data": []
                 }
             ]
@@ -198,10 +199,10 @@ def post_account_ana(request):
                         cash_add -= row['payment']
                         det += row['balance']
                 x = day.strftime("%m-%d-%Y")
-                result['long_series'][0]['data'].append({'x':x,"y": det/10000})
-                result['long_series'][1]['data'].append({"x":x, "y": prop/10000})
-                result['long_series'][2]['data'].append({'x':x, 'y': (prop-det)/10000})
-                result['short_series'][0]['data'].append({'x': x, 'y': cash_add/10000})
+                result['long_series'][0]['data'].append({'x':x,"y": round(det/split_time, 2)})
+                result['long_series'][1]['data'].append({"x":x, "y": round(prop/split_time, 2)})
+                result['long_series'][2]['data'].append({'x':x, 'y': round((prop-det)/split_time, 2)})
+                result['short_series'][0]['data'].append({'x': x, 'y': round(cash_add/split_time, 2)})
 
     result = json.dumps(result)
     return HttpResponse(result, content_type='application/json;charset=utf-8')

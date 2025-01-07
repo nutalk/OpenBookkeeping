@@ -8,6 +8,13 @@
 <script src="https://cdn.staticfile.net/apexcharts/3.45.1/apexcharts.min.js"></script>
 <script src="{% static 'accounts/js/chart_fuc.js' %}"></script>
 <script src="{% static 'accounts/js/account_ana.js' %}"></script>
+<script>
+  $(document).ready(function() {
+    // 隐藏列
+    // $('#dataTable').bootstrapTable('hideColumn', 'account_type');
+    // $('#dataTable').bootstrapTable('hideColumn', 'repayment_type');
+  });
+</script>
 <style>
     /* 设置大类和小类列的宽度 */
     #dataTable td:nth-child(2) {
@@ -18,6 +25,9 @@
     }
     #dataTable td:nth-child(8) {
       width: 80px; /* 设置宽度，可以根据需求调整 */
+    }
+    .hidden-column {
+      display: none;
     }
   </style>
 {% endblock %}
@@ -35,6 +45,8 @@
       <th>{% trans "Interest Rate" %}(%)</th>
       <th>{% trans "Cash Flow" %}</th>
       <th>{% trans "Terms" %}</th>
+      <th data-field="account_type" data-visible="false" class="hidden-column">account_type</th>
+      <th data-field="repayment_type" data-visible="false" class="hidden-column">repayment_type</th>
       <th>{% trans "Edit" %}</th>
     </tr>
     </thead>
@@ -45,19 +57,19 @@
       <td><input type="text" class="form-control" id="name" required></td>
       <td>
         <select class="form-control" id="categoryLarge">
-          <option value="固定资产">{% trans "Capital Assets" %}</option>
-          <option value="流动资产">{% trans "Liquid Assets" %}</option>
-          <option value="长期负债">{% trans "Long-term Liabilities" %}</option>
-          <option value="短期负债">{% trans "Current Liability" %}</option>
+          <option value="Capital_Assets">{% trans "Capital Assets" %}</option>
+          <option value="Liquid_Assets">{% trans "Liquid Assets" %}</option>
+          <option value="Long-term_Liabilities">{% trans "Long-term Liabilities" %}</option>
+          <option value="Current_Liability">{% trans "Current Liability" %}</option>
         </select>
       </td>
       <td>
         <select class="form-control" id="categorySmall">
-          <option value="无">{% trans "No" %}</option>
-          <option value="等额本息">{% trans "Fixed-payment" %}</option>
-          <option value="先息后本">{% trans "Interest-first" %}</option>
-          <option value="等额本金">{% trans "Fixed-principal" %}</option>
-          <option value="到期还本付息">{% trans "Upon maturity" %}</option>
+          <option value="No">{% trans "No" %}</option>
+          <option value="Fixed-payment">{% trans "Fixed-payment" %}</option>
+          <option value="Interest-first">{% trans "Interest-first" %}</option>
+          <option value="Fixed-principal">{% trans "Fixed-principal" %}</option>
+          <option value="Upon_maturity">{% trans "Upon maturity" %}</option>
         </select>
       </td>
       <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>
