@@ -36,6 +36,8 @@
       <th>{% trans "Cash Flow" %}</th>
       <th>{% trans "Terms" %}</th>
       <th>{% trans "Edit" %}</th>
+      <th data-visible="false">account_type</th>
+      <th data-visible="false">repayment_type</th>
     </tr>
     </thead>
     <tbody>
@@ -45,10 +47,10 @@
       <td><input type="text" class="form-control" id="name" required></td>
       <td>
         <select class="form-control" id="categoryLarge">
-          <option value="Capital Assets">{% trans "Capital Assets" %}</option>
-          <option value="Liquid Assets">{% trans "Liquid Assets" %}</option>
-          <option value="Long-term Liabilities">{% trans "Long-term Liabilities" %}</option>
-          <option value="Current Liability">{% trans "Current Liability" %}</option>
+          <option value="Capital_Assets">{% trans "Capital Assets" %}</option>
+          <option value="Liquid_Assets">{% trans "Liquid Assets" %}</option>
+          <option value="Long-term_Liabilities">{% trans "Long-term Liabilities" %}</option>
+          <option value="Current_Liability">{% trans "Current Liability" %}</option>
         </select>
       </td>
       <td>
@@ -57,7 +59,7 @@
           <option value="Fixed-payment">{% trans "Fixed-payment" %}</option>
           <option value="Interest-first">{% trans "Interest-first" %}</option>
           <option value="Fixed-principal">{% trans "Fixed-principal" %}</option>
-          <option value="Upon maturity">{% trans "Upon maturity" %}</option>
+          <option value="Upon_maturity">{% trans "Upon maturity" %}</option>
         </select>
       </td>
       <td><input type="text" class="form-control" id="currentValue" value="0" oninput="formatInput(this)"></td>

@@ -4,8 +4,8 @@ $(document).ready(function(){
         const rows = document.querySelectorAll('#dataTable tbody tr');
         const sdata = Array.from(rows).slice(0, -1).map(row => ({
             name: row.cells[0].innerText,
-            type: row.cells[1].innerText,
-            ctype: row.cells[2].innerText,
+            type: row.cells[7].innerText,
+            ctype: row.cells[8].innerText,
             sum_amount: row.cells[3].innerText.replace(/,/g, ''),
             rate: row.cells[4].innerText.replace('%', ''),
             currency: row.cells[5].innerText,
@@ -62,8 +62,12 @@ if (!validateForm()) return;
 const name = document.getElementById('name').value.trim();
 var selLarge = document.getElementById("categoryLarge");
 var categoryLarge = selLarge.options[selLarge.selectedIndex].text;
+var account_type = selLarge.value;
+
 var selSmall = document.getElementById("categorySmall");
 var categorySmall = selSmall.options[selSmall.selectedIndex].text;
+var repayment_type = selSmall.value;
+
 const currentValue = document.getElementById('currentValue').value;
 const annualRate = document.getElementById('annualRate').value;
 const cashFlow = document.getElementById('cashFlow').value;
@@ -79,6 +83,8 @@ row.insertCell(3).innerText = currentValue;
 row.insertCell(4).innerText = annualRate + '%';
 row.insertCell(5).innerText = cashFlow;
 row.insertCell(6).innerText = periods;
+row.insertCell(7).innerText = account_type;
+row.insertCell(8).innerText = repayment_type; 
 
 var trans1 = {
   "en": "Delet",
