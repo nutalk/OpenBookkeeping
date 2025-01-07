@@ -8,6 +8,13 @@
 <script src="https://cdn.staticfile.net/apexcharts/3.45.1/apexcharts.min.js"></script>
 <script src="{% static 'accounts/js/chart_fuc.js' %}"></script>
 <script src="{% static 'accounts/js/account_ana.js' %}"></script>
+<script>
+  $(document).ready(function() {
+    // 隐藏列
+    $('#dataTable').bootstrapTable('hideColumn', 'account_type');
+    $('#dataTable').bootstrapTable('hideColumn', 'repayment_type');
+  });
+</script>
 <style>
     /* 设置大类和小类列的宽度 */
     #dataTable td:nth-child(2) {
@@ -18,6 +25,9 @@
     }
     #dataTable td:nth-child(8) {
       width: 80px; /* 设置宽度，可以根据需求调整 */
+    }
+    .hidden-column {
+      display: none;
     }
   </style>
 {% endblock %}
@@ -36,8 +46,8 @@
       <th>{% trans "Cash Flow" %}</th>
       <th>{% trans "Terms" %}</th>
       <th>{% trans "Edit" %}</th>
-      <th data-visible="false">account_type</th>
-      <th data-visible="false">repayment_type</th>
+      <th data-field="account_type" data-visible="false" class="hidden-column">account_type</th>
+      <th data-field="repayment_type" data-visible="false" class="hidden-column">repayment_type</th>
     </tr>
     </thead>
     <tbody>
