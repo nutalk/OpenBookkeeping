@@ -1,40 +1,59 @@
-# OpenBookkeeping
-开源个人与家庭财务跟踪软件。
+[README EN](https://github.com/nutalk/OpenBookkeeping/blob/main/README_EN.md)
 
-## 主要功能
-个人与家庭记账应该关注整体的资产与负债、现金流是否充沛，而各项收支细节记录过于繁琐，且没有很大的用处。
+OpenBookkeeping是一个利用定期对账来跟踪个人资产负债的开源项目，并且可以绘制丰富的报表，包括资产负债的变化、未来现金流的预测等。
+# 主要特点
+- 每月对账一次，避免繁琐记账
+- 丰富的报表，帮助对当前财务状况进行评估
+- 对过往的资产负债情况进行跟踪，并能查看明细
+- 对各项资产负债的现金流进行汇总，预测资产负债的变化
+- 开源、免费、自部署，支持docker部署
+- 基于sqlite的本地数据管理，保证安全与隐私
 
-因此，OpenBookkeeping最关注以下功能：
-1. 记录各项资产与负债。
-2. 每项资产与负债都能计算现金流。
-3. 定期核对各项资产与负债的情况。
-4. 跟踪整体资产与负债的变化趋势。
+# 安装方式
+## 在debian系linux服务器直接安装
 
-另外出于安全性考虑，数据用sqlite在本地保存。
-
-## 安装
-### 直接安装
-在linux服务器上执行以下命令：
+在debian linux服务器上执行以下命令：
 
 ```
-get clone git@github.com:nutalk/OpenBookkeeping.git
+git clone git@github.com:nutalk/OpenBookkeeping.git
 pip install --no-cache-dir -r requirement.txt
+sudo apt install -y gettext
 sudo mkdir /data
 sudo chmod -R 777 /data
 bash docker/init_run.sh
 ```
-你就能打开浏览器，通过http://ip:7788 访问了。
 
+## 通过docker安装
 
-### 通过docker安装
 ```
+sudo mkdir /path_to_data
+sudo chmod -R 777 /path_to_data
 docker pull nutalk/bookkeep:main
 docker run -p 7788:7788 -v /path_to_data:/data nutalk/bookkeep:main
 ```
 
-### 数据导出
-在docker的挂载目录有一个db.sqlite3文件。
+# 安装完成后
 
-## django账户密码
+打开浏览器，通过http://ip:7788 访问项目主页。
+
+在/path_to_data或者/data目录，你能找到一个db.sqlite3文件，里面是所有的数据文件，记得定期进行备份。
+
+如果希望使用django自带的后台，账号密码如下：
+```
 user: admin
-password: 77887788
+password:77887788
+```
+
+# 截图
+
+账户清单页面
+![](https://www.gaopule.tech/upload/%E5%9B%BE%E7%89%87.png)
+
+每月对账页面
+![](https://www.gaopule.tech/upload/%E5%9B%BE%E7%89%87-ltha.png)
+
+账户概述报表
+![](https://www.gaopule.tech/upload/%E5%9B%BE%E7%89%87-mfgi.png)
+
+资产负债的现金流推演
+![](https://www.gaopule.tech/upload/%E5%9B%BE%E7%89%87-cynw.png)
