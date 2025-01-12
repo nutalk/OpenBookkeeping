@@ -219,7 +219,7 @@ def check_submit(request):
 
         for k, v in request.POST.items():
             if 'idd_' in k:
-                *_, tid = k.split('_')
+                *_i, tid = k.split('_')
                 tid = int(tid)
                 v = int(v)
                 if prop_remain_dict[tid] != v:
