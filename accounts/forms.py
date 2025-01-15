@@ -20,13 +20,12 @@ class PropNewForm(forms.Form):
                               required=True, label=_('Repayment'))
     comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
     init_ammount = forms.IntegerField(required=True, initial=0, label=_('Init Balance'))
+    is_fake = forms.ChoiceField(choices=[(0, _('Real')),
+                                       (1, _('Assumed'))],
+                                       required=True, initial=0, label=_('Is assumed'))
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        user_language = get_language()
-        out = _('Init Balance')
-        # iout = _('Interest Rate')
-        print(f"{user_language=}, {out=}")
         self.helper = FormHelper()
         self.helper.form_id = form_id
         self.helper.form_class = form_class
@@ -42,7 +41,8 @@ class PropNewForm(forms.Form):
             'currency',
             'ctype',
             'comment',
-            AppendedText('init_ammount', _('$'), active=False)
+            AppendedText('init_ammount', _('$'), active=False),
+            'is_fake'
         )
 
         self.helper.add_input(Submit('submit', _('Submit')))

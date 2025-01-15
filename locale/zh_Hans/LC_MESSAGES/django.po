@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-03 09:13+0000\n"
+"POT-Creation-Date: 2025-01-15 08:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: accounts/forms.py:11 accounts/forms.py:53
-#: accounts/templates/account_ana.html:31
+#: accounts/templates/account_ana.html:41
 msgid "Account Name"
 msgstr "账户名称"
 
 #: accounts/forms.py:13 accounts/forms.py:55
-#: accounts/templates/account_ana.html:32
+#: accounts/templates/account_ana.html:42
 msgid "Account Type"
 msgstr "账户类型"
 
@@ -31,22 +31,22 @@ msgid "Start Date"
 msgstr "起始日期"
 
 #: accounts/forms.py:16 accounts/forms.py:58
-#: accounts/templates/account_ana.html:37
+#: accounts/templates/account_ana.html:47
 msgid "Terms"
 msgstr "期限"
 
 #: accounts/forms.py:17 accounts/forms.py:59
-#: accounts/templates/account_ana.html:35
+#: accounts/templates/account_ana.html:45
 msgid "Interest Rate"
 msgstr "年利率"
 
 #: accounts/forms.py:18 accounts/forms.py:60
-#: accounts/templates/account_ana.html:36
+#: accounts/templates/account_ana.html:46
 msgid "Cash Flow"
 msgstr "现金流"
 
 #: accounts/forms.py:20 accounts/forms.py:62
-#: accounts/templates/account_ana.html:33
+#: accounts/templates/account_ana.html:43
 msgid "Repayment"
 msgstr "还款方式"
 
@@ -54,16 +54,27 @@ msgstr "还款方式"
 msgid "Comment"
 msgstr "备注"
 
-#: accounts/forms.py:22 accounts/forms.py:27
-#: accounts/templates/account_ana.html:34
+#: accounts/forms.py:22 accounts/templates/account_ana.html:44
 msgid "Init Balance"
 msgstr "初始余额"
 
-#: accounts/forms.py:40 accounts/forms.py:77
+#: accounts/forms.py:23
+msgid "Real"
+msgstr "真实账户"
+
+#: accounts/forms.py:24
+msgid "Assumed"
+msgstr "假设账户"
+
+#: accounts/forms.py:25
+msgid "Is assumed"
+msgstr "账户真假"
+
+#: accounts/forms.py:39 accounts/forms.py:77
 msgid "month"
 msgstr "月"
 
-#: accounts/forms.py:45 accounts/forms.py:105 accounts/templates/check.html:27
+#: accounts/forms.py:44 accounts/forms.py:105 accounts/templates/check.html:27
 msgid "$"
 msgstr "￥"
 
@@ -127,67 +138,67 @@ msgstr "报表"
 msgid "CashFlow"
 msgstr "现金流预测"
 
-#: accounts/templates/account_ana.html:26
+#: accounts/templates/account_ana.html:36
 msgid "Assets and liabilities"
 msgstr "资产与负债"
 
-#: accounts/templates/account_ana.html:38 accounts/templates/detail.html:59
+#: accounts/templates/account_ana.html:50 accounts/templates/detail.html:59
 msgid "Edit"
 msgstr "编辑"
 
-#: accounts/templates/account_ana.html:48
+#: accounts/templates/account_ana.html:60
 msgid "Capital Assets"
 msgstr "固定资产"
 
-#: accounts/templates/account_ana.html:49
+#: accounts/templates/account_ana.html:61
 msgid "Liquid Assets"
 msgstr "流动资产"
 
-#: accounts/templates/account_ana.html:50
+#: accounts/templates/account_ana.html:62
 msgid "Long-term Liabilities"
 msgstr "长期负债"
 
-#: accounts/templates/account_ana.html:51
+#: accounts/templates/account_ana.html:63
 msgid "Current Liability"
 msgstr "短期负债"
 
-#: accounts/templates/account_ana.html:56
+#: accounts/templates/account_ana.html:68
 msgid "No"
 msgstr "无"
 
-#: accounts/templates/account_ana.html:57
+#: accounts/templates/account_ana.html:69
 msgid "Fixed-payment"
 msgstr "等额本息"
 
-#: accounts/templates/account_ana.html:58
+#: accounts/templates/account_ana.html:70
 msgid "Interest-first"
 msgstr "先息后本"
 
-#: accounts/templates/account_ana.html:59
+#: accounts/templates/account_ana.html:71
 msgid "Fixed-principal"
 msgstr "等额本金"
 
-#: accounts/templates/account_ana.html:60
+#: accounts/templates/account_ana.html:72
 msgid "Upon maturity"
 msgstr "到期还本付息"
 
-#: accounts/templates/account_ana.html:68
+#: accounts/templates/account_ana.html:80
 msgid "Add"
 msgstr "增加"
 
-#: accounts/templates/account_ana.html:74
+#: accounts/templates/account_ana.html:86
 msgid "Predict"
 msgstr "预测"
 
-#: accounts/templates/account_ana.html:80 accounts/templates/report.html:165
+#: accounts/templates/account_ana.html:92 accounts/templates/report.html:165
 msgid "Prediction of assets and liabilities"
 msgstr "资产负债预测"
 
-#: accounts/templates/account_ana.html:89 accounts/templates/report.html:174
+#: accounts/templates/account_ana.html:101 accounts/templates/report.html:174
 msgid "History of net asset and cash"
 msgstr "净资产、现金流变动"
 
-#: accounts/templates/account_ana.html:98
+#: accounts/templates/account_ana.html:110
 msgid "Detail of cash flow"
 msgstr "现金流明细"
 
@@ -292,7 +303,6 @@ msgid "Balance Check"
 msgstr "余额核对"
 
 #: accounts/web_fuc.py:249
-#| msgid "CashFlow"
 msgid "Cash"
 msgstr "现金"
 
@@ -305,11 +315,9 @@ msgid "Change of cash"
 msgstr "现金变化"
 
 #: accounts/web_fuc.py:306 accounts/web_fuc.py:314
-#| msgid "Fixed-principal"
 msgid "Principal"
 msgstr "本金"
 
 #: accounts/web_fuc.py:308 accounts/web_fuc.py:316
-#| msgid "Interest Rate"
 msgid "Interest"
 msgstr "利息"

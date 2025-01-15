@@ -10,6 +10,7 @@ class Prop(models.Model):
     currency=models.IntegerField(default=0, null=True)
     ctype=models.IntegerField(null=True)
     comment=models.CharField(max_length=255, null=True)
+    is_fake=models.IntegerField(default=0)
 
 
 class Detail(models.Model):
