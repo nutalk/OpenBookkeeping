@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.bootstrap import AppendedText
-from crispy_forms.layout import Submit, Layout, Field
+from crispy_forms.layout import Submit, Layout, Field, Div
 from .gloab_info import prop_type_items, liability_currency_types
 from django.utils.translation import get_language, gettext_lazy as _
 
@@ -32,17 +32,23 @@ class PropNewForm(forms.Form):
         self.helper.form_method = 'post'
         self.helper.form_action = action_str
         self.helper.layout = Layout(
-            Field('id', type='hidden'),
-            'name',
-            'p_type',
-            'start_date',
-            AppendedText('term_month', _('month'), active=False),
-            AppendedText('rate', '%', active=False),
-            'currency',
-            'ctype',
-            'comment',
-            AppendedText('init_ammount', _('$'), active=False),
-            'is_fake'
+            Div(Field('name', css_class="col-md-6"),
+                Field(AppendedText('init_ammount', _('$'), active=False), css_class="col-md-6"),
+                css_class='form-row'),
+            Div(Field('p_type', css_class="col-md-6"),
+                Field('is_fake', css_class="col-md-6"),
+                css_class='form-row'),
+            Div(Field('start_date', css_class="col-md-6"),
+                Field(AppendedText('term_month', _('month'), active=False), css_class="col-md-6"),
+                css_class='form-row'),
+            Div(Field(AppendedText('rate', '%', active=False), css_class="col-md-6"),
+                Field('ctype', css_class="col-md-6"),
+                css_class='form-row'),
+            Div(
+                Field('currency', css_class="col-md-6"),
+                Field('comment', css_class="col-md-6"),
+                css_class='form-row'
+            )
         )
 
         self.helper.add_input(Submit('submit', _('Submit')))
