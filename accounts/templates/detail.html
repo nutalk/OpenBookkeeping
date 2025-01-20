@@ -175,8 +175,61 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        {% load crispy_forms_tags %}
-        {% crispy prop_edit_form prop_edit_form.helper %}
+        <form id="propNewForm" class="prop_edit_form" method="post" action="/prop_edit/">
+          {% csrf_token %}
+          <div class="d-none">
+            {{ prop_edit_form.id }}
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_edit_form.name.label_tag }}
+              {{ prop_edit_form.name }}
+            </div>
+            <div class="form-column">
+              {{ prop_edit_form.p_type.label_tag }}
+              {{ prop_edit_form.p_type }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_edit_form.start_date.label_tag }}
+              {{ prop_edit_form.start_date }}
+            </div>
+            <div class="form-column">
+              {{ prop_edit_form.term_month.label_tag }}
+              {{ prop_edit_form.term_month }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_edit_form.rate.label_tag }}
+              {{ prop_edit_form.rate }}
+            </div>
+            <div class="form-column">
+              {{ prop_edit_form.currency.label_tag }}
+              {{ prop_edit_form.currency }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_edit_form.ctype.label_tag }}
+              {{ prop_edit_form.ctype }}
+            </div>
+            <div class="form-column">
+              {{ prop_edit_form.is_fake.label_tag }}
+              {{ prop_edit_form.is_fake }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_edit_form.comment.label_tag }}
+              {{ prop_edit_form.comment }}
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
