@@ -20,3 +20,5 @@ account_info_show = {
 
 history_month_term = 24
 predict_month_term = 24
+
+is_fake_items = ['Real', 'Assumed']

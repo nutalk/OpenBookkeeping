@@ -8,7 +8,7 @@ from django.db.models import Sum
 from .models import Prop, Detail
 from .forms import PropNewForm, DetailForm, PropEditForm
 from .gloab_info import prop_type_ids, prop_type_items, \
-    liability_currency_ids, liability_currency_types, account_info_show
+    is_fake_items, liability_currency_types, account_info_show
 from django.utils.translation import gettext as _
 # Create your views here.
 
@@ -68,6 +68,8 @@ def prop_detail_post(request):
                 res = _(liability_currency_types[v])
             elif k == 'start_date':
                 res = trans_date_str(v)
+            elif k == 'is_fake':
+                res = _(is_fake_items[v])
             else:
                 res = v
             result.append({'k': k, 'v': res})
