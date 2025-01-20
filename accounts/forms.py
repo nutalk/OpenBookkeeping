@@ -61,6 +61,9 @@ class PropEditForm(forms.Form):
     ctype = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(liability_currency_types)], 
                               required=True, label=_('Repayment'))
     comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
+    is_fake = forms.ChoiceField(choices=[(0, _('Real')),
+                                       (1, _('Assumed'))],
+                                       required=True, initial=0, label=_('Is assumed'))
 
     def __init__(self, action_str, form_id: str, form_class: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,7 +81,8 @@ class PropEditForm(forms.Form):
             AppendedText('rate', '%', active=False),
             'currency',
             'ctype',
-            'comment'
+            'comment',
+            'is_fake'
         )
         self.helper.add_input(Submit('submit', _('Submit')))
 

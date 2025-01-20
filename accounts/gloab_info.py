@@ -14,6 +14,7 @@ account_info_show = {
     'rate': 'Interest Rate',
     'currency': 'Cash Flow',
     'ctype': 'Repayment',
+    'is_fake': 'Is assumed',
     'comment': 'Comment'
 }
 

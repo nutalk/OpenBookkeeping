@@ -107,7 +107,8 @@ def prop_new(request):
             rate = float(request.POST.get('rate')),
             currency=request.POST.get('currency'),
             ctype=request.POST.get('ctype'),
-            comment=request.POST.get('comment')
+            comment=request.POST.get('comment'),
+            is_fake = request.POST.get('is_fake')
         )
         new_prop.save()
         detail = Detail(
@@ -141,6 +142,7 @@ def prop_edit(request):
             prop.currency=request.POST.get('currency')
             prop.ctype=int(request.POST.get('ctype'))
             prop.comment=request.POST.get('comment')
+            prop.is_fake = int(request.POST.get('is_fake'))
             prop.save()
     return redirect("/")
 
