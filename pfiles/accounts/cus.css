@@ -3,7 +3,23 @@ div#body_container {
     padding-bottom: 25px;
 } 
 
-.form-row {
+.form-columns {
     display: flex;
     justify-content: space-between;
-}
+  }
+  
+  .form-column {
+    flex: 1;
+    margin-right: 10px; /* 调整列之间的间距 */
+  }
+  
+  .form-column:last-child {
+    margin-right: 0; /* 最后一列不需要右边距 */
+  }
+  
+  .form-column input,
+  .form-column select,
+  .form-column textarea {
+    width: 100%;
+    box-sizing: border-box; /* 确保内边距和边框不会增加元素的总宽度 */
+  }

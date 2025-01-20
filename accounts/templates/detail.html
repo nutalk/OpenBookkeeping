@@ -105,8 +105,60 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        {% load crispy_forms_tags %}
-        {% crispy prop_new_form prop_new_form.helper %}
+        <form id="propNewForm" method="post">
+          {% csrf_token %}
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_new_form.name.label_tag }}
+              {{ prop_new_form.name }}
+            </div>
+            <div class="form-column">
+              {{ prop_new_form.p_type.label_tag }}
+              {{ prop_new_form.p_type }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_new_form.start_date.label_tag }}
+              {{ prop_new_form.start_date }}
+            </div>
+            <div class="form-column">
+              {{ prop_new_form.term_month.label_tag }}
+              {{ prop_new_form.term_month }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_new_form.rate.label_tag }}
+              {{ prop_new_form.rate }}
+            </div>
+            <div class="form-column">
+              {{ prop_new_form.currency.label_tag }}
+              {{ prop_new_form.currency }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_new_form.ctype.label_tag }}
+              {{ prop_new_form.ctype }}
+            </div>
+            <div class="form-column">
+              {{ prop_new_form.comment.label_tag }}
+              {{ prop_new_form.comment }}
+            </div>
+          </div>
+          <div class="form-columns">
+            <div class="form-column">
+              {{ prop_new_form.init_ammount.label_tag }}
+              {{ prop_new_form.init_ammount }}
+            </div>
+            <div class="form-column">
+              {{ prop_new_form.is_fake.label_tag }}
+              {{ prop_new_form.is_fake }}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </div>
     </div>
   </div>
