@@ -105,7 +105,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="propNewForm" method="post">
+        <form id="propNewForm" method="post" action="/prop_new/">
           {% csrf_token %}
           <div class="form-columns">
             <div class="form-column">
@@ -157,7 +157,9 @@
               {{ prop_new_form.is_fake }}
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+          </div>
         </form>
       </div>
     </div>
