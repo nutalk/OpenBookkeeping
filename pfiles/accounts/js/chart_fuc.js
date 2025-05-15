@@ -44,7 +44,67 @@ function update_ts_chart(pic_id, data_series, chart_type, ytitle, detail_data=nu
           title: {
             text: ytitle
           },
-        }
+        },
+        tooltip: {
+    enabled: true,
+    style: {
+        background: 'transparent', // Remove default background
+        border: '0' // Remove default border
+    },
+    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+        const timestamp = w.globals.seriesX[seriesIndex][dataPointIndex];
+        const date = new Date(timestamp);
+        const colors = w.globals.colors; // Get series colors
+        
+        return `
+            <div class="apexcharts-tooltip-box">
+                <!-- Header -->
+                <div style="
+                    background: #6c757d;
+                    color: white;
+                    padding: 8px 12px;
+                    font-weight: 500;
+                    border-radius: 3px 3px 0 0;
+                ">
+                    ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}
+                </div>
+                
+                <!-- Body -->
+                <div style="
+                    padding: 8px 12px;
+                    background: white;
+                    border-radius: 0 0 3px 3px;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                ">
+                    ${series.map((s, i) => `
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            margin: 4px 0;
+                        ">
+                            <span style="
+                                display: inline-block;
+                                width: 10px;
+                                height: 10px;
+                                border-radius: 50%;
+                                background: ${colors[i]};
+                            "></span>
+                            <div style="
+                                display: flex;
+                                justify-content: space-between;
+                                flex-grow: 1;
+                            ">
+                                <span style="color: #666">${w.globals.seriesNames[i]}:</span>
+                                <span style="font-weight: 500">${s[dataPointIndex].toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+}
       };
       
       var chart = new ApexCharts(document.querySelector("#"+pic_id), options);

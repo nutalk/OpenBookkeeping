@@ -20,7 +20,7 @@ $(document).ready(function(){
             console.log(data);
             var trans1 = {
               "en": "K$",
-              "zh-hans": "万元"
+              "zh-hans": "千元"
               // 添加更多语言的翻译
           };
           var trans2 = {

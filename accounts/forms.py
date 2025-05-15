@@ -51,14 +51,14 @@ class PropNewForm(forms.Form):
 class PropEditForm(forms.Form):
     id = forms.IntegerField(label='id')
     name = forms.CharField(label=_('Account Name'), max_length=255, required=True)
-    p_type = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(prop_type_items)], 
+    p_type = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(prop_type_items)], 
                                   required=True, label=_('Account Type'))
     start_date = forms.DateField(required=True, label=_('Start Date'),
                                  widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     term_month = forms.IntegerField(required=True, initial=0, label=_('Terms'))
     rate = forms.FloatField(required=True, initial=0.0, label=_('Interest Rate'))
     currency = forms.IntegerField(required=True, initial=0, label=_('Cash Flow'))
-    ctype = forms.ChoiceField(choices=[(idx, item) for idx, item in enumerate(liability_currency_types)], 
+    ctype = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(liability_currency_types)], 
                               required=True, label=_('Repayment'))
     comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
 

@@ -121,7 +121,7 @@ $(document).ready(function () {
     function (data, status) {
       var translations = {
         "en": "K$",
-        "zh-hans": "万元"
+        "zh-hans": "千元"
         // 添加更多语言的翻译
     };
     var currentLanguage = $('#current_lan').text();
@@ -140,7 +140,7 @@ $(document).ready(function () {
     function (data, status) {
       var trans1 = {
         "en": "K$",
-        "zh-hans": "万元"
+        "zh-hans": "千元"
         // 添加更多语言的翻译
     };
     var trans2 = {
