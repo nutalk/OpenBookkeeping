@@ -313,3 +313,7 @@ msgstr "本金"
 #| msgid "Interest Rate"
 msgid "Interest"
 msgstr "利息"
+
+
+msgid "Interest Expense"
+msgstr "利息支出"
