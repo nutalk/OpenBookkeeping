@@ -170,6 +170,7 @@ $(document).ready(function () {
       $("#income_total").text(data.income_total);
       $("#outcome_total").text(data.outcome_total);
       $("#netcome_total").text(data.netcome_total);
+      $("#interest_expense").text(data.interest_expense);
 
     });
 })
