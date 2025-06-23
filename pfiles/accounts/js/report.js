@@ -17,14 +17,70 @@ $(document).ready(function () {
 })
 
 // 更新资产和负债的组成
+var chartCache = {};
+
 function update_pie(series, labels, pic_id) {
+  let visible = Array(series.length).fill(true);
+  let originalColors = [];
+
   var options = {
     series: series,
     chart: {
       height: 300,
       type: 'pie',
+      id: pic_id,
+      events: {
+        mounted: function(chartContext, config) {
+          // 缓存原始颜色
+          originalColors = chartContext.w.globals.colors.slice();
+        },
+        legendClick: function(chartContext, seriesIndex, config) {
+          visible[seriesIndex] = !visible[seriesIndex];
+          const newSeries = series.map((s, i) => visible[i] ? s : 0);
+
+          // 设置图例颜色：不可见项目改为灰色
+          const fillColors = originalColors.map((color, i) =>
+            visible[i] ? color : "#ccc"
+          );
+          const labelColors = originalColors.map((color, i) =>
+            visible[i] ? "#000" : "#999"
+          );
+
+          chartCache[pic_id].updateOptions({
+            series: newSeries,
+            chart: {
+              height: 300
+            },
+            legend: {
+              markers: {
+                fillColors: fillColors
+              },
+              labels: {
+                colors: labelColors
+              }
+            }
+          }, true, true);
+
+          return false;
+        }
+      }
     },
     labels: labels,
+    legend: {
+      show: true,
+      position: 'right',
+      offsetY: 0,
+      height: 'auto',
+      onItemClick: {
+        toggleDataSeries: false
+      },
+      markers: {
+        fillColors: [] // 动态填充
+      },
+      labels: {
+        colors: []
+      }
+    },
     responsive: [{
       breakpoint: 480,
       options: {
@@ -38,9 +94,16 @@ function update_pie(series, labels, pic_id) {
     }]
   };
 
-  var chart = new ApexCharts(document.querySelector("#"+pic_id), options);
+  if (chartCache[pic_id]) {
+    chartCache[pic_id].destroy();
+  }
+
+  const chart = new ApexCharts(document.querySelector("#" + pic_id), options);
   chart.render();
+  chartCache[pic_id] = chart;
 }
+
+
 
 $(document).ready(function(){
   var translations = {
