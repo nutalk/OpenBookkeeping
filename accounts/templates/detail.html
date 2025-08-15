@@ -7,6 +7,83 @@
 <link rel="stylesheet" href="https://cdn.staticfile.net/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="{% static 'bs_table/bootstrap-table.min.css' %}">
 <script src="{% static 'bs_table/bootstrap-table.min.js' %}"></script>
+
+<style>
+.account-detail-card {
+    border: 1px solid #e3e6f0;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    transition: all 0.3s ease;
+}
+
+.account-detail-card:hover {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.25);
+    transform: translateY(-2px);
+}
+
+.account-detail-table {
+    margin-bottom: 0;
+}
+
+.account-detail-table .detail-label {
+    font-weight: 600;
+    color: #5a5c69;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #f8f9fc;
+}
+
+.account-detail-table .detail-value {
+    font-weight: 500;
+    color: #2e59d9;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #f8f9fc;
+}
+
+.status-tag-container {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
+}
+
+.status-badge {
+    transform: rotate(15deg);
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.bg-success {
+    background: linear-gradient(45deg, #1cc88a, #36e9ae) !important;
+    border: 2px solid #fff;
+}
+
+.status-badge.bg-danger {
+    background: linear-gradient(45deg, #e74a3b, #f56565) !important;
+    border: 2px solid #fff;
+}
+
+.card-body {
+    padding: 1.5rem;
+    position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-tag-container {
+        top: -5px;
+        right: -5px;
+    }
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+</style>
 {% endblock %}
 
 {% block main_page %}
@@ -66,37 +143,44 @@
     <hr />
     <div class="row">
       <div class="col-md-6">
-        <table class="table table-borderless table-sm">
-          <tbody>
-            {%for show_rec in show_info%}
-            {% if forloop.counter <= 4 %}
-            <tr>
-              <td class="col-6">{{show_rec.show}}</td>
-              <td id={{show_rec.id}}></td>
-            </tr>
-            {% endif %}
-            {%endfor%}
-          </tbody>
-        </table>
+        <div class="card account-detail-card">
+          <div class="card-body position-relative">
+            <!-- Status tag positioned at top-right corner -->
+            <div class="status-tag-container">
+              <span id="account_status_tag" class="badge bg-success status-badge">激活</span>
+            </div>
+            <table class="table table-borderless table-sm account-detail-table">
+              <tbody>
+                {%for show_rec in show_info%}
+                {% if forloop.counter <= 4 %}
+                <tr>
+                  <td class="col-6 detail-label">{{show_rec.show}}</td>
+                  <td id={{show_rec.id}} class="detail-value"></td>
+                </tr>
+                {% endif %}
+                {%endfor%}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <div class="col-md-6">
-        <table class="table table-borderless table-sm">
-          <tbody>
-            {%for show_rec in show_info%}
-            {% if forloop.counter > 4 %}
-            <tr>
-              <td class="col-6">{{show_rec.show}}</td>
-              <td id={{show_rec.id}}></td>
-            </tr>
-            {% endif %}
-            {%endfor%}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-12">
-        <span id="account_status_tag" class="badge bg-success">激活</span>
+        <div class="card account-detail-card">
+          <div class="card-body">
+            <table class="table table-borderless table-sm account-detail-table">
+              <tbody>
+                {%for show_rec in show_info%}
+                {% if forloop.counter > 4 %}
+                <tr>
+                  <td class="col-6 detail-label">{{show_rec.show}}</td>
+                  <td id={{show_rec.id}} class="detail-value"></td>
+                </tr>
+                {% endif %}
+                {%endfor%}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
     <hr />
