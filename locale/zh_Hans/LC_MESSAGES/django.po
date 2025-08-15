@@ -207,6 +207,14 @@ msgstr "账户信息"
 msgid "Delete"
 msgstr "删除"
 
+#: accounts/templates/detail.html:61
+msgid "Deactivate"
+msgstr "停用"
+
+#: accounts/templates/detail.html:61
+msgid "Activate"
+msgstr "启用"
+
 #: accounts/templates/detail.html:78
 msgid "Trades"
 msgstr "交易明细"

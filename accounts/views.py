@@ -68,6 +68,8 @@ def prop_detail_post(request):
                 res = _(liability_currency_types[v])
             elif k == 'start_date':
                 res = trans_date_str(v)
+            elif k == 'activate':
+                res = str(v)  # Convert boolean to string for consistency
             else:
                 res = v
             result.append({'k': k, 'v': res})
@@ -143,6 +145,23 @@ def prop_edit(request):
                 prop.comment=request.POST.get('comment')
                 prop.save()
                 return HttpResponse(json.dumps({'status': 'success', 'message': 'Account updated successfully'}), 
+                                  content_type='application/json;charset=utf-8')
+        except Exception as e:
+            return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
+                              content_type='application/json;charset=utf-8')
+    return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
+                       content_type='application/json;charset=utf-8')
+
+# 切换账户激活状态
+def prop_toggle_activate(request):
+    if request.method == "POST":
+        try:
+            prop = Prop.objects.get(pk=request.POST.get('id'))
+            if prop is not None:
+                prop.activate = not prop.activate
+                prop.save()
+                status_text = "activated" if prop.activate else "deactivated"
+                return HttpResponse(json.dumps({'status': 'success', 'message': f'Account {status_text} successfully', 'activate': prop.activate}), 
                                   content_type='application/json;charset=utf-8')
         except Exception as e:
             return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
