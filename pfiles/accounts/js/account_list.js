@@ -233,7 +233,17 @@ $(function(){
 $(function(){
     $("#prop_activate_btn").click(function(){
         var current_id = $("#account_id_p").text();
-        if (current_id && confirm('Are you sure you want to change the account status?')) {
+        var currentLanguage = $('#current_lan').text();
+        
+        // Define confirmation messages in different languages
+        var confirmMessages = {
+            "en": "Are you sure you want to change the account status?",
+            "zh-hans": "确定要更改账户状态吗？"
+        };
+        
+        var confirmMessage = confirmMessages[currentLanguage] || confirmMessages["en"];
+        
+        if (current_id && confirm(confirmMessage)) {
             $.post("/prop_toggle_activate/", {
                 id: current_id.split('_')[1], // Extract the ID from plg_123 format
                 csrfmiddlewaretoken: csrftoken
@@ -249,7 +259,12 @@ $(function(){
                         $("#prop_activate_btn").removeClass("btn-warning").addClass("btn-success");
                     }
                 } else {
-                    alert('Error: ' + data.message);
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
@@ -280,7 +295,13 @@ $(function(){
                     // Clear the form
                     form[0].reset();
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
@@ -307,7 +328,13 @@ $(function(){
                         update_detail_table(current_id);
                     }
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
@@ -350,7 +377,13 @@ $(function(){
                     
                     // Success - no alert needed
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
