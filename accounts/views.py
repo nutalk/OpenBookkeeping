@@ -68,6 +68,8 @@ def prop_detail_post(request):
                 res = _(liability_currency_types[v])
             elif k == 'start_date':
                 res = trans_date_str(v)
+            elif k == 'activate':
+                res = str(v)  # Convert boolean to string for consistency
             else:
                 res = v
             result.append({'k': k, 'v': res})
@@ -150,6 +152,23 @@ def prop_edit(request):
     return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
                        content_type='application/json;charset=utf-8')
 
+# 切换账户激活状态
+def prop_toggle_activate(request):
+    if request.method == "POST":
+        try:
+            prop = Prop.objects.get(pk=request.POST.get('id'))
+            if prop is not None:
+                prop.activate = not prop.activate
+                prop.save()
+                status_text = "activated" if prop.activate else "deactivated"
+                return HttpResponse(json.dumps({'status': 'success', 'message': f'Account {status_text} successfully', 'activate': prop.activate}), 
+                                  content_type='application/json;charset=utf-8')
+        except Exception as e:
+            return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
+                              content_type='application/json;charset=utf-8')
+    return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
+                       content_type='application/json;charset=utf-8')
+
 # 删除明细
 def detail_del(request):
     if request.method == 'POST':
@@ -211,7 +230,7 @@ def detail_edit(request):
 
 # 对账页面
 def book_check(request):
-    res = Prop.objects.annotate(remains=Sum('detail__amount')).values()
+    res = Prop.objects.filter(activate=True).annotate(remains=Sum('detail__amount')).values()
     contex = {'type_prop': []}
     output = defaultdict(list)
 
@@ -234,7 +253,7 @@ def book_check(request):
 # 对账数据处理
 def check_submit(request):
     if request.method == 'POST':
-        res = Prop.objects.annotate(remains=Sum('detail__amount')).values()
+        res = Prop.objects.filter(activate=True).annotate(remains=Sum('detail__amount')).values()
         prop_remain_dict = {int(item['id']): item['remains'] for item in res}
 
         for k, v in request.POST.items():

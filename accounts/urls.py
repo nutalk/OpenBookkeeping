@@ -20,6 +20,7 @@ detial_api_urls = [
     path('prop_new/', views.prop_new, name='prop_new'),
     path('prop_del/', views.prop_del, name='prop_del'),
     path('prop_edit/', views.prop_edit, name='prop_edit'),
+    path('prop_toggle_activate/', views.prop_toggle_activate, name='prop_toggle_activate'),
     path('detail_del/', views.detail_del, name='detail_del'),
     path('detail_new/', views.detail_new, name='detail_new'),
     path('detail_edit/', views.detail_edit, name='detail_edit'),

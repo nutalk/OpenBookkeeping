@@ -8,6 +8,7 @@ $(document).ready(function () {
         $('#account_name_p').text(current_name);
         $('#prop_edit_btn').prop('disabled', false);
         $('#prop_del_btn').prop('disabled', false);
+        $('#prop_activate_btn').prop('disabled', false);
         $('#detail_add_btn').prop('disabled', false);
         $('#detail_edit_btn').prop('disabled', true);
         $('#detail_del_btn').prop('disabled', true);
@@ -84,6 +85,22 @@ $(document).ready(function () {
                         objs.val(rec.v);
                     }
                 }
+                
+                // Update activate button based on account status
+                var activateStatus = data.find(function(item) { return item.k === 'activate'; });
+                if (activateStatus) {
+                    if (activateStatus.v === 'True' || activateStatus.v === true) {
+                        $("#activate_text").text("停用");
+                        $("#prop_activate_btn").removeClass("btn-success").addClass("btn-warning");
+                        // Update status tag for active account
+                        $("#account_status_tag").text("激活").removeClass("bg-danger").addClass("bg-success");
+                    } else {
+                        $("#activate_text").text("启用");
+                        $("#prop_activate_btn").removeClass("btn-warning").addClass("btn-success");
+                        // Update status tag for inactive account
+                        $("#account_status_tag").text("停用").removeClass("bg-success").addClass("bg-danger");
+                    }
+                }
             });
         })
 });
@@ -111,6 +128,7 @@ $(function(){
     if (current_id == ''){
         $('#prop_edit_btn').prop('disabled', true);
         $('#prop_del_btn').prop('disabled', true);
+        $('#prop_activate_btn').prop('disabled', true);
         $('#detail_add_btn').prop('disabled', true);
         $('#detail_edit_btn').prop('disabled', true);
         $('#detail_del_btn').prop('disabled', true);
@@ -215,6 +233,54 @@ $(function(){
     })
 })
 
+// Handle prop activate/deactivate button
+$(function(){
+    $("#prop_activate_btn").click(function(){
+        var current_id = $("#account_id_p").text();
+        var currentLanguage = $('#current_lan').text();
+        
+        // Define confirmation messages in different languages
+        var confirmMessages = {
+            "en": "Are you sure you want to change the account status?",
+            "zh-hans": "确定要更改账户状态吗？"
+        };
+        
+        var confirmMessage = confirmMessages[currentLanguage] || confirmMessages["en"];
+        
+        if (current_id && confirm(confirmMessage)) {
+            $.post("/prop_toggle_activate/", {
+                id: current_id.split('_')[1], // Extract the ID from plg_123 format
+                csrfmiddlewaretoken: csrftoken
+            },
+            function (data, status) {
+                if (data.status === 'success') {
+                    // Update button text based on new status
+                    if (data.activate) {
+                        $("#activate_text").text("停用");
+                        $("#prop_activate_btn").removeClass("btn-success").addClass("btn-warning");
+                        // Update status tag for active account
+                        $("#account_status_tag").text("激活").removeClass("bg-danger").addClass("bg-success");
+                    } else {
+                        $("#activate_text").text("启用");
+                        $("#prop_activate_btn").removeClass("btn-warning").addClass("btn-success");
+                        // Update status tag for inactive account
+                        $("#account_status_tag").text("停用").removeClass("bg-success").addClass("bg-danger");
+                    }
+                } else {
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
+                }
+            },
+            'json'
+            );
+        }
+    });
+})
+
 // Handle detail new form submission
 $(function(){
     $(".detail_new_form").submit(function(e){
@@ -237,7 +303,13 @@ $(function(){
                     // Clear the form
                     form[0].reset();
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
@@ -264,7 +336,13 @@ $(function(){
                         update_detail_table(current_id);
                     }
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
@@ -307,7 +385,13 @@ $(function(){
                     
                     // Success - no alert needed
                 } else {
-                    alert('Error: ' + data.message);
+                    var currentLanguage = $('#current_lan').text();
+                    var errorMessages = {
+                        "en": "Error: ",
+                        "zh-hans": "错误："
+                    };
+                    var errorPrefix = errorMessages[currentLanguage] || errorMessages["en"];
+                    alert(errorPrefix + data.message);
                 }
             },
             'json'
