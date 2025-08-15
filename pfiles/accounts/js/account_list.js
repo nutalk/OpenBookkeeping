@@ -214,3 +214,46 @@ $(function(){
         })
     })
 })
+
+// Handle prop edit form submission
+$(function(){
+    $(".prop_edit_form").submit(function(e){
+        e.preventDefault();
+        var form = $(this);
+        var formData = form.serialize();
+        
+        $.post("/prop_edit/", formData,
+            function (data, status) {
+                if (data.status === 'success') {
+                    // Close the modal
+                    $('#prop_edit_modal').modal('hide');
+                    
+                    // Refresh the account info and detail table
+                    var current_id = $("#account_id_p").text();
+                    if (current_id) {
+                        // Refresh account info
+                        $.post("/prop_detail_post/",
+                            {
+                                prop_id: current_id,
+                                csrfmiddlewaretoken: csrftoken
+                            },
+                            function (data, status) {
+                                for (var i=0; i<data.length; i++){
+                                    var rec = data[i];
+                                    $("#"+rec.k).text(rec.v);
+                                }
+                            });
+                        
+                        // Refresh detail table
+                        update_detail_table(current_id);
+                    }
+                    
+                    // Success - no alert needed
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            },
+            'json'
+        );
+    });
+})
