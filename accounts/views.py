@@ -230,7 +230,7 @@ def detail_edit(request):
 
 # 对账页面
 def book_check(request):
-    res = Prop.objects.annotate(remains=Sum('detail__amount')).values()
+    res = Prop.objects.filter(activate=True).annotate(remains=Sum('detail__amount')).values()
     contex = {'type_prop': []}
     output = defaultdict(list)
 
@@ -253,7 +253,7 @@ def book_check(request):
 # 对账数据处理
 def check_submit(request):
     if request.method == 'POST':
-        res = Prop.objects.annotate(remains=Sum('detail__amount')).values()
+        res = Prop.objects.filter(activate=True).annotate(remains=Sum('detail__amount')).values()
         prop_remain_dict = {int(item['id']): item['remains'] for item in res}
 
         for k, v in request.POST.items():
