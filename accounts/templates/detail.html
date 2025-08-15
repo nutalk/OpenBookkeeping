@@ -64,16 +64,41 @@
       </div>
     </div>
     <hr />
-    <table class="table table-borderless table-sm">
-      <tbody>
-        {%for show_rec in show_info%}
-        <tr>
-          <td class="col-3">{{show_rec.show}}</td>
-          <td id={{show_rec.id}}></td>
-        </tr>
-        {%endfor%}
-      </tbody>
-    </table>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-borderless table-sm">
+          <tbody>
+            {%for show_rec in show_info%}
+            {% if forloop.counter <= 4 %}
+            <tr>
+              <td class="col-6">{{show_rec.show}}</td>
+              <td id={{show_rec.id}}></td>
+            </tr>
+            {% endif %}
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table class="table table-borderless table-sm">
+          <tbody>
+            {%for show_rec in show_info%}
+            {% if forloop.counter > 4 %}
+            <tr>
+              <td class="col-6">{{show_rec.show}}</td>
+              <td id={{show_rec.id}}></td>
+            </tr>
+            {% endif %}
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <span id="account_status_tag" class="badge bg-success">激活</span>
+      </div>
+    </div>
     <hr />
     <div class="row">
       <div class="col-4 pt-2">

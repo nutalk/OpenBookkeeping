@@ -92,9 +92,13 @@ $(document).ready(function () {
                     if (activateStatus.v === 'True' || activateStatus.v === true) {
                         $("#activate_text").text("停用");
                         $("#prop_activate_btn").removeClass("btn-success").addClass("btn-warning");
+                        // Update status tag for active account
+                        $("#account_status_tag").text("激活").removeClass("bg-danger").addClass("bg-success");
                     } else {
                         $("#activate_text").text("启用");
                         $("#prop_activate_btn").removeClass("btn-warning").addClass("btn-success");
+                        // Update status tag for inactive account
+                        $("#account_status_tag").text("停用").removeClass("bg-success").addClass("bg-danger");
                     }
                 }
             });
@@ -254,9 +258,13 @@ $(function(){
                     if (data.activate) {
                         $("#activate_text").text("停用");
                         $("#prop_activate_btn").removeClass("btn-success").addClass("btn-warning");
+                        // Update status tag for active account
+                        $("#account_status_tag").text("激活").removeClass("bg-danger").addClass("bg-success");
                     } else {
                         $("#activate_text").text("启用");
                         $("#prop_activate_btn").removeClass("btn-warning").addClass("btn-success");
+                        // Update status tag for inactive account
+                        $("#account_status_tag").text("停用").removeClass("bg-success").addClass("bg-danger");
                     }
                 } else {
                     var errorMessages = {
