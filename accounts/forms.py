@@ -4,6 +4,7 @@ from crispy_forms.bootstrap import AppendedText
 from crispy_forms.layout import Submit, Layout, Field
 from .gloab_info import prop_type_items, liability_currency_types
 from django.utils.translation import get_language, gettext_lazy as _
+from datetime import date
 
 
 class PropNewForm(forms.Form):
@@ -12,7 +13,8 @@ class PropNewForm(forms.Form):
     p_type = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(prop_type_items)], 
                                   required=True, label=_('Account Type'))
     start_date = forms.DateField(required=True, label=_('Start Date'),
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                 initial=date.today)
     term_month = forms.IntegerField(required=True, initial=0, label=_('Terms'))
     rate = forms.FloatField(required=True, initial=0.0, label=_('Interest Rate'))
     currency = forms.IntegerField(required=True, initial=0, label=_('Cash Flow'))
@@ -54,7 +56,8 @@ class PropEditForm(forms.Form):
     p_type = forms.ChoiceField(choices=[(idx, _(item)) for idx, item in enumerate(prop_type_items)], 
                                   required=True, label=_('Account Type'))
     start_date = forms.DateField(required=True, label=_('Start Date'),
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                 initial=date.today)
     term_month = forms.IntegerField(required=True, initial=0, label=_('Terms'))
     rate = forms.FloatField(required=True, initial=0.0, label=_('Interest Rate'))
     currency = forms.IntegerField(required=True, initial=0, label=_('Cash Flow'))
@@ -87,7 +90,8 @@ class DetailForm(forms.Form):
     id = forms.IntegerField(label='id')
     target_id = forms.ImageField(label='tid')
     occur_date = forms.DateField(required=True, label=_('Date'),
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                 initial=date.today)
     amount = forms.IntegerField(label=_('amount'), required=True, initial=0)
     comment = forms.CharField(label=_('Comment'), max_length=255, required=False)
 

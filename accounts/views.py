@@ -130,19 +130,25 @@ def prop_del(request):
 # 编辑保存账户信息
 def prop_edit(request):
     if request.method == "POST":
-        
-        prop = Prop.objects.get(pk=request.POST.get('id'))
-        if prop is not None:
-            prop.name = request.POST.get('name')
-            prop.p_type = int(request.POST.get('p_type'))
-            prop.start_date = retrans_date_str(request.POST.get('start_date'))
-            prop.term_month = request.POST.get('term_month')
-            prop.rate = float(request.POST.get('rate'))
-            prop.currency=request.POST.get('currency')
-            prop.ctype=int(request.POST.get('ctype'))
-            prop.comment=request.POST.get('comment')
-            prop.save()
-    return redirect("/")
+        try:
+            prop = Prop.objects.get(pk=request.POST.get('id'))
+            if prop is not None:
+                prop.name = request.POST.get('name')
+                prop.p_type = int(request.POST.get('p_type'))
+                prop.start_date = retrans_date_str(request.POST.get('start_date'))
+                prop.term_month = request.POST.get('term_month')
+                prop.rate = float(request.POST.get('rate'))
+                prop.currency=request.POST.get('currency')
+                prop.ctype=int(request.POST.get('ctype'))
+                prop.comment=request.POST.get('comment')
+                prop.save()
+                return HttpResponse(json.dumps({'status': 'success', 'message': 'Account updated successfully'}), 
+                                  content_type='application/json;charset=utf-8')
+        except Exception as e:
+            return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
+                              content_type='application/json;charset=utf-8')
+    return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
+                       content_type='application/json;charset=utf-8')
 
 # 删除明细
 def detail_del(request):
@@ -155,16 +161,23 @@ def detail_del(request):
 # 新增明细
 def detail_new(request):
     if request.method == 'POST':
-        target_prop = get_prop_from_request(request, 'target_id')
-        target_prop = Prop.objects.get(pk=target_prop['id'])
-        detail = Detail(
-            target_id = target_prop,
-            occur_date = retrans_date_str(request.POST.get('occur_date')),
-            amount = request.POST.get('amount'),
-            comment = request.POST.get('comment')
-        )
-        detail.save()
-    return redirect("/")
+        try:
+            target_prop = get_prop_from_request(request, 'target_id')
+            target_prop = Prop.objects.get(pk=target_prop['id'])
+            detail = Detail(
+                target_id = target_prop,
+                occur_date = retrans_date_str(request.POST.get('occur_date')),
+                amount = request.POST.get('amount'),
+                comment = request.POST.get('comment')
+            )
+            detail.save()
+            return HttpResponse(json.dumps({'status': 'success', 'message': 'Trade added successfully'}), 
+                              content_type='application/json;charset=utf-8')
+        except Exception as e:
+            return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
+                              content_type='application/json;charset=utf-8')
+    return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
+                       content_type='application/json;charset=utf-8')
 
 # 获取一条明细
 def detail_get_post(request):
@@ -181,13 +194,20 @@ def detail_get_post(request):
 # 编辑明细
 def detail_edit(request):
     if request.method == 'POST':
-        detail = Detail.objects.get(pk=request.POST.get('id'))
-        if detail is not None:
-            detail.occur_date = retrans_date_str(request.POST.get('occur_date'))
-            detail.amount = request.POST.get('amount')
-            detail.comment = request.POST.get('comment')
-            detail.save()
-    return redirect("/")
+        try:
+            detail = Detail.objects.get(pk=request.POST.get('id'))
+            if detail is not None:
+                detail.occur_date = retrans_date_str(request.POST.get('occur_date'))
+                detail.amount = request.POST.get('amount')
+                detail.comment = request.POST.get('comment')
+                detail.save()
+                return HttpResponse(json.dumps({'status': 'success', 'message': 'Trade updated successfully'}), 
+                                  content_type='application/json;charset=utf-8')
+        except Exception as e:
+            return HttpResponse(json.dumps({'status': 'error', 'message': str(e)}), 
+                              content_type='application/json;charset=utf-8')
+    return HttpResponse(json.dumps({'status': 'error', 'message': 'Invalid request'}), 
+                       content_type='application/json;charset=utf-8')
 
 # 对账页面
 def book_check(request):
