@@ -44,6 +44,76 @@ user: admin
 password:77887788
 ```
 
+# 数据导出
+
+OpenBookkeeping 支持将数据导出为 JSON 格式，方便迁移到其他系统（如 [my_bookkeep](https://github.com/nutalk/my-bookkeep)）。
+
+## 导出方法
+
+在项目根目录执行：
+
+```bash
+python export_data.py
+```
+
+默认会在当前目录生成 `export.json` 文件。
+
+### 自定义导出路径
+
+```bash
+python export_data.py --output /path/to/export.json
+```
+
+### 指定数据库文件
+
+如果数据库不在默认位置，可以通过 `--db` 参数指定：
+
+```bash
+python export_data.py --db /data/db.sqlite3 --output ./export.json
+```
+
+### 导出 JSON 格式说明
+
+```json
+{
+  "version": "1.0",
+  "exported_at": "2026-06-09T12:00:00",
+  "source": "OpenBookkeeping",
+  "summary": {
+    "total_props": 5,
+    "total_details": 50,
+    "total_assets": 5000000,
+    "total_liabilities": 2000000,
+    "net_worth": 3000000
+  },
+  "props": [
+    {
+      "id": 1,
+      "name": "账户名称",
+      "p_type": 0,
+      "start_date": "01/06/2023",
+      "term_month": 360,
+      "rate": 3.8,
+      "currency": 5000,
+      "ctype": 1,
+      "comment": "备注",
+      "activate": true,
+      "details": [
+        {
+          "id": 1,
+          "occur_date": "01/06/2023",
+          "amount": 3000000,
+          "comment": "初始金额"
+        }
+      ]
+    }
+  ]
+}
+```
+
+- `p_type`: 0=固定资产, 1=流动资产, 2=长期负债, 3=流动负债
+- `ctype`: 0=固定现金流, 1=等额本息, 2=先息后本, 3=等额本金, 4=到期还本付息
+
 # 截图
 
 账户清单页面
